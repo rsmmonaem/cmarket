@@ -64,23 +64,25 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'phone' => 'required|string',
+            'login' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        $user = User::where('phone', $request->phone)->first();
+        $user = User::where('phone', $request->login)
+                    ->orWhere('email', $request->login)
+                    ->first();
 
         if (!$user) {
             return back()->withErrors([
-                'phone' => 'The provided credentials do not match our records.',
-            ])->onlyInput('phone');
+                'login' => 'The provided credentials do not match our records.',
+            ])->onlyInput('login');
         }
 
         // Check if account is locked
         if ($user->isLocked()) {
             $minutes = now()->diffInMinutes($user->locked_until);
             return back()->withErrors([
-                'phone' => "Your account is locked due to multiple failed attempts. Please try again in {$minutes} minutes.",
+                'login' => "Your account is locked due to multiple failed attempts. Please try again in {$minutes} minutes.",
             ]);
         }
 
@@ -108,8 +110,8 @@ class AuthController extends Controller
         $user->incrementLoginAttempts();
         
         return back()->withErrors([
-            'phone' => 'The provided credentials do not match our records.',
-        ])->onlyInput('phone');
+            'login' => 'The provided credentials do not match our records.',
+        ])->onlyInput('login');
     }
 
     public function showOtpVerifyForm()
@@ -154,7 +156,7 @@ class AuthController extends Controller
         if ($user->status === 'suspended') {
             Auth::logout();
             return redirect()->route('login')->withErrors([
-                'phone' => 'Your account has been suspended. Please contact support.',
+                'login' => 'Your account has been suspended. Please contact support.',
             ]);
         }
 

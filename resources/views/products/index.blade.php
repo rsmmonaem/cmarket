@@ -1,121 +1,115 @@
-@extends('layouts.public')
+@extends('layouts.customer')
+
+@section('title', 'Marketplace')
+@section('page-title', 'Marketplace')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">All Products</h1>
-        <p class="text-gray-600 mt-2">Discover amazing products with cashback rewards</p>
-    </div>
+<div style="display: flex; flex-direction: column; md-flex-direction: row; gap: 2rem;">
+    <!-- Filters Sidebar -->
+    <aside style="width: 100%; md-width: 280px; flex-shrink: 0;">
+        <div class="card-solid">
+            <h3 style="margin-bottom: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🔍</span> Filters
+            </h3>
+            
+            <form action="{{ route('products.index') }}" method="GET">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.75rem;">Category</label>
+                    <select name="category" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light); font-size: 0.875rem;">
+                        <option value="">All Categories</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-    <div class="flex flex-col md:flex-row gap-8">
-        <!-- Filters Sidebar -->
-        <div class="w-full md:w-64 flex-shrink-0">
-            <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="font-semibold text-lg mb-4">Filters</h3>
-                
-                <form action="{{ route('products.index') }}" method="GET">
-                    <!-- Categories -->
-                    <div class="mb-6">
-                        <h4 class="font-medium mb-2">Category</h4>
-                        <select name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                            <option value="">All Categories</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.75rem;">Price Range</label>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <input type="number" name="min_price" placeholder="Min" value="{{ request('min_price') }}" style="width: 50%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light); font-size: 0.875rem;">
+                        <input type="number" name="max_price" placeholder="Max" value="{{ request('max_price') }}" style="width: 50%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light); font-size: 0.875rem;">
                     </div>
+                </div>
 
-                    <!-- Price Range -->
-                    <div class="mb-6">
-                        <h4 class="font-medium mb-2">Price Range</h4>
-                        <div class="flex gap-2">
-                            <input type="number" name="min_price" placeholder="Min" value="{{ request('min_price') }}"
-                                   class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg">
-                            <input type="number" name="max_price" placeholder="Max" value="{{ request('max_price') }}"
-                                   class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg">
-                        </div>
-                    </div>
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.75rem;">Sort By</label>
+                    <select name="sort" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light); font-size: 0.875rem;">
+                        <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Newest Arrivals</option>
+                        <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
+                        <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
+                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Alphabetical</option>
+                    </select>
+                </div>
 
-                    <!-- Sort -->
-                    <div class="mb-6">
-                        <h4 class="font-medium mb-2">Sort By</h4>
-                        <select name="sort" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
-                            <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
-                            <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
-                            <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Name</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">
-                        Apply Filters
-                    </button>
-                </form>
-            </div>
+                <button type="submit" class="btn-solid btn-primary-solid" style="width: 100%; justify-content: center;">
+                    Refine Results ✨
+                </button>
+            </form>
         </div>
+    </aside>
 
-        <!-- Products Grid -->
-        <div class="flex-1">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @forelse($products as $product)
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-                        <a href="{{ route('products.show', $product) }}">
+    <!-- Products Grid -->
+    <div style="flex: 1;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem;">
+            @forelse($products as $product)
+                <div class="card-solid" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <a href="{{ route('products.show', $product) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
+                        <div style="height: 200px; position: relative; background: #f1f5f9;">
                             @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" 
-                                     class="w-full h-48 object-cover">
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
                             @else
-                                <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                    <span class="text-gray-400 text-4xl">📦</span>
-                                </div>
+                                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem;">📦</div>
                             @endif
                             
-                            <div class="p-4">
-                                <span class="text-xs text-gray-500">{{ $product->category->name }}</span>
-                                <h3 class="font-semibold text-lg mb-2 truncate">{{ $product->name }}</h3>
-                                <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ $product->description }}</p>
-                                
-                                <div class="flex items-center justify-between mb-3">
-                                    <div>
-                                        @if($product->discount_price)
-                                            <span class="text-xl font-bold text-indigo-600">৳{{ number_format($product->discount_price, 2) }}</span>
-                                            <span class="text-sm text-gray-500 line-through ml-2">৳{{ number_format($product->price, 2) }}</span>
-                                        @else
-                                            <span class="text-xl font-bold text-indigo-600">৳{{ number_format($product->price, 2) }}</span>
-                                        @endif
-                                    </div>
-                                    @if($product->cashback_percentage)
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
-                                            {{ $product->cashback_percentage }}% Cashback
-                                        </span>
+                            @if($product->cashback_percentage)
+                                <div style="position: absolute; top: 1rem; right: 1rem; background: var(--success); color: white; padding: 0.25rem 0.75rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 800; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                    {{ $product->cashback_percentage }}% CASHBACK
+                                </div>
+                            @endif
+                        </div>
+                        
+                        <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted-light); font-weight: 700; text-transform: uppercase; margin-bottom: 0.25rem;">{{ $product->category->name }}</div>
+                            <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.4;">{{ $product->name }}</h3>
+                            
+                            <div style="margin-top: auto;">
+                                <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 1rem;">
+                                    @if($product->discount_price)
+                                        <span style="font-size: 1.5rem; font-weight: 900; color: var(--primary);">৳{{ number_format($product->discount_price, 2) }}</span>
+                                        <span style="font-size: 0.875rem; color: var(--text-muted-light); text-decoration: line-through;">৳{{ number_format($product->price, 2) }}</span>
+                                    @else
+                                        <span style="font-size: 1.5rem; font-weight: 900; color: var(--primary);">৳{{ number_format($product->price, 2) }}</span>
                                     @endif
                                 </div>
                                 
-                                <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                    <span>Stock: {{ $product->stock }}</span>
-                                    <span>{{ $product->merchant->business_name }}</span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted-light); margin-bottom: 1.5rem;">
+                                    <span>Stock: <strong style="color: {{ $product->stock > 0 ? 'var(--success)' : 'var(--danger)' }}">{{ $product->stock }}</strong></span>
+                                    <span>Merchant: <strong>{{ $product->merchant->business_name }}</strong></span>
                                 </div>
-                                
-                                <button onclick="addToCart({{ $product->id }})" 
-                                        class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
-                                    Add to Cart
-                                </button>
                             </div>
-                        </a>
+                        </div>
+                    </a>
+                    
+                    <div style="padding: 0 1.5rem 1.5rem 1.5rem; margin-top: auto;">
+                        <button onclick="addToCart({{ $product->id }})" class="btn-solid btn-primary-solid" style="width: 100%; justify-content: center; padding: 0.875rem;">
+                            <span>🛒</span> Add to Cart
+                        </button>
                     </div>
-                @empty
-                    <div class="col-span-3 text-center py-12 text-gray-500">
-                        No products found
-                    </div>
-                @endforelse
-            </div>
+                </div>
+            @empty
+                <div style="grid-column: 1 / -1; text-align: center; padding: 5rem 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1.5rem;">🔍</div>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">No products matched your criteria</h3>
+                    <p style="color: var(--text-muted-light); margin-top: 0.5rem;">Try adjusting your filters or search terms.</p>
+                </div>
+            @endforelse
+        </div>
 
-            <!-- Pagination -->
-            <div class="mt-8">
-                {{ $products->links() }}
-            </div>
+        <!-- Pagination -->
+        <div style="margin-top: 3rem;">
+            {{ $products->links() }}
         </div>
     </div>
 </div>
@@ -137,11 +131,15 @@ function addToCart(productId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Product added to cart!');
+            alert('Added to your cart! 🛍️');
             location.reload();
         } else {
-            alert(data.message || 'Failed to add product to cart');
+            alert(data.message || 'Error occurred while adding to cart.');
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Could not add to cart. Please try again.');
     });
 }
 </script>

@@ -1,42 +1,47 @@
-@extends('layouts.public')
+@extends('layouts.customer')
+
+@section('title', 'My Wallets')
+@section('page-title', 'My Wallets')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-3xl font-bold mb-8">My Wallets</h1>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        @foreach($wallets as $wallet)
-            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <p class="text-sm opacity-90">{{ ucfirst($wallet->wallet_type) }} Wallet</p>
-                        <h2 class="text-3xl font-bold mt-1">৳{{ number_format($wallet->balance, 2) }}</h2>
-                    </div>
-                    <div class="text-2xl">
-                        @if($wallet->wallet_type === 'main') 💰
-                        @elseif($wallet->wallet_type === 'cashback') 🎁
-                        @elseif($wallet->wallet_type === 'commission') 💵
-                        @elseif($wallet->wallet_type === 'shop') 🏪
-                        @elseif($wallet->wallet_type === 'share') 🤝
-                        @elseif($wallet->wallet_type === 'rider') 🚴
-                        @endif
-                    </div>
-                </div>
-                <div class="flex justify-between items-center text-sm opacity-90">
-                    <span>Status: {{ ucfirst($wallet->status) }}</span>
-                    <span>{{ $wallet->ledgers->count() }} transactions</span>
-                </div>
+<div class="stats-grid">
+    @foreach($wallets as $wallet)
+        @php
+            $gradient = 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)';
+            $icon = '💰';
+            if($wallet->wallet_type === 'cashback') {
+                $gradient = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
+                $icon = '🎁';
+            } elseif($wallet->wallet_type === 'commission') {
+                $gradient = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                $icon = '💵';
+            } elseif($wallet->wallet_type === 'shop') {
+                $gradient = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+                $icon = '🏪';
+            } elseif($wallet->wallet_type === 'share') {
+                $gradient = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
+                $icon = '🤝';
+            }
+        @endphp
+        <div class="stat-card-custom" style="background: {{ $gradient }};">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                <h3 style="margin-bottom: 0;">{{ ucfirst($wallet->wallet_type) }} Wallet</h3>
+                <span style="font-size: 1.5rem;">{{ $icon }}</span>
             </div>
-        @endforeach
-    </div>
-
-    <!-- Recent Transactions -->
-    <div class="bg-white rounded-lg shadow">
-        <div class="p-6 border-b">
-            <h2 class="text-xl font-semibold">Recent Transactions</h2>
+            <div class="value">৳{{ number_format($wallet->balance, 2) }}</div>
+            <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.5rem;">
+                Status: {{ ucfirst($wallet->status) }}
+            </div>
         </div>
+    @endforeach
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <!-- Recent Transactions -->
+    <div class="card-solid">
+        <h3 style="margin-bottom: 1.5rem; font-weight: 700;">Recent Transactions</h3>
         
-        <div class="divide-y">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
             @php
                 $allTransactions = collect();
                 foreach($wallets as $wallet) {
@@ -46,75 +51,78 @@
             @endphp
 
             @forelse($allTransactions as $transaction)
-                <div class="p-6 hover:bg-gray-50">
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-2xl">
-                                    {{ $transaction->type === 'credit' ? '📥' : '📤' }}
-                                </span>
-                                <h3 class="font-semibold">{{ $transaction->description }}</h3>
-                            </div>
-                            <p class="text-sm text-gray-600">
-                                {{ ucfirst($transaction->wallet->wallet_type) }} Wallet
-                            </p>
-                            <p class="text-xs text-gray-500 mt-1">
-                                {{ $transaction->created_at->format('M d, Y h:i A') }}
-                            </p>
+                <div style="padding: 1.25rem; background: var(--bg-light); border-radius: 0.75rem; border: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; border: 1px solid var(--border-light);">
+                            {{ $transaction->type === 'credit' ? '📥' : '📤' }}
                         </div>
-                        <div class="text-right">
-                            <p class="text-lg font-bold {{ $transaction->type === 'credit' ? 'text-green-600' : 'text-red-600' }}">
-                                {{ $transaction->type === 'credit' ? '+' : '-' }}৳{{ number_format($transaction->amount, 2) }}
-                            </p>
-                            <p class="text-sm text-gray-600">
-                                Balance: ৳{{ number_format($transaction->running_balance, 2) }}
-                            </p>
+                        <div>
+                            <div style="font-weight: 600; color: var(--text-light);">{{ $transaction->description }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted-light);">
+                                {{ ucfirst($transaction->wallet->wallet_type) }} • {{ $transaction->created_at->format('M d, Y h:i A') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 700; color: {{ $transaction->type === 'credit' ? 'var(--success)' : 'var(--danger)' }}; font-size: 1.125rem;">
+                            {{ $transaction->type === 'credit' ? '+' : '-' }}৳{{ number_format($transaction->amount, 2) }}
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted-light);">
+                            Bal: ৳{{ number_format($transaction->running_balance, 2) }}
                         </div>
                     </div>
                 </div>
             @empty
-                <div class="p-12 text-center text-gray-500">
-                    <div class="text-6xl mb-4">💳</div>
-                    <p>No transactions yet</p>
+                <div style="padding: 3rem; text-align: center; color: var(--text-muted-light);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">💳</div>
+                    <p>No transactions found in your records.</p>
                 </div>
             @endforelse
         </div>
     </div>
 
-    <!-- Referral Section -->
-    <div class="mt-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-8 text-white">
-        <h2 class="text-2xl font-bold mb-4">Invite Friends & Earn Rewards</h2>
-        <p class="mb-6 opacity-90">Share your referral code and earn commissions on their purchases!</p>
-        
-        <div class="bg-white bg-opacity-20 rounded-lg p-4 mb-4">
-            <p class="text-sm opacity-90 mb-1">Your Referral Code</p>
-            <div class="flex items-center gap-2">
-                <code class="text-2xl font-bold">{{ auth()->user()->referral_code ?? 'Not Generated' }}</code>
-                @if(auth()->user()->referral_code)
-                    <button onclick="copyReferralCode()" class="bg-white text-indigo-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100">
-                        Copy
-                    </button>
-                @endif
-            </div>
-        </div>
-
-        @if(!auth()->user()->referral_code)
-            <form action="{{ route('referral.generate') }}" method="POST">
+    <!-- Quick Transfer -->
+    <div>
+        <div class="card-solid" style="margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1.5rem; font-weight: 700;">Fund Transfer</h3>
+            <form action="{{ route('wallet.transfer') }}" method="POST">
                 @csrf
-                <button type="submit" class="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
-                    Generate Referral Code
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-light);">Recipient Phone</label>
+                    <input type="text" name="phone" placeholder="01XXXXXXXXX" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light);" required>
+                </div>
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-light);">Wallet Source</label>
+                    <select name="wallet_type" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light);" required>
+                        @foreach($wallets as $wallet)
+                            <option value="{{ $wallet->wallet_type }}">{{ ucfirst($wallet->wallet_type) }} (৳{{ number_format($wallet->balance, 2) }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-light);">Amount (৳)</label>
+                    <input type="number" name="amount" min="1" step="0.01" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light);" required>
+                </div>
+                <button type="submit" class="btn-solid btn-primary-solid" style="width: 100%; justify-content: center;">
+                    Send Money 🚀
                 </button>
             </form>
-        @endif
+        </div>
+
+        <!-- Referral Promo -->
+        <div class="stat-card-custom" style="background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);">
+            <h3 style="color: white; opacity: 1; font-weight: 700; font-size: 1rem; margin-bottom: 1rem;">Invite & Earn</h3>
+            <p style="font-size: 0.875rem; opacity: 0.9; line-height: 1.5; margin-bottom: 1.5rem;">
+                Invite your family and friends to join CMarket using your code.
+            </p>
+            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 0.75rem; border: 1px dashed rgba(255,255,255,0.4); text-align: center;">
+                <div style="font-size: 0.75rem; opacity: 0.8; margin-bottom: 0.5rem;">YOUR CODE</div>
+                <div style="font-size: 1.5rem; font-weight: 800; letter-spacing: 0.1em;">{{ auth()->user()->referral_code ?? '---' }}</div>
+            </div>
+            <a href="{{ route('referrals.index') }}" style="display: block; text-align: center; margin-top: 1.5rem; color: white; text-decoration: none; font-weight: 600; font-size: 0.875rem;">
+                Manage Referrals →
+            </a>
+        </div>
     </div>
 </div>
-
-<script>
-function copyReferralCode() {
-    const code = '{{ auth()->user()->referral_code }}';
-    navigator.clipboard.writeText(code).then(() => {
-        alert('Referral code copied to clipboard!');
-    });
-}
-</script>
 @endsection

@@ -130,9 +130,9 @@
             @csrf
 
             <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="text" id="phone" name="phone" value="{{ old('phone') }}" placeholder="01XXXXXXXXX" required autofocus>
-                @error('phone')
+                <label for="login">Email or Phone Number</label>
+                <input type="text" id="login" name="login" value="{{ old('login') }}" placeholder="01XXXXXXXXX or email@example.com" required autofocus>
+                @error('login')
                     <div class="error">{{ $message }}</div>
                 @enderror
             </div>

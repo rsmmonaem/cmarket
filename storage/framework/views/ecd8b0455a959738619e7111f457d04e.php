@@ -4,159 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $__env->yieldContent('title', 'Customer Dashboard'); ?> - CMarket</title>
+    <link rel="stylesheet" href="<?php echo e(asset('css/admin-custom.css')); ?>">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
+        :root {
+            --sidebar-w: 280px;
+            --primary-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            --active-gradient: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 100%);
         }
         .dashboard-container {
             display: flex;
             min-height: 100vh;
         }
         .sidebar {
-            width: 260px;
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
+            width: var(--sidebar-w);
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            z-index: 1000;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .main-content {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            padding: 2rem;
+            min-height: 100vh;
+            background-color: var(--bg-light);
         }
         .sidebar-logo {
             font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            font-weight: 900;
+            padding: 2.5rem 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.02em;
+            text-decoration: none;
+        }
+        .sidebar-logo span {
+            background: var(--info);
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            font-size: 1.25rem;
         }
         .sidebar-menu {
+            padding: 0 1rem;
             list-style: none;
         }
         .sidebar-menu li {
-            margin-bottom: 5px;
+            margin-bottom: 0.25rem;
         }
-        .sidebar-menu a {
+        .sidebar-link {
+            padding: 0.875rem 1.25rem;
+            border-radius: 0.75rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 15px;
-            color: white;
+            gap: 1rem;
+            color: #94a3b8;
             text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: rgba(255,255,255,0.2);
+        .sidebar-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
         }
-        .main-content {
-            margin-left: 260px;
-            flex: 1;
-            padding: 20px;
+        .sidebar-link.active {
+            color: #3b82f6;
+            background: var(--active-gradient);
         }
+        .sidebar-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20%;
+            height: 60%;
+            width: 4px;
+            background: #3b82f6;
+            border-radius: 0 4px 4px 0;
+            box-shadow: 4px 0 10px rgba(59, 130, 246, 0.5);
+        }
+        .menu-label {
+            padding: 1.5rem 1.5rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        /* Topbar & Other existing styles */
         .topbar {
-            background: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 1rem 2rem;
+            border-radius: 1.25rem;
+            margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
-        .topbar h2 {
-            color: #333;
-        }
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .user-info {
-            text-align: right;
-        }
-        .user-name {
-            font-weight: 600;
-            color: #333;
-        }
-        .user-role {
-            font-size: 0.85rem;
-            color: #666;
-        }
+        .user-info { text-align: right; }
+        .user-name { font-weight: 700; color: var(--text-light); }
+        .user-role { font-size: 0.75rem; color: #64748b; font-weight: 600; }
         .logout-btn {
-            padding: 8px 20px;
-            background: #e74c3c;
-            color: white;
+            background: #fee2e2;
+            color: #ef4444;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
             border: none;
-            border-radius: 6px;
             cursor: pointer;
-            text-decoration: none;
-            font-size: 0.9rem;
+            transition: all 0.2s;
         }
-        .logout-btn:hover {
-            background: #c0392b;
-        }
-        .content-area {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-        .stat-card h3 {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+        .logout-btn:hover { background: #fecaca; transform: scale(1.02); }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-logo">
-                🚀 CMarket
-            </div>
+        <aside class="sidebar sidebar-solid">
+            <a href="<?php echo e(route('home')); ?>" class="sidebar-logo">
+                <span>🛒</span> CMarket
+            </a>
+            
+            <div class="menu-label">Main Personal</div>
             <ul class="sidebar-menu">
-                <li><a href="<?php echo e(route('customer.dashboard')); ?>" class="<?php echo e(request()->routeIs('customer.dashboard') ? 'active' : ''); ?>">📊 Dashboard</a></li>
-                <li><a href="#">💰 My Wallets</a></li>
-                <li><a href="#">🛍️ My Orders</a></li>
-                <li><a href="#">🤝 Referrals</a></li>
-                <li><a href="#">📈 Commissions</a></li>
-                <li><a href="#">🏆 My Designation</a></li>
-                <li><a href="#">📦 Products</a></li>
-                <li><a href="#">👤 Profile</a></li>
-                <li><a href="#">⚙️ Settings</a></li>
+                <li><a href="<?php echo e(route('customer.dashboard')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customer.dashboard') ? 'active' : ''); ?>">📊 Dashboard</a></li>
+                <li><a href="<?php echo e(route('wallet.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('wallet.*') ? 'active' : ''); ?>">💰 My Wallets</a></li>
+                <li><a href="<?php echo e(route('orders.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('orders.*') ? 'active' : ''); ?>">🛍️ My Orders</a></li>
+                <li><a href="<?php echo e(route('referrals.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('referrals.*') ? 'active' : ''); ?>">🤝 Referrals</a></li>
+            </ul>
+
+            <div class="menu-label">Earnings & Rank</div>
+            <ul class="sidebar-menu">
+                <li><a href="<?php echo e(route('customer.commissions')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customer.commissions') ? 'active' : ''); ?>">📈 Commissions</a></li>
+                <li><a href="<?php echo e(route('customer.designation')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customer.designation') ? 'active' : ''); ?>">🏆 My Designation</a></li>
+                <li><a href="<?php echo e(route('kyc.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('kyc.*') ? 'active' : ''); ?>">🆔 KYC Verification</a></li>
+            </ul>
+
+            <div class="menu-label">Market & Settings</div>
+            <ul class="sidebar-menu">
+                <li><a href="<?php echo e(route('products.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('products.*') ? 'active' : ''); ?>">📦 Products</a></li>
+                <li><a href="<?php echo e(route('customer.profile')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customer.profile') ? 'active' : ''); ?>">👤 Profile</a></li>
+                <li><a href="<?php echo e(route('customer.settings')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customer.settings') ? 'active' : ''); ?>">⚙️ Settings</a></li>
             </ul>
         </aside>
 
@@ -179,9 +173,7 @@
                 <div class="alert alert-success"><?php echo e(session('success')); ?></div>
             <?php endif; ?>
 
-            <div class="content-area">
-                <?php echo $__env->yieldContent('content'); ?>
-            </div>
+            <?php echo $__env->yieldContent('content'); ?>
         </main>
     </div>
 </body>

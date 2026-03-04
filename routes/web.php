@@ -109,6 +109,12 @@ Route::get('/affiliate/register', function() { return view('affiliate.register')
 // Customer dashboard (all authenticated users)
 Route::middleware(['auth'])->prefix('customer')->name('customer.')->group(function () {
     Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [CustomerDashboardController::class, 'profile'])->name('profile');
+    Route::post('/profile', [CustomerDashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/settings', [CustomerDashboardController::class, 'settings'])->name('settings');
+    Route::post('/settings', [CustomerDashboardController::class, 'updateSettings'])->name('settings.update');
+    Route::get('/commissions', [CustomerDashboardController::class, 'commissions'])->name('commissions');
+    Route::get('/designation', [CustomerDashboardController::class, 'designation'])->name('designation');
 });
 
 // Merchant dashboard

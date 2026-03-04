@@ -130,9 +130,9 @@
             <?php echo csrf_field(); ?>
 
             <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="text" id="phone" name="phone" value="<?php echo e(old('phone')); ?>" placeholder="01XXXXXXXXX" required autofocus>
-                <?php $__errorArgs = ['phone'];
+                <label for="login">Email or Phone Number</label>
+                <input type="text" id="login" name="login" value="<?php echo e(old('login')); ?>" placeholder="01XXXXXXXXX or email@example.com" required autofocus>
+                <?php $__errorArgs = ['login'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
