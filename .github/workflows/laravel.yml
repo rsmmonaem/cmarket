@@ -6,23 +6,38 @@ on:
 
 jobs:
   deploy:
-
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: List files for debugging
-      run: ls -la
-      shell: bash
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+
+    - name: Install Production Dependencies
+      run: |
+        composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
     - name: Setup FTP deployment
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
-        server: ftp.cmarket.com.bd
-        username: admin_ftp
-        password: admin_ftp
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./
         server-dir: /public_html/
-        exclude: .gitignore
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/tests/**
+          .env*
+          README.md
+          composer.json
+          composer.lock
+          package.json
+          package-lock.json
+          phpunit.xml
+          vite.config.js
