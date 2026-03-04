@@ -1,80 +1,118 @@
 @extends('layouts.admin')
 
-@section('title', 'Rider Management')
-@section('page-title', 'Delivery Partners')
+@section('title', 'Logistics Terminal - CMarket')
+@section('page-title', 'Delivery Network Protocol')
 
 @section('content')
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-    <x-admin.card class="border-l-4 border-l-amber-500">
-        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Pending Approval</p>
-        <h3 class="text-3xl font-black text-light">{{ $riders->where('status', 'pending')->count() }}</h3>
-    </x-admin.card>
-    <x-admin.card class="border-l-4 border-l-emerald-500">
-        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Active Riders</p>
-        <h3 class="text-3xl font-black text-light">{{ $riders->where('status', 'approved')->count() }}</h3>
-    </x-admin.card>
-    <x-admin.card class="border-l-4 border-l-slate-900 dark:border-l-slate-700">
-        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Total partners</p>
-        <h3 class="text-3xl font-black text-light">{{ $riders->total() }}</h3>
-    </x-admin.card>
-</div>
-
-<x-admin.card title="Rider Directory">
-    <div class="overflow-x-auto -mx-6">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="border-b border-light">
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Partner Detail</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Vehicle Type</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Phone</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Account Status</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light text-right">Action</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-light">
-                @forelse($riders as $rider)
-                    <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="text-sm font-black text-light">{{ $rider->user->name }}</div>
-                            <div class="text-[10px] text-muted-light font-bold uppercase tracking-wider">ZONE: {{ $rider->zone ?? 'Dhaka' }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-light uppercase tracking-tighter">{{ $rider->vehicle_type }}</div>
-                            <div class="text-[10px] text-muted-light font-black">{{ $rider->vehicle_number ?? 'N/A' }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                             <div class="text-sm font-bold text-light">{{ $rider->phone }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            @if($rider->status === 'approved')
-                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ACTIVE DELIVERY
-                                </span>
-                            @elseif($rider->status === 'pending')
-                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> PENDING REVIEW
-                                </span>
-                            @else
-                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> SUSPENDED
-                                </span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="{{ route('admin.riders.show', $rider) }}" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light text-[10px] font-black hover:bg-sky-500 hover:text-white transition uppercase tracking-widest shadow-sm inline-block">
-                                Review Profile
-                            </a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr><td colspan="5" class="px-6 py-12 text-center text-muted-light italic">No delivery partners registered.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
+<div class="space-y-10 animate-fade-in">
+    <!-- Macro Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white dark:bg-slate-900 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+            <div class="relative z-10">
+                <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-6 font-black tracking-[0.2em]">Pending Approval</p>
+                <h3 class="text-4xl font-black text-slate-800 dark:text-white leading-none">{{ $riders->where('status', 'pending')->count() }}</h3>
+            </div>
+            <div class="absolute -right-2 -bottom-2 opacity-[0.03] text-6xl font-black italic text-slate-400 dark:text-white">WAIT</div>
+        </div>
+        <div class="bg-slate-900 dark:bg-sky-600 rounded-[2rem] p-8 text-white shadow-2xl shadow-slate-900/10 relative overflow-hidden group border-none">
+            <div class="relative z-10">
+                <p class="text-[9px] font-black uppercase tracking-widest text-sky-400 dark:text-white/60 mb-6 font-black tracking-[0.2em]">Active Logistics</p>
+                <h3 class="text-4xl font-black text-white leading-none">{{ $riders->where('status', 'approved')->count() }}</h3>
+            </div>
+            <div class="absolute -right-2 -bottom-2 opacity-[0.05] text-6xl font-black italic text-white">NODES</div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+            <div class="relative z-10">
+                <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-6 font-black tracking-[0.2em]">Total Entities</p>
+                <h3 class="text-4xl font-black text-slate-800 dark:text-white leading-none">{{ $riders->total() }}</h3>
+            </div>
+            <div class="absolute -right-2 -bottom-2 opacity-[0.03] text-6xl font-black italic text-slate-400 dark:text-white">GLOBAL</div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+            <div class="relative z-10">
+                <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-6 font-black tracking-[0.2em]">Audit Status</p>
+                <h3 class="text-4xl font-black text-emerald-500 leading-none">HEALTHY</h3>
+            </div>
+            <div class="absolute -right-2 -bottom-2 opacity-[0.03] text-6xl font-black italic text-slate-400 dark:text-white">SYSTEM</div>
+        </div>
     </div>
 
-    @if($riders->hasPages())
-        <div class="mt-8">{{ $riders->links() }}</div>
-    @endif
-</x-admin.card>
+    <!-- Data Infrastructure Table -->
+    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[900px]">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/50">
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Logistics Node</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Vector Asset</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Comm Channel</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Protocol Level</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-right">Operations</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+                    @forelse($riders as $rider)
+                        <tr class="group hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-all duration-300">
+                            <td class="px-10 py-8">
+                                <div class="flex items-center gap-6">
+                                    <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition-transform overflow-hidden font-black">
+                                        {{ substr($rider->user->name, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-black text-slate-800 dark:text-white mb-1">{{ $rider->user->name }}</div>
+                                        <div class="text-[9px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">ZONE: {{ $rider->zone ?? 'CENTRAL' }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-10 py-8">
+                                <div class="text-[10px] font-black text-slate-800 dark:text-white uppercase tracking-widest mb-1">{{ $rider->vehicle_type }}</div>
+                                <div class="text-[9px] text-sky-500 font-bold tracking-widest">{{ $rider->vehicle_number ?? 'UNREGISTERED' }}</div>
+                            </td>
+                            <td class="px-10 py-8">
+                                <div class="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest">
+                                    {{ $rider->phone }}
+                                </div>
+                            </td>
+                            <td class="px-10 py-8 text-center">
+                                @if($rider->status === 'approved')
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800 uppercase">
+                                        ACTIVE LOGISTICS
+                                    </span>
+                                @elseif($rider->status === 'pending')
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-800 uppercase">
+                                        AWAITING AUDIT
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800 uppercase">
+                                        PROTOCOL SUSPENDED
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-10 py-8 text-right">
+                                <div class="flex justify-end opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0 duration-300">
+                                    <a href="{{ route('admin.riders.show', $rider) }}" class="px-6 py-3 bg-slate-900 dark:bg-slate-800 text-white rounded-xl text-[9px] font-black uppercase tracking-[0.2em] shadow-xl shadow-slate-900/10 hover:bg-sky-500 transition-all">
+                                        Review Profile ⚡
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-10 py-32 text-center text-slate-300 flex flex-col items-center">
+                                <span class="text-8xl mb-6 opacity-10">🚴</span>
+                                <p class="text-lg font-black uppercase tracking-[0.2em]">No Logistic Nodes Detected</p>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @if($riders->hasPages())
+            <div class="p-6 md:p-10 border-t border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30">
+                {{ $riders->links() }}
+            </div>
+        @endif
+    </div>
+</div>
 @endsection

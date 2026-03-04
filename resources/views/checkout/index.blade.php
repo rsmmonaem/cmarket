@@ -1,146 +1,185 @@
 @extends('layouts.customer')
 
-@section('title', 'Secure Checkout')
-@section('page-title', 'Checkout')
+@section('title', 'Secure Settlement - CMarket')
+@section('page-title', 'Final Confirmation')
 
 @section('content')
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2.5rem; align-items: start;">
-    <!-- Checkout Form -->
-    <div>
-        <form action="{{ route('checkout.process') }}" method="POST">
-            @csrf
-
-            <!-- Shipping Information -->
-            <div class="card-solid" style="margin-bottom: 2rem;">
-                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem;">
-                    <span style="font-size: 1.5rem;">📍</span>
-                    <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">Shipping Details</h2>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                    <div>
-                        <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.5rem;">Full Name</label>
-                        <input type="text" value="{{ auth()->user()->name }}" readonly
-                               style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-light); border-radius: 0.75rem; background: var(--bg-light); color: var(--text-muted-light); font-weight: 600;">
-                    </div>
-
-                    <div>
-                        <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.5rem;">Phone Number *</label>
-                        <input type="text" name="phone" value="{{ auth()->user()->phone }}" required
-                               style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-light); border-radius: 0.75rem; background: white; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border-light)'">
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.5rem;">Shipping Address *</label>
-                    <textarea name="shipping_address" rows="3" required placeholder="Enter your full street address, city, and zip code"
-                              style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-light); border-radius: 0.75rem; background: white; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border-light)'"></textarea>
-                </div>
-
-                <div>
-                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.5rem;">Order Notes (Optional)</label>
-                    <textarea name="notes" rows="2" placeholder="Any special instructions for delivery?"
-                              style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-light); border-radius: 0.75rem; background: white; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border-light)'"></textarea>
-                </div>
-            </div>
-
-            <!-- Payment Method -->
-            <div class="card-solid" style="margin-bottom: 2rem;">
-                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem;">
-                    <span style="font-size: 1.5rem;">💳</span>
-                    <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">Payment Selection</h2>
-                </div>
-                
-                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                    <label style="display: flex; align-items: center; padding: 1.5rem; border: 2px solid var(--border-light); border-radius: 1rem; cursor: pointer; transition: all 0.2s; position: relative;" class="payment-option">
-                        <input type="radio" name="payment_method" value="wallet" style="margin-right: 1.25rem; width: 20px; height: 20px; accent-color: var(--primary);" required>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 800; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">Wallet Payment</div>
-                            <div style="font-size: 0.875rem; color: var(--text-muted-light);">
-                                Available Balance: <strong style="color: var(--success);">৳{{ number_format($mainWallet->balance ?? 0, 2) }}</strong>
-                            </div>
-                        </div>
-                        <span style="font-size: 1.5rem; opacity: 0.5;">🏦</span>
-                    </label>
-
-                    <label style="display: flex; align-items: center; padding: 1.5rem; border: 2px solid var(--border-light); border-radius: 1rem; cursor: pointer; transition: all 0.2s; position: relative;" class="payment-option">
-                        <input type="radio" name="payment_method" value="cod" style="margin-right: 1.25rem; width: 20px; height: 20px; accent-color: var(--primary);">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 800; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">Cash on Delivery</div>
-                            <div style="font-size: 0.875rem; color: var(--text-muted-light);">Pay in cash when your order reaches your doorstep</div>
-                        </div>
-                        <span style="font-size: 1.5rem; opacity: 0.5;">🚛</span>
-                    </label>
-
-                    <label style="display: flex; align-items: center; padding: 1.5rem; border: 2px solid var(--border-light); border-radius: 1rem; cursor: not-allowed; position: relative; opacity: 0.5; background: var(--bg-light);">
-                        <input type="radio" name="payment_method" value="gateway" disabled style="margin-right: 1.25rem; width: 20px; height: 20px;">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 800; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">Online Payment</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Coming Soon</div>
-                        </div>
-                        <span style="font-size: 1.5rem; opacity: 0.5;">⚡</span>
-                    </label>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-solid btn-primary-solid" style="width: 100%; justify-content: center; padding: 1.5rem; font-size: 1.25rem; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(30, 41, 59, 0.4);">
-                Complete Order 🚀
-            </button>
-        </form>
+<div class="space-y-12 animate-fade-in">
+    <!-- Top Progress Indicator -->
+    <div class="flex items-center justify-between px-10 max-w-2xl mx-auto mb-16 relative">
+        <div class="flex flex-col items-center gap-4 relative z-10">
+            <div class="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm font-black shadow-lg shadow-emerald-500/20">1</div>
+            <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Inventory</p>
+        </div>
+        <div class="flex-1 h-0.5 bg-emerald-500 mx-4"></div>
+        <div class="flex flex-col items-center gap-4 relative z-10">
+            <div class="w-12 h-12 rounded-full bg-slate-900 text-white flex items-center justify-center text-sm font-black shadow-lg shadow-slate-900/20">2</div>
+            <p class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Settlement</p>
+        </div>
+        <div class="flex-1 h-0.5 bg-slate-100 mx-4"></div>
+        <div class="flex flex-col items-center gap-4 relative z-10">
+            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-sm font-black">3</div>
+            <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Deployment</p>
+        </div>
     </div>
 
-    <!-- Order Summary -->
-    <div style="position: sticky; top: 1.5rem;">
-        <div class="card-solid" style="background: var(--bg-light); border: none;">
-            <h2 style="font-size: 1.125rem; font-weight: 800; color: var(--primary); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.75rem;">Your Order</h2>
-            
-            <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; max-height: 300px; overflow-y: auto; padding-right: 0.5rem;">
-                @foreach($cartItems as $item)
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 700; color: var(--text-light); font-size: 0.875rem; line-height: 1.4;">{{ $item['product']->name }}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted-light); margin-top: 0.25rem;">Qty: {{ $item['quantity'] }} × ৳{{ number_format($item['product']->price, 2) }}</div>
-                        </div>
-                        <div style="font-weight: 800; color: var(--primary); font-size: 0.875rem;">৳{{ number_format($item['subtotal'], 2) }}</div>
-                    </div>
-                @endforeach
-            </div>
+    <div class="flex flex-col lg:flex-row gap-12">
+        <!-- Main Checkout Intelligence -->
+        <div class="lg:w-2/3 space-y-8">
+            <form action="{{ route('checkout.process') }}" method="POST" id="checkoutForm">
+                @csrf
 
-            <div style="border-top: 2px dashed var(--border-light); pt-1.5rem; padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.875rem;">
-                    <span style="color: var(--text-muted-light);">Subtotal</span>
-                    <span style="font-weight: 700; color: var(--primary);">৳{{ number_format($subtotal, 2) }}</span>
+                <!-- Deployment Logistics -->
+                <div class="bg-white rounded-[3rem] p-10 lg:p-12 border border-slate-100 shadow-sm space-y-10">
+                    <div class="flex items-center gap-4 mb-12 border-b border-slate-50 pb-8">
+                        <span class="text-3xl">📍</span>
+                        <h3 class="text-xl font-black text-slate-800 tracking-tight">Logistics Command</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-3">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Asset Receiver</label>
+                            <input type="text" value="{{ auth()->user()->name }}" readonly class="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-400 cursor-not-allowed">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Secure Contact Number</label>
+                            <input type="text" name="phone" value="{{ auth()->user()->phone ?? old('phone') }}" required placeholder="01XXXXXXXXX" class="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-black text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Physical Coordinates (Address)</label>
+                        <textarea name="shipping_address" rows="4" required placeholder="Full deployment address including district and upazila..." class="w-full bg-slate-50 border-none rounded-[2rem] p-6 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">{{ old('shipping_address') }}</textarea>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Special Directives (Optional)</label>
+                        <input type="text" name="notes" placeholder="Example: Leave at front gate..." class="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">
+                    </div>
                 </div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.875rem;">
-                    <span style="color: var(--text-muted-light);">Shipping Fee</span>
-                    <span style="font-weight: 700; color: var(--success);">FREE</span>
+
+                <!-- Financial Gateway -->
+                <div class="bg-white rounded-[3rem] p-10 lg:p-12 border border-slate-100 shadow-sm space-y-10 mt-10">
+                    <div class="flex items-center gap-4 mb-12 border-b border-slate-50 pb-8">
+                        <span class="text-3xl">💳</span>
+                        <h3 class="text-xl font-black text-slate-800 tracking-tight">Monetary Protocol</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6">
+                        <!-- Internal Wallet -->
+                        <label class="relative block cursor-pointer group">
+                            <input type="radio" name="payment_method" value="wallet" class="peer hidden" required>
+                            <div class="p-8 rounded-[2rem] border-2 border-slate-50 bg-slate-50 peer-checked:border-sky-500 peer-checked:bg-sky-50 peer-checked:shadow-xl peer-checked:shadow-sky-500/10 transition-all duration-300 flex items-center justify-between">
+                                <div class="flex items-center gap-6">
+                                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-sm border border-slate-100 peer-checked:border-sky-200">🏦</div>
+                                    <div>
+                                        <h4 class="text-lg font-black text-slate-800 mb-1">Ecosystem Digital Wallet</h4>
+                                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Instant Settlement • Liquid: <span class="text-emerald-500">৳{{ number_format($mainWallet->balance ?? 0, 2) }}</span></p>
+                                    </div>
+                                </div>
+                                <div class="w-6 h-6 rounded-full border-2 border-slate-200 peer-checked:border-sky-500 peer-checked:bg-sky-500 flex items-center justify-center transition-all">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-all"></div>
+                                </div>
+                            </div>
+                        </label>
+
+                        <!-- COD -->
+                        <label class="relative block cursor-pointer group">
+                            <input type="radio" name="payment_method" value="cod" class="peer hidden">
+                            <div class="p-8 rounded-[2rem] border-2 border-slate-50 bg-slate-50 peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:shadow-xl peer-checked:shadow-slate-900/10 transition-all duration-300 flex items-center justify-between">
+                                <div class="flex items-center gap-6">
+                                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-sm border border-slate-100 peer-checked:border-slate-800">🚚</div>
+                                    <div>
+                                        <h4 class="text-lg font-black text-slate-800 peer-checked:text-white mb-1 transition-colors">Physical Fiat (COD)</h4>
+                                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest peer-checked:text-slate-400">Settlement upon territory arrival</p>
+                                    </div>
+                                </div>
+                                <div class="w-6 h-6 rounded-full border-2 border-slate-200 peer-checked:border-white peer-checked:bg-white flex items-center justify-center transition-all">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-slate-900 opacity-0 peer-checked:opacity-100 transition-all"></div>
+                                </div>
+                            </div>
+                        </label>
+
+                        <!-- Disabled Gateway -->
+                        <div class="p-8 rounded-[2rem] border-2 border-dashed border-slate-100 bg-slate-50/50 flex items-center justify-between opacity-50 grayscale">
+                            <div class="flex items-center gap-6">
+                                <div class="w-14 h-14 rounded-2xl bg-white/50 flex items-center justify-center text-2xl shadow-sm border border-slate-100">🛡️</div>
+                                <div>
+                                    <h4 class="text-lg font-black text-slate-400 mb-1">Credit / Debit Matrix</h4>
+                                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Protocol implementation pending</p>
+                                </div>
+                            </div>
+                            <span class="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl text-[8px] font-black uppercase tracking-[0.2em]">Restricted</span>
+                        </div>
+                    </div>
                 </div>
-                <div style="margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: baseline;">
-                    <span style="font-size: 1rem; font-weight: 800; color: var(--primary);">Total</span>
-                    <span style="font-size: 1.5rem; font-weight: 900; color: var(--primary);">৳{{ number_format($subtotal, 2) }}</span>
+
+                <div class="mt-12">
+                    <button type="submit" class="w-full py-7 bg-slate-900 text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.4em] shadow-2xl shadow-slate-900/40 hover:bg-sky-600 hover:scale-[1.01] transition-all duration-500">
+                        Initiate Final Deployment ➔
+                    </button>
+                    <p class="text-center text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-6">Secure end-to-end encrypted transaction module</p>
                 </div>
-            </div>
-            
-            <div style="background: rgba(16, 185, 129, 0.1); border-radius: 0.75rem; padding: 1rem; margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: center;">
-                <span style="font-size: 1.25rem;">✨</span>
-                <div style="color: var(--success); font-size: 0.8125rem; font-weight: 700;">
-                    You will earn cashback points after successful delivery.
-                </div>
-            </div>
+            </form>
         </div>
-        
-        <div style="margin-top: 1.5rem; text-align: center;">
-            <a href="{{ route('cart.index') }}" style="color: var(--text-muted-light); text-decoration: none; font-weight: 700; font-size: 0.8125rem;">
-                ← Back to My Bag
-            </a>
+
+        <!-- Order Infrastructure Summary -->
+        <div class="lg:w-1/3">
+            <div class="sticky top-32 space-y-6">
+                <!-- Main Breakdown -->
+                <div class="bg-white rounded-[3rem] border border-slate-100 shadow-xl overflow-hidden">
+                    <div class="p-10 border-b border-slate-50 bg-slate-50/50">
+                        <h3 class="text-xs font-black text-slate-800 uppercase tracking-[0.2em]">Batch Inventory</h3>
+                    </div>
+
+                    <div class="p-10 max-h-[400px] overflow-y-auto space-y-6 scrollbar-hide">
+                        @foreach($cartItems as $item)
+                            <div class="flex justify-between items-start gap-6">
+                                <div class="flex-1">
+                                    <h4 class="text-xs font-black text-slate-800 mb-1 leading-tight">{{ $item['product']->name }}</h4>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Qty: {{ $item['quantity'] }} × ৳{{ number_format($item['product']->price, 0) }}</p>
+                                </div>
+                                <span class="text-xs font-black text-slate-900">৳{{ number_format($item['subtotal'], 0) }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="p-10 bg-slate-900 text-white space-y-6">
+                        <div class="flex justify-between items-center text-white/50">
+                            <span class="text-[9px] font-black uppercase tracking-widest">Assessment Subtotal</span>
+                            <span class="text-xs font-black">৳{{ number_format($subtotal, 0) }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Logistics Allocation</span>
+                            <span class="text-xs font-black text-emerald-400 tracking-widest">EXEMPTED</span>
+                        </div>
+                        <div class="border-t border-white/10 pt-8 flex justify-between items-baseline">
+                            <span class="text-sm font-black uppercase tracking-[0.3em]">Total</span>
+                            <span class="text-3xl font-black tracking-tighter">৳{{ number_format($subtotal, 0) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reward Potential -->
+                <div class="bg-gradient-to-br from-indigo-500 to-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
+                    <div class="relative z-10 flex items-center gap-5">
+                        <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-xl">🎁</div>
+                        <div>
+                            <h4 class="text-xs font-black uppercase tracking-widest mb-1 text-indigo-200">Growth Reward</h4>
+                            <p class="text-sm font-bold opacity-70">Cashback & Points will be credited upon delivery completion.</p>
+                        </div>
+                    </div>
+                    <!-- Decor -->
+                    <div class="absolute -right-4 -bottom-4 opacity-10 text-6xl">📈</div>
+                </div>
+
+                <div class="text-center pt-4">
+                    <a href="{{ route('cart.index') }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors">
+                        ← Modification of Batch
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-<style>
-.payment-option:has(input:checked) {
-    border-color: var(--primary) !important;
-    background: var(--bg-light);
-}
-</style>
 @endsection

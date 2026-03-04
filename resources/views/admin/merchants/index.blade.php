@@ -1,86 +1,106 @@
 @extends('layouts.admin')
 
-@section('title', 'Merchant Management')
-@section('page-title', 'Merchant Management')
+@section('title', 'Merchant Directory - CMarket')
+@section('page-title', 'Global Merchant Network')
 
 @section('content')
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-    <x-admin.card class="border-l-4 border-l-amber-500">
-        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Pending Store Requests</p>
-        <h3 class="text-3xl font-black text-light">{{ $merchants->where('status', 'pending')->count() }}</h3>
-    </x-admin.card>
-    <x-admin.card class="border-l-4 border-l-emerald-500">
-        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Active Merchants</p>
-        <h3 class="text-3xl font-black text-light">{{ $merchants->where('status', 'approved')->count() }}</h3>
-    </x-admin.card>
-    <x-admin.card class="border-l-4 border-l-red-500">
-        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Suspended Vendors</p>
-        <h3 class="text-3xl font-black text-light">{{ $merchants->where('status', 'suspended')->count() }}</h3>
-    </x-admin.card>
-    <x-admin.card class="border-l-4 border-l-slate-900 dark:border-l-slate-700">
-        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Total Catalog size</p>
-        <h3 class="text-3xl font-black text-light">{{ \App\Models\Product::count() }}</h3>
-    </x-admin.card>
-</div>
-
-<x-admin.card title="Merchant Directory">
-    <div class="overflow-x-auto -mx-6">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="border-b border-light">
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Business Detail</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Owner Info</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light text-center">Catalog</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Account Status</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light text-right">Action</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-light">
-                @forelse($merchants as $merchant)
-                    <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="text-sm font-black text-light">{{ $merchant->business_name }}</div>
-                            <div class="text-[10px] text-muted-light font-bold uppercase tracking-wider">{{ $merchant->business_type }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-light uppercase tracking-tighter">{{ $merchant->user->name }}</div>
-                            <div class="text-[10px] text-muted-light font-black">{{ $merchant->phone }}</div>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="inline-flex px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-black text-light border border-light">
-                                {{ $merchant->products_count ?? 0 }} PRODUCTS
-                            </span>
-                        </td>
-                        <td class="px-6 py-4">
-                            @if($merchant->status === 'approved')
-                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> APPROVED VENDOR
-                                </span>
-                            @elseif($merchant->status === 'pending')
-                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> PENDING REVIEW
-                                </span>
-                            @else
-                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> SUSPENDED
-                                </span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="{{ route('admin.merchants.show', $merchant) }}" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light text-[10px] font-black hover:bg-sky-500 hover:text-white transition uppercase tracking-widest shadow-sm inline-block">
-                                Review Profile
-                            </a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr><td colspan="5" class="px-6 py-12 text-center text-muted-light italic">No merchants managed yet.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
+<div class="space-y-10 animate-fade-in">
+    <!-- Macro Summary -->
+    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 lg:p-12 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col lg:flex-row justify-between items-center gap-8 md:gap-10 overflow-hidden relative group">
+        <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
+            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Merchant Network</h2>
+            <p class="text-slate-400 dark:text-slate-500 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em] ml-1">Protocol Partners • {{ $merchants->total() }} Identified Entities</p>
+        </div>
+        <div class="grid grid-cols-2 lg:flex items-center gap-3 md:gap-4 relative z-10 w-full lg:w-auto">
+            <div class="px-6 py-4 md:px-8 md:py-6 rounded-2xl md:rounded-3xl bg-slate-950 text-white text-center flex-1 lg:w-32 shadow-xl shadow-slate-900/20">
+                <div class="text-[7px] md:text-[8px] font-black text-sky-400 uppercase mb-1">Live Nodes</div>
+                <div class="text-base md:text-xl font-black">{{ $merchants->where('status', 'active')->count() }}</div>
+            </div>
+            <div class="px-6 py-4 md:px-8 md:py-6 rounded-2xl md:rounded-3xl bg-amber-500 text-white text-center flex-1 lg:w-32 shadow-xl shadow-amber-500/20">
+                <div class="text-[7px] md:text-[8px] font-black text-amber-900 uppercase mb-1">Waitlist</div>
+                <div class="text-base md:text-xl font-black">{{ $merchants->where('status', 'pending')->count() }}</div>
+            </div>
+        </div>
+        <!-- Decor -->
+        <div class="absolute -right-10 -bottom-10 opacity-[0.03] text-[150px] md:text-[200px] leading-none select-none italic font-black group-hover:scale-110 transition-transform duration-1000 dark:text-white">NODES</div>
     </div>
 
-    @if($merchants->hasPages())
-        <div class="mt-8">{{ $merchants->links() }}</div>
-    @endif
-</x-admin.card>
+    <!-- Data Infrastructure Table -->
+    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[1000px]">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/50">
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Merchant Entity</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Auth Controller</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Catalog Vector</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Operational Status</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-right">Operations</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+                    @forelse($merchants as $merchant)
+                        <tr class="group hover:bg-slate-50/80 transition-all duration-300">
+                            <td class="px-10 py-8">
+                                <div class="flex items-center gap-6">
+                                    <div class="w-14 h-14 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 overflow-hidden flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform text-2xl">
+                                        🏪
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-black text-slate-800 dark:text-white mb-1">{{ $merchant->business_name }}</div>
+                                        <div class="text-[9px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">{{ $merchant->business_type }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-10 py-8">
+                                <div class="text-[10px] font-black text-slate-800 dark:text-white uppercase tracking-widest mb-1">{{ $merchant->user->name }}</div>
+                                <div class="text-[10px] font-bold text-sky-500">{{ $merchant->phone }}</div>
+                            </td>
+                            <td class="px-10 py-8 text-center">
+                                <span class="inline-flex px-4 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-[9px] font-black text-slate-800 dark:text-white tracking-tighter">
+                                    {{ $merchant->products_count ?? 0 }} DEP. UNITS
+                                </span>
+                            </td>
+                            <td class="px-10 py-8 text-center">
+                                @if($merchant->status === 'approved')
+                                    <span class="inline-flex items-center gap-2 py-2 px-4 rounded-xl text-[9px] font-black bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                        LIVE
+                                    </span>
+                                @elseif($merchant->status === 'pending')
+                                    <span class="inline-flex items-center gap-2 py-2 px-4 rounded-xl text-[9px] font-black bg-amber-50 text-amber-600 border border-amber-100">
+                                        PENDING
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-2 py-2 px-4 rounded-xl text-[9px] font-black bg-rose-50 text-rose-600 border border-rose-100">
+                                        OFFLINE
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-10 py-8 text-right">
+                                <div class="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 duration-300">
+                                    <a href="{{ route('admin.merchants.show', $merchant) }}" class="px-6 py-3 rounded-xl bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest hover:bg-sky-500 transition-all shadow-xl shadow-slate-900/10">
+                                        Inspect Node ⚡
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-10 py-32 text-center text-slate-300 flex flex-col items-center">
+                                <span class="text-8xl mb-6 opacity-10">🧊</span>
+                                <p class="text-lg font-black uppercase tracking-[0.2em]">Network Vacuum Detected</p>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @if($merchants->hasPages())
+            <div class="p-6 md:p-10 border-t border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30">
+                {{ $merchants->links() }}
+            </div>
+        @endif
+    </div>
+</div>
 @endsection

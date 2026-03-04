@@ -119,6 +119,7 @@
 
         <form action="<?php echo e(route('register')); ?>" method="POST">
             <?php echo csrf_field(); ?>
+            <input type="hidden" name="ref" value="<?php echo e(request()->get('ref')); ?>">
 
             <div class="form-group">
                 <label for="name">Full Name</label>

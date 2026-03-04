@@ -1,204 +1,159 @@
-<?php $__env->startSection('title', 'Product Management'); ?>
-<?php $__env->startSection('page-title', 'Product Management'); ?>
+<?php $__env->startSection('title', 'Product Master Directory - CMarket'); ?>
+<?php $__env->startSection('page-title', 'Global Inventory Management'); ?>
 
 <?php $__env->startSection('content'); ?>
-<?php if (isset($component)) { $__componentOriginalad5130b5347ab6ecc017d2f5a278b926 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.card','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.card'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
-        <div>
-            <h2 class="text-xl font-black text-light">Master Product Catalog</h2>
-            <p class="text-xs text-muted-light font-bold uppercase tracking-widest">Manage inventory and business packages</p>
+<div class="space-y-10 animate-fade-in">
+    <!-- Macro Summary & Action -->
+    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 lg:p-12 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col lg:flex-row justify-between items-center gap-8 md:gap-10 overflow-hidden relative group">
+        <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
+            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Master Product Catalog</h2>
+            <p class="text-slate-400 dark:text-slate-500 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em] ml-1">Managing <?php echo e($products->total()); ?> global inventory nodes</p>
         </div>
-        <div class="flex flex-wrap gap-3">
-            <a href="<?php echo e(route('admin.products.create')); ?>">
-                <?php if (isset($component)) { $__componentOriginal60a020e5340f3f52bbc4501dc9f93102 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal60a020e5340f3f52bbc4501dc9f93102 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.button','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-                    <span class="text-lg">➕</span> Add New Product
-                 <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal60a020e5340f3f52bbc4501dc9f93102)): ?>
-<?php $attributes = $__attributesOriginal60a020e5340f3f52bbc4501dc9f93102; ?>
-<?php unset($__attributesOriginal60a020e5340f3f52bbc4501dc9f93102); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal60a020e5340f3f52bbc4501dc9f93102)): ?>
-<?php $component = $__componentOriginal60a020e5340f3f52bbc4501dc9f93102; ?>
-<?php unset($__componentOriginal60a020e5340f3f52bbc4501dc9f93102); ?>
-<?php endif; ?>
+        <div class="flex items-center gap-4 relative z-10 w-full lg:w-auto">
+            <a href="<?php echo e(route('admin.products.create')); ?>" class="flex-1 lg:flex-none px-6 py-4 md:px-10 md:py-5 bg-slate-900 dark:bg-sky-600 text-white rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-2xl shadow-slate-900/10 hover:bg-sky-600 dark:hover:bg-sky-500 hover:scale-[1.05] transition-all flex items-center justify-center gap-3">
+                <span class="text-base md:text-lg">➕</span> Register Global Unit
             </a>
         </div>
+        <!-- Decor -->
+        <div class="absolute -right-10 -bottom-10 opacity-[0.03] text-[150px] md:text-[200px] leading-none select-none italic font-black group-hover:scale-110 transition-transform duration-1000 dark:text-white">INDEX</div>
     </div>
 
-    <!-- Filters -->
-    <div class="p-6 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 mb-8">
-        <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <input type="text" name="search" placeholder="Search products..." 
-                   value="<?php echo e(request('search')); ?>"
-                   class="px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition">
+    <!-- Intelligent Filtering Terminal -->
+    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 border border-slate-100 dark:border-slate-800 shadow-sm mb-10">
+        <form method="GET" class="flex flex-col lg:flex-row gap-4 md:gap-6">
+            <div class="flex-1 relative">
+                <span class="absolute left-6 top-1/2 -translate-y-1/2 opacity-20 text-lg">🔍</span>
+                <input type="text" name="search" placeholder="Search products..." 
+                       value="<?php echo e(request('search')); ?>"
+                       class="w-full h-14 md:h-16 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl pl-16 pr-6 text-xs font-black text-slate-800 dark:text-white focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300 dark:placeholder:text-slate-600">
+            </div>
             
-            <select name="status" class="px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition">
-                <option value="">All Status</option>
-                <option value="active" <?php echo e(request('status') == 'active' ? 'selected' : ''); ?>>Active</option>
-                <option value="inactive" <?php echo e(request('status') == 'inactive' ? 'selected' : ''); ?>>Inactive</option>
-                <option value="draft" <?php echo e(request('status') == 'draft' ? 'selected' : ''); ?>>Draft</option>
-            </select>
+            <div class="grid grid-cols-2 lg:flex gap-4">
+                <select name="status" class="w-full lg:w-48 h-14 md:h-16 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl px-6 text-xs font-black text-slate-800 dark:text-white focus:ring-2 focus:ring-sky-500/20 transition-all">
+                    <option value="">Status</option>
+                    <option value="active" <?php echo e(request('status') == 'active' ? 'selected' : ''); ?>>Active</option>
+                    <option value="inactive" <?php echo e(request('status') == 'inactive' ? 'selected' : ''); ?>>Inactive</option>
+                    <option value="draft" <?php echo e(request('status') == 'draft' ? 'selected' : ''); ?>>Draft</option>
+                </select>
 
-            <select name="type" class="px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition">
-                <option value="">All Types</option>
-                <option value="product" <?php echo e(request('type') == 'product' ? 'selected' : ''); ?>>Normal Product</option>
-                <option value="package" <?php echo e(request('type') == 'package' ? 'selected' : ''); ?>>Business Package</option>
-            </select>
+                <select name="type" class="w-full lg:w-48 h-14 md:h-16 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl px-6 text-xs font-black text-slate-800 dark:text-white focus:ring-2 focus:ring-sky-500/20 transition-all">
+                    <option value="">Type</option>
+                    <option value="product" <?php echo e(request('type') == 'product' ? 'selected' : ''); ?>>Product</option>
+                    <option value="package" <?php echo e(request('type') == 'package' ? 'selected' : ''); ?>>Package</option>
+                </select>
+            </div>
             
-            <?php if (isset($component)) { $__componentOriginal60a020e5340f3f52bbc4501dc9f93102 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal60a020e5340f3f52bbc4501dc9f93102 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.button','data' => ['type' => 'submit','variant' => 'secondary','class' => 'w-full']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['type' => 'submit','variant' => 'secondary','class' => 'w-full']); ?>
-                🔍 Apply Filters
-             <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal60a020e5340f3f52bbc4501dc9f93102)): ?>
-<?php $attributes = $__attributesOriginal60a020e5340f3f52bbc4501dc9f93102; ?>
-<?php unset($__attributesOriginal60a020e5340f3f52bbc4501dc9f93102); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal60a020e5340f3f52bbc4501dc9f93102)): ?>
-<?php $component = $__componentOriginal60a020e5340f3f52bbc4501dc9f93102; ?>
-<?php unset($__componentOriginal60a020e5340f3f52bbc4501dc9f93102); ?>
-<?php endif; ?>
+            <button type="submit" class="h-14 md:h-16 px-10 bg-slate-900 dark:bg-sky-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-sky-600 dark:hover:bg-sky-500 transition-all flex items-center justify-center gap-3 active:scale-95 shadow-lg shadow-slate-900/10 dark:shadow-sky-500/10">
+                Execute
+            </button>
         </form>
     </div>
 
-    <div class="overflow-x-auto -mx-6">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="border-b border-light">
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Product Detail</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Category</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Pricing</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Stock</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Status</th>
-                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-light">
-                <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                    <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-4">
-                                <div class="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center border border-light relative">
-                                    <?php $imgArr = is_array($product->images) ? $product->images : (json_decode($product->images, true) ?: []); $img = $imgArr[0] ?? null; ?>
-                                    <?php if($img): ?>
-                                        <img src="<?php echo e(asset('storage/' . $img)); ?>" alt="<?php echo e($product->name); ?>" class="w-full h-full object-cover">
-                                    <?php else: ?>
-                                        <span class="text-2xl">🛍️</span>
-                                    <?php endif; ?>
-                                    <?php if($product->type === 'package'): ?>
-                                        <div class="absolute top-0 right-0 bg-sky-500 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900"></div>
-                                    <?php endif; ?>
-                                </div>
-                                <div>
-                                    <div class="text-sm font-black text-light line-clamp-1"><?php echo e($product->name); ?></div>
-                                    <div class="text-[10px] text-muted-light font-bold flex items-center gap-2">
-                                        <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 uppercase tracking-tighter"><?php echo e($product->type); ?></span>
-                                        SKU: <?php echo e($product->sku ?? 'N/A'); ?>
-
+    <!-- Data Infrastructure Table -->
+    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[1100px]">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/50">
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Inventory Node</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Category & Source</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Price Matrix</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Stock Vector</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Visibility</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-right">Operations</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+                    <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        <tr class="group hover:bg-slate-50/80 transition-all duration-300">
+                            <td class="px-10 py-8">
+                                <div class="flex items-center gap-6">
+                                    <div class="w-16 h-16 rounded-2xl bg-white border border-slate-100 overflow-hidden flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform relative">
+                                        <?php $imgArr = is_array($product->images) ? $product->images : (json_decode($product->images, true) ?: []); $img = $imgArr[0] ?? null; ?>
+                                        <?php if($img): ?>
+                                            <img src="<?php echo e(asset('storage/' . $img)); ?>" alt="<?php echo e($product->name); ?>" class="w-full h-full object-cover">
+                                        <?php else: ?>
+                                            <span class="text-2xl">🛍️</span>
+                                        <?php endif; ?>
+                                        <?php if($product->type === 'package'): ?>
+                                            <div class="absolute top-0 right-0 bg-sky-500 w-3 h-3 rounded-full border-2 border-white"></div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-black text-slate-800 mb-1 truncate max-w-[200px]"><?php echo e($product->name); ?></div>
+                                        <div class="text-[9px] text-slate-400 font-black uppercase tracking-widest">SKU: <?php echo e($product->sku ?? 'N/A'); ?></div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-sm font-bold text-muted-light">
-                            <?php echo e($product->category->name ?? 'Uncategorized'); ?>
+                            </td>
+                            <td class="px-10 py-8">
+                                <div class="text-[10px] font-black text-slate-800 uppercase tracking-widest mb-1"><?php echo e($product->category->name ?? 'Uncategorized'); ?></div>
+                                <div class="text-[10px] font-bold text-sky-500 truncate max-w-[150px]"><?php echo e($product->merchant->shop_name ?? 'System Direct'); ?></div>
+                            </td>
+                            <td class="px-10 py-8 text-center text-sm font-black text-slate-800">
+                                ৳<?php echo e(number_format($product->discount_price ?? $product->price, 2)); ?>
 
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm font-black text-light">৳<?php echo e(number_format($product->discount_price ?? $product->price, 2)); ?></div>
-                            <?php if($product->discount_price): ?>
-                                <div class="text-[10px] text-muted-light line-through font-bold">৳<?php echo e(number_format($product->price, 2)); ?></div>
-                            <?php endif; ?>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-2">
-                                <div class="w-24 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div class="h-full <?php echo e($product->stock > 10 ? 'bg-emerald-500' : 'bg-red-500'); ?>" style="width: <?php echo e(min(100, ($product->stock / 100) * 100)); ?>%"></div>
+                            </td>
+                            <td class="px-10 py-8 text-center">
+                                <div class="inline-flex flex-col items-center">
+                                    <span class="text-[10px] font-black <?php echo e($product->stock < 10 ? 'text-rose-500' : 'text-slate-800'); ?>">
+                                        <?php echo e($product->stock); ?>
+
+                                    </span>
+                                    <div class="w-12 h-1 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
+                                        <div class="h-full <?php echo e($product->stock < 10 ? 'bg-rose-500' : 'bg-emerald-500'); ?>" style="width: <?php echo e(min(100, ($product->stock / 50) * 100)); ?>%"></div>
+                                    </div>
                                 </div>
-                                <span class="text-[10px] font-black text-light"><?php echo e($product->stock); ?></span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <?php if($product->status === 'active'): ?>
-                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ACTIVE
-                                </span>
-                            <?php elseif($product->status === 'draft'): ?>
-                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> DRAFT
-                                </span>
-                            <?php else: ?>
-                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> INACTIVE
-                                </span>
-                            <?php endif; ?>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <div class="flex justify-end gap-2">
-                                <a href="<?php echo e(route('admin.products.edit', $product)); ?>" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light hover:bg-sky-500 hover:text-white transition shadow-sm">
-                                    ✏️
-                                </a>
-                                <form action="<?php echo e(route('admin.products.destroy', $product)); ?>" method="POST" class="inline" onsubmit="return confirm('Delete this product?');">
-                                    <?php echo csrf_field(); ?>
-                                    <?php echo method_field('DELETE'); ?>
-                                    <button type="submit" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light hover:bg-red-500 hover:text-white transition shadow-sm">
-                                        🗑️
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                    <tr>
-                        <td colspan="6" class="px-6 py-12 text-center text-muted-light italic">No products found for the current selection.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-
-    <?php if($products->hasPages()): ?>
-        <div class="mt-8">
-            <?php echo e($products->links()); ?>
-
+                            </td>
+                            <td class="px-10 py-8 text-center">
+                                <?php if($product->status === 'active'): ?>
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                        LIVE
+                                    </span>
+                                <?php elseif($product->status === 'draft'): ?>
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-amber-50 text-amber-600 border border-amber-100">
+                                        DRAFT
+                                    </span>
+                                <?php else: ?>
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-slate-50 text-slate-400 border border-slate-100">
+                                        OFFLINE
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="px-10 py-8 text-right">
+                                <div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 duration-300">
+                                    <a href="<?php echo e(route('admin.products.edit', $product)); ?>" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-lg hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all shadow-sm">
+                                        ✏️
+                                    </a>
+                                    <form action="<?php echo e(route('admin.products.destroy', $product)); ?>" method="POST" class="inline" onsubmit="return confirm('Permanent node deletion confirmation?');">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
+                                        <button type="submit" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-lg hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all shadow-sm">
+                                            🗑️
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                        <tr>
+                            <td colspan="6" class="px-10 py-32 text-center text-slate-300 flex flex-col items-center">
+                                <span class="text-8xl mb-6 opacity-10">🧊</span>
+                                <p class="text-lg font-black uppercase tracking-[0.2em]">Inventory Exhausted</p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
-    <?php endif; ?>
- <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
-<?php $attributes = $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
-<?php unset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
-<?php $component = $__componentOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
-<?php unset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
-<?php endif; ?>
+
+        <?php if($products->hasPages()): ?>
+            <div class="p-6 md:p-10 border-t border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30">
+                <?php echo e($products->links()); ?>
+
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /Users/rsmmonaem/Projects/Nibiz/cmarket/resources/views/admin/products/index.blade.php ENDPATH**/ ?>

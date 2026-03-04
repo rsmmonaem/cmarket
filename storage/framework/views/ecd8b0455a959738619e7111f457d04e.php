@@ -464,17 +464,30 @@
                     </div>
                     
                     <div class="relative group">
-                        <button class="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-lg hover:border-sky-500 transition-all">
+                        <button class="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-lg hover:border-sky-500 hover:shadow-lg hover:shadow-sky-500/10 transition-all duration-300">
                             👤
                         </button>
-                        <div class="absolute right-0 mt-3 w-48 bg-white rounded-2xl shadow-2xl border border-slate-100 py-3 hidden group-hover:block animate-fade-in z-50">
-                            <a href="<?php echo e(route('customer.profile')); ?>" class="block px-6 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50">Go to Profile</a>
-                            <a href="<?php echo e(route('customer.settings')); ?>" class="block px-6 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50">Settings</a>
-                            <div class="border-t border-slate-50 my-2"></div>
-                            <form action="<?php echo e(route('logout')); ?>" method="POST">
-                                <?php echo csrf_field(); ?>
-                                <button type="submit" class="w-full text-left px-6 py-2 text-sm font-black text-red-500 hover:bg-red-50">Logout</button>
-                            </form>
+                        <!-- Dropdown with transparent bridge to maintain hover -->
+                        <div class="absolute right-0 top-full pt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                            <div class="bg-white rounded-[1.5rem] shadow-2xl border border-slate-100 py-4 overflow-hidden">
+                                <div class="px-6 py-3 border-b border-slate-50 mb-2">
+                                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest"><?php echo e(Auth::user()->name); ?></div>
+                                    <div class="text-[9px] font-black text-sky-500 uppercase tracking-tighter mt-0.5">Verified Profile</div>
+                                </div>
+                                <a href="<?php echo e(route('customer.profile')); ?>" class="flex items-center gap-3 px-6 py-3 text-xs font-black text-slate-700 hover:bg-slate-50 hover:text-sky-600 transition-colors">
+                                    <span>👤</span> View Profile
+                                </a>
+                                <a href="<?php echo e(route('customer.settings')); ?>" class="flex items-center gap-3 px-6 py-3 text-xs font-black text-slate-700 hover:bg-slate-50 hover:text-sky-600 transition-colors">
+                                    <span>⚙️</span> Account Settings
+                                </a>
+                                <div class="border-t border-slate-50 my-2"></div>
+                                <form action="<?php echo e(route('logout')); ?>" method="POST">
+                                    <?php echo csrf_field(); ?>
+                                    <button type="submit" class="w-full text-left flex items-center gap-3 px-6 py-3 text-xs font-black text-rose-500 hover:bg-rose-50 transition-colors">
+                                        <span>🚪</span> Terminate Session
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
