@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    protected $rankService;
+
+    public function __construct(\App\Services\RankService $rankService)
+    {
+        $this->rankService = $rankService;
+    }
+
     public function index()
     {
         $user = auth()->user();
@@ -23,7 +30,10 @@ class DashboardController extends Controller
             'total_orders' => Order::where('user_id', $user->id)->count(),
             'pending_orders' => Order::where('user_id', $user->id)->where('status', 'pending')->count(),
             'total_spent' => Order::where('user_id', $user->id)->where('status', 'delivered')->sum('total_amount'),
+            'team_size' => $this->rankService->getTeamSize($user),
         ];
+
+        $nextRank = $this->rankService->getNextRank($user);
 
         $recent_orders = Order::where('user_id', $user->id)
             ->with(['merchant', 'items'])
@@ -31,6 +41,7 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        return view('customer.dashboard', compact('user', 'wallets', 'stats', 'recent_orders', 'nextRank'));
     }
 
     public function profile()

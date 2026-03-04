@@ -119,6 +119,7 @@
 
         <form action="{{ route('register') }}" method="POST">
             @csrf
+            <input type="hidden" name="ref" value="{{ request()->get('ref') }}">
 
             <div class="form-group">
                 <label for="name">Full Name</label>

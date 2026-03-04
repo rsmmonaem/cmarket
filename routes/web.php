@@ -56,22 +56,45 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/clear', [App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
     
     // Checkout
-    Route::get('/checkout', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout/process', [App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
+    Route::middleware(['wallet_verified'])->group(function () {
+        Route::get('/checkout', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+        Route::post('/checkout/process', [App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
+    });
     
     // Orders
     Route::get('/orders', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
     
     // Wallet
-    Route::get('/wallet', [App\Http\Controllers\WalletController::class, 'index'])->name('wallet.index');
-    Route::get('/wallet/preview-recipient', [App\Http\Controllers\WalletController::class, 'previewRecipient'])->name('wallet.preview-recipient');
-    Route::post('/wallet/transfer', [App\Http\Controllers\WalletController::class, 'transfer'])->name('wallet.transfer');
+    Route::middleware(['wallet_verified'])->group(function () {
+        Route::get('/wallet', [App\Http\Controllers\WalletController::class, 'index'])->name('wallet.index');
+        Route::get('/wallet/preview-recipient', [App\Http\Controllers\WalletController::class, 'previewRecipient'])->name('wallet.preview-recipient');
+        Route::post('/wallet/transfer', [App\Http\Controllers\WalletController::class, 'transfer'])->name('wallet.transfer');
+        
+        // Withdrawal system
+        Route::get('/withdrawals', [App\Http\Controllers\Customer\WithdrawalController::class, 'index'])->name('withdrawals.index');
+        Route::post('/withdrawals/request', [App\Http\Controllers\Customer\WithdrawalController::class, 'request'])->name('withdrawals.request');
+    });
     
     // Referral system
     Route::post('/referral/generate', [App\Http\Controllers\ReferralController::class, 'generateCode'])->name('referral.generate');
     Route::get('/referrals', [App\Http\Controllers\ReferralController::class, 'myReferrals'])->name('referrals.index');
     
+    // Investment & Shares (Phase 6)
+    Route::middleware(['wallet_verified'])->prefix('investments')->name('investments.')->group(function () {
+        Route::get('/', [App\Http\Controllers\InvestmentController::class, 'index'])->name('index');
+        Route::get('/my-shares', [App\Http\Controllers\InvestmentController::class, 'myShares'])->name('my-shares');
+        Route::get('/{shop}', [App\Http\Controllers\InvestmentController::class, 'show'])->name('show');
+        Route::post('/{shop}/purchase', [App\Http\Controllers\InvestmentController::class, 'purchase'])->name('purchase');
+    });
+
+    // Regional Management (Phase 3)
+    Route::middleware(['role:upazila|district|division|director'])->prefix('regional')->name('regional.')->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\RegionalDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/users', [App\Http\Controllers\RegionalDashboardController::class, 'users'])->name('users');
+        Route::get('/orders', [App\Http\Controllers\RegionalDashboardController::class, 'orders'])->name('orders');
+    });
+
     // Invoices
     Route::get('/invoices/{order}/download', [App\Http\Controllers\InvoiceController::class, 'download'])->name('invoices.download');
     Route::get('/invoices/{order}/view', [App\Http\Controllers\InvoiceController::class, 'view'])->name('invoices.view');
@@ -103,6 +126,7 @@ Route::post('/payment/cancel', [App\Http\Controllers\PaymentController::class, '
 Route::post('/payment/ipn', [App\Http\Controllers\PaymentController::class, 'ipn'])->name('payment.ipn');
 
 // Affiliate program
+Route::get('/ref/{code}', [App\Http\Controllers\AffiliateController::class, 'track'])->name('affiliate.track');
 Route::get('/affiliate/register', function() { return view('affiliate.register'); })->name('affiliate.register');
 
 
@@ -113,8 +137,14 @@ Route::middleware(['auth'])->prefix('customer')->name('customer.')->group(functi
     Route::post('/profile', [CustomerDashboardController::class, 'updateProfile'])->name('profile.update');
     Route::get('/settings', [CustomerDashboardController::class, 'settings'])->name('settings');
     Route::post('/settings', [CustomerDashboardController::class, 'updateSettings'])->name('settings.update');
-    Route::get('/commissions', [CustomerDashboardController::class, 'commissions'])->name('commissions');
-    Route::get('/designation', [CustomerDashboardController::class, 'designation'])->name('designation');
+    
+    // Income & Network (Locked until verified)
+    Route::middleware(['wallet_verified'])->group(function () {
+        Route::get('/commissions', [CustomerDashboardController::class, 'commissions'])->name('commissions');
+        Route::get('/designation', [CustomerDashboardController::class, 'designation'])->name('designation');
+        Route::get('/generations', [App\Http\Controllers\Customer\GenerationController::class, 'index'])->name('generations');
+        Route::post('/upgrade/voucher', [App\Http\Controllers\Customer\GenerationController::class, 'upgradeWithVoucher'])->name('upgrade.voucher');
+    });
 });
 
 // Merchant dashboard
@@ -149,6 +179,7 @@ Route::middleware(['auth', 'role:super-admin|admin'])->prefix('admin')->name('ad
     
     // User management
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    Route::get('users/{user}/generations', [App\Http\Controllers\Admin\UserController::class, 'generations'])->name('users.generations');
     
     // KYC management
     Route::get('kyc', [App\Http\Controllers\Admin\KycController::class, 'index'])->name('kyc.index');
@@ -205,4 +236,8 @@ Route::middleware(['auth', 'role:super-admin|admin'])->prefix('admin')->name('ad
     
     // Designation management
     Route::resource('designations', App\Http\Controllers\Admin\DesignationController::class);
+
+    // System Settings
+    Route::get('settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+    Route::post('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
 });

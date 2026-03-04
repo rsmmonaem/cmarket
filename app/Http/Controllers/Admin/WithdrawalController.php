@@ -11,7 +11,15 @@ class WithdrawalController extends Controller
     public function index()
     {
         $withdrawals = Withdrawal::with(['wallet.user'])->latest()->paginate(20);
-        return view('admin.withdrawals.index', compact('withdrawals'));
+        
+        $stats = [
+            'pending' => Withdrawal::where('status', 'pending')->count(),
+            'approved' => Withdrawal::where('status', 'approved')->count(),
+            'rejected' => Withdrawal::where('status', 'rejected')->count(),
+            'total_disbursed' => Withdrawal::whereIn('status', ['approved', 'completed'])->sum('amount'),
+        ];
+
+        return view('admin.withdrawals.index', compact('withdrawals', 'stats'));
     }
 
     public function show(Withdrawal $withdrawal)

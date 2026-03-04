@@ -98,6 +98,9 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex justify-end gap-2">
+                                <a href="{{ route('admin.users.generations', $user) }}" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light hover:bg-emerald-500 hover:text-white transition shadow-sm" title="View Generations">
+                                    🌍
+                                </a>
                                 <a href="{{ route('admin.users.edit', $user) }}" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light hover:bg-sky-500 hover:text-white transition shadow-sm">
                                     ✏️
                                 </a>

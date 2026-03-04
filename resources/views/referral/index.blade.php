@@ -1,135 +1,129 @@
 @extends('layouts.customer')
 
-@section('title', 'My Referrals')
-@section('page-title', 'Referral Network')
+@section('title', 'Referral Network - CMarket')
+@section('page-title', 'My Affiliates')
 
 @section('content')
-<div class="stats-grid">
-    <div class="stat-card-custom" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
-        <h3>Direct Referrals</h3>
-        <div class="value">{{ $directReferrals->count() }}</div>
-    </div>
-    <div class="stat-card-custom" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
-        <h3>Total Network</h3>
-        <div class="value">{{ $allReferrals->count() }}</div>
-    </div>
-    <div class="stat-card-custom" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-        <h3>Total Earnings</h3>
-        <div class="value">৳{{ number_format($totalCommissions, 2) }}</div>
-    </div>
-    <div class="stat-card-custom" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-        <h3>Pending Earnings</h3>
-        <div class="value">৳{{ number_format($pendingCommissions, 2) }}</div>
-    </div>
-</div>
-
-<div class="card-solid" style="margin-bottom: 2rem; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white;">
-    <h3 style="margin-bottom: 1.5rem; font-weight: 700;">Your Referral Hub</h3>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-        <div>
-            <p style="font-size: 0.875rem; opacity: 0.8; margin-bottom: 0.75rem;">REFERRAL CODE</p>
-            <div style="background: rgba(255,255,255,0.1); padding: 1.25rem; border-radius: 0.75rem; border: 1px dashed rgba(255,255,255,0.3); display: flex; justify-content: space-between; align-items: center;">
-                <code style="font-size: 1.5rem; font-weight: 800; letter-spacing: 0.1em;">{{ auth()->user()->referral_code ?? 'NOT GENERATED' }}</code>
-                @if(auth()->user()->referral_code)
-                    <button onclick="copyText('{{ auth()->user()->referral_code }}')" class="btn-solid" style="background: white; color: var(--primary); padding: 0.5rem 1rem;">Copy</button>
-                @endif
-            </div>
-            @if(!auth()->user()->referral_code)
-                <form action="{{ route('referral.generate') }}" method="POST" style="margin-top: 1rem;">
-                    @csrf
-                    <button type="submit" class="btn-solid btn-primary-solid" style="background: white; color: var(--primary);">Generate Now</button>
-                </form>
-            @endif
-        </div>
-        <div>
-            @if(auth()->user()->referral_code)
-                <p style="font-size: 0.875rem; opacity: 0.8; margin-bottom: 0.75rem;">SHARING LINK</p>
-                <div style="background: rgba(255,255,255,0.1); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.2); display: flex; gap: 0.75rem;">
-                    <input type="text" readonly value="{{ url('/register?ref=' . auth()->user()->referral_code) }}" style="flex: 1; background: transparent; border: none; color: white; font-size: 0.875rem; outline: none;">
-                    <button onclick="copyText('{{ url('/register?ref=' . auth()->user()->referral_code) }}')" style="background: transparent; border: none; color: white; cursor: pointer; font-weight: 700;">COPY</button>
+<div class="space-y-8 animate-fade-in">
+    <!-- Network Hub -->
+    <div class="bg-slate-900 rounded-[2.5rem] p-10 text-white shadow-2xl shadow-slate-900/10 relative overflow-hidden group">
+        <div class="relative z-10">
+            <h2 class="text-3xl font-black mb-10 tracking-tight">Your Referral Hub</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="space-y-4">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">Unique Referral Code</p>
+                    <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex items-center justify-between group/code hover:border-sky-500/50 transition-all">
+                        <code class="text-3xl font-black text-white tracking-widest">{{ auth()->user()->referral_code ?? '---' }}</code>
+                        @if(auth()->user()->referral_code)
+                            <button onclick="copyToClipboard('{{ auth()->user()->referral_code }}')" class="p-3 bg-white text-slate-900 rounded-2xl hover:bg-sky-500 hover:text-white transition-all shadow-lg active:scale-95">
+                                📋
+                            </button>
+                        @else
+                            <form action="{{ route('referral.generate') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="px-6 py-3 bg-sky-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-sky-400 transition shadow-lg shadow-sky-500/20">Generate</button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
-            @else
-                <p style="font-size: 0.875rem; opacity: 0.8; line-height: 1.6;">Once you generate your code, you'll get a unique link to share with your friends and family.</p>
-            @endif
+
+                <div class="space-y-4">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">Invite Share Link</p>
+                    <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex items-center justify-between group/link hover:border-emerald-500/50 transition-all overflow-hidden">
+                        @if(auth()->user()->referral_code)
+                            <input type="text" readonly value="{{ url('/register?ref=' . auth()->user()->referral_code) }}" class="bg-transparent border-none text-xs font-bold text-slate-300 focus:ring-0 flex-1 truncate">
+                            <button onclick="copyToClipboard('{{ url('/register?ref=' . auth()->user()->referral_code) }}')" class="p-3 bg-white/10 text-white rounded-2xl hover:bg-emerald-500 transition-all ml-4">
+                                🔗
+                            </button>
+                        @else
+                            <p class="text-[10px] font-bold text-slate-500 italic">Generate your code first to get a sharing link.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute -right-10 -bottom-10 opacity-5 text-[250px] leading-none select-none italic group-hover:scale-110 transition-transform duration-700">🤝</div>
+    </div>
+
+    <!-- Quick Stats Hub -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm text-center">
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Direct Team</p>
+            <h3 class="text-3xl font-black text-slate-800">{{ $directReferrals->count() }}</h3>
+        </div>
+        <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm text-center">
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Total Network</p>
+            <h3 class="text-3xl font-black text-slate-800">{{ $allReferrals->count() }}</h3>
+        </div>
+        <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm text-center">
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Total Earnings</p>
+            <h3 class="text-3xl font-black text-emerald-600">৳{{ number_format($totalCommissions, 2) }}</h3>
+        </div>
+        <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm text-center">
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Pending</p>
+            <h3 class="text-3xl font-black text-amber-500">৳{{ number_format($pendingCommissions, 2) }}</h3>
+        </div>
+    </div>
+
+    <!-- Direct Referrals Table -->
+    <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+        <div class="p-8 border-b border-slate-50 flex items-center justify-between">
+            <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Level 1 Members</h3>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ $directReferrals->count() }} Active Partners</span>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/50">
+                        <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Partner</th>
+                        <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Contact</th>
+                        <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Designation</th>
+                        <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Joined</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @forelse($directReferrals as $referral)
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="p-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xs font-black text-slate-800">
+                                        {{ substr($referral->name, 0, 1) }}
+                                    </div>
+                                    <p class="text-sm font-black text-slate-800">{{ $referral->name }}</p>
+                                </div>
+                            </td>
+                            <td class="p-6 text-sm font-bold text-slate-500">{{ $referral->phone }}</td>
+                            <td class="p-6">
+                                <span class="px-3 py-1 rounded bg-sky-50 text-sky-600 text-[9px] font-black uppercase tracking-wider">
+                                    {{ $referral->designation->name ?? 'None' }}
+                                </span>
+                            </td>
+                            <td class="p-6 text-right text-[11px] font-black text-slate-400">
+                                {{ $referral->created_at->format('M d, Y') }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="p-20 text-center opacity-30">
+                                <p class="text-sm font-black uppercase tracking-widest">No direct referrals yet</p>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
-<div class="card-solid" style="margin-bottom: 2rem;">
-    <h3 style="margin-bottom: 1.5rem; font-weight: 700;">Direct Referrals (Level 1)</h3>
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="text-align: left; border-bottom: 2px solid var(--border-light);">
-                    <th style="padding: 1rem; color: var(--text-muted-light); font-size: 0.75rem; text-transform: uppercase;">Name</th>
-                    <th style="padding: 1rem; color: var(--text-muted-light); font-size: 0.75rem; text-transform: uppercase;">Phone</th>
-                    <th style="padding: 1rem; color: var(--text-muted-light); font-size: 0.75rem; text-transform: uppercase;">Designation</th>
-                    <th style="padding: 1rem; color: var(--text-muted-light); font-size: 0.75rem; text-transform: uppercase;">Joined At</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($directReferrals as $referral)
-                    <tr style="border-bottom: 1px solid var(--border-light);">
-                        <td style="padding: 1rem; font-weight: 600;">{{ $referral->name }}</td>
-                        <td style="padding: 1rem;">{{ $referral->phone }}</td>
-                        <td style="padding: 1rem;">
-                            <span style="padding: 0.25rem 0.75rem; background: var(--bg-light); border-radius: 2rem; font-size: 0.75rem; font-weight: 700; color: var(--primary);">
-                                {{ $referral->designation->name ?? 'None' }}
-                            </span>
-                        </td>
-                        <td style="padding: 1rem; color: var(--text-muted-light);">{{ $referral->created_at->format('M d, Y') }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" style="padding: 3rem; text-align: center; color: var(--text-muted-light);">No direct referrals yet. Start your journey!</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
-
-@if($allReferrals->count() > 0)
-<div class="card-solid">
-    <h3 style="margin-bottom: 1.5rem; font-weight: 700;">Complete Referral Network</h3>
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="text-align: left; border-bottom: 2px solid var(--border-light);">
-                    <th style="padding: 1rem; color: var(--text-muted-light); font-size: 0.75rem; text-transform: uppercase;">Lvl</th>
-                    <th style="padding: 1rem; color: var(--text-muted-light); font-size: 0.75rem; text-transform: uppercase;">Member</th>
-                    <th style="padding: 1rem; color: var(--text-muted-light); font-size: 0.75rem; text-transform: uppercase;">Role</th>
-                    <th style="padding: 1rem; color: var(--text-muted-light); font-size: 0.75rem; text-transform: uppercase;">Joined At</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($allReferrals as $referral)
-                    <tr style="border-bottom: 1px solid var(--border-light);">
-                        <td style="padding: 1rem;">
-                            <span style="font-weight: 800; color: var(--info);">L{{ $referral->level }}</span>
-                        </td>
-                        <td style="padding: 1rem;">
-                            <div style="font-weight: 600;">{{ $referral->name }}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted-light);">{{ $referral->phone }}</div>
-                        </td>
-                        <td style="padding: 1rem;">
-                            <span style="padding: 0.25rem 0.75rem; background: var(--bg-light); border-radius: 2rem; font-size: 0.75rem; font-weight: 700; color: var(--secondary);">
-                                {{ $referral->designation->name ?? 'MEMBER' }}
-                            </span>
-                        </td>
-                        <td style="padding: 1rem; color: var(--text-muted-light);">{{ $referral->created_at->format('M d, Y') }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-@endif
 
 <script>
-function copyText(text) {
+function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
-        alert('Copied to clipboard!');
+        Toast.fire({
+            icon: 'success',
+            title: 'Copied to clipboard! 📋'
+        });
     });
 }
 </script>

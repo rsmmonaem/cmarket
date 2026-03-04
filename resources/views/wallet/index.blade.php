@@ -1,127 +1,152 @@
 @extends('layouts.customer')
 
-@section('title', 'My Wallets')
+@section('title', 'Financial Hub - CMarket')
 @section('page-title', 'My Wallets')
 
 @section('content')
-<div class="stats-grid">
-    @foreach($wallets as $wallet)
-        @php
-            $gradient = 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)';
-            $icon = '💰';
-            if($wallet->wallet_type === 'cashback') {
-                $gradient = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
-                $icon = '🎁';
-            } elseif($wallet->wallet_type === 'commission') {
-                $gradient = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-                $icon = '💵';
-            } elseif($wallet->wallet_type === 'shop') {
-                $gradient = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
-                $icon = '🏪';
-            } elseif($wallet->wallet_type === 'share') {
-                $gradient = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
-                $icon = '🤝';
-            }
-        @endphp
-        <div class="stat-card-custom" style="background: {{ $gradient }};">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                <h3 style="margin-bottom: 0;">{{ ucfirst($wallet->wallet_type) }} Wallet</h3>
-                <span style="font-size: 1.5rem;">{{ $icon }}</span>
-            </div>
-            <div class="value">৳{{ number_format($wallet->balance, 2) }}</div>
-            <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.5rem;">
-                Status: {{ ucfirst($wallet->status) }}
-            </div>
-        </div>
-    @endforeach
-</div>
-
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
-    <!-- Recent Transactions -->
-    <div class="card-solid">
-        <h3 style="margin-bottom: 1.5rem; font-weight: 700;">Recent Transactions</h3>
-        
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
+<div class="space-y-10">
+    <!-- Wallets Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        @foreach($wallets as $wallet)
             @php
-                $allTransactions = collect();
-                foreach($wallets as $wallet) {
-                    $allTransactions = $allTransactions->merge($wallet->ledgers);
-                }
-                $allTransactions = $allTransactions->sortByDesc('created_at')->take(20);
+                $color = 'slate';
+                $icon = '💰';
+                if($wallet->wallet_type === 'cashback') { $color = 'sky'; $icon = '🎁'; }
+                elseif($wallet->wallet_type === 'commission') { $color = 'emerald'; $icon = '💵'; }
+                elseif($wallet->wallet_type === 'shop') { $color = 'amber'; $icon = '🏪'; }
+                elseif($wallet->wallet_type === 'share') { $color = 'indigo'; $icon = '🤝'; }
+                
+                $colorClasses = [
+                    'slate' => 'bg-slate-900 shadow-slate-900/10 text-white',
+                    'sky' => 'bg-white border-sky-100 text-slate-800',
+                    'emerald' => 'bg-white border-emerald-100 text-slate-800',
+                    'amber' => 'bg-white border-amber-100 text-slate-800',
+                    'indigo' => 'bg-indigo-600 shadow-indigo-600/10 text-white',
+                ];
+                $currentClass = $colorClasses[$color] ?? $colorClasses['slate'];
             @endphp
-
-            @forelse($allTransactions as $transaction)
-                <div style="padding: 1.25rem; background: var(--bg-light); border-radius: 0.75rem; border: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; border: 1px solid var(--border-light);">
-                            {{ $transaction->type === 'credit' ? '📥' : '📤' }}
-                        </div>
-                        <div>
-                            <div style="font-weight: 600; color: var(--text-light);">{{ $transaction->description }}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted-light);">
-                                {{ ucfirst($transaction->wallet->wallet_type) }} • {{ $transaction->created_at->format('M d, Y h:i A') }}
-                            </div>
-                        </div>
+            
+            <div class="{{ $currentClass }} rounded-[2rem] p-8 {{ !str_contains($currentClass, 'bg-white') ? 'shadow-2xl' : 'border border-slate-100 shadow-sm' }} relative overflow-hidden group hover:-translate-y-2 transition-all duration-300">
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-[10px] font-black uppercase tracking-widest opacity-60">{{ ucfirst($wallet->wallet_type) }}</span>
+                        <span class="text-2xl">{{ $icon }}</span>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-weight: 700; color: {{ $transaction->type === 'credit' ? 'var(--success)' : 'var(--danger)' }}; font-size: 1.125rem;">
-                            {{ $transaction->type === 'credit' ? '+' : '-' }}৳{{ number_format($transaction->amount, 2) }}
-                        </div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted-light);">
-                            Bal: ৳{{ number_format($transaction->running_balance, 2) }}
-                        </div>
-                    </div>
+                    <h3 class="text-3xl font-black mb-1">৳{{ number_format($wallet->balance, 2) }}</h3>
+                    <p class="text-[10px] font-bold opacity-60">Status: {{ ucfirst($wallet->status) }}</p>
                 </div>
-            @empty
-                <div style="padding: 3rem; text-align: center; color: var(--text-muted-light);">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">💳</div>
-                    <p>No transactions found in your records.</p>
-                </div>
-            @endforelse
-        </div>
+                <!-- Abstract Design Elements -->
+                <div class="absolute -right-4 -bottom-4 opacity-5 text-8xl rotate-12 group-hover:rotate-0 transition-transform duration-700 select-none">{{ $icon }}</div>
+            </div>
+        @endforeach
     </div>
 
-    <!-- Quick Transfer -->
-    <div>
-        <div class="card-solid" style="margin-bottom: 2rem;">
-            <h3 style="margin-bottom: 1.5rem; font-weight: 700;">Fund Transfer</h3>
-            <form action="{{ route('wallet.transfer') }}" method="POST">
-                @csrf
-                <div style="margin-bottom: 1.25rem;">
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-light);">Recipient Phone</label>
-                    <input type="text" name="phone" placeholder="01XXXXXXXXX" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light);" required>
+    <!-- Main Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <!-- Transaction Ledger -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm min-h-[600px]">
+                <div class="flex items-center justify-between mb-10">
+                    <div>
+                        <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Recent Transactions</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Real-time ledger data</p>
+                    </div>
+                    <button class="p-3 rounded-2xl bg-slate-50 text-slate-400 hover:text-sky-500 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                    </button>
                 </div>
-                <div style="margin-bottom: 1.25rem;">
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-light);">Wallet Source</label>
-                    <select name="wallet_type" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light);" required>
-                        @foreach($wallets as $wallet)
-                            <option value="{{ $wallet->wallet_type }}">{{ ucfirst($wallet->wallet_type) }} (৳{{ number_format($wallet->balance, 2) }})</option>
-                        @endforeach
-                    </select>
+
+                <div class="space-y-4">
+                    @php
+                        $allTransactions = collect();
+                        foreach($wallets as $wallet) { $allTransactions = $allTransactions->merge($wallet->ledgers); }
+                        $allTransactions = $allTransactions->sortByDesc('created_at')->take(15);
+                    @endphp
+
+                    @forelse($allTransactions as $tx)
+                        <div class="flex items-center justify-between p-5 rounded-3xl bg-slate-50 border border-transparent hover:border-slate-100 hover:bg-white transition-all group">
+                            <div class="flex items-center gap-5">
+                                <div class="w-12 h-12 rounded-2xl {{ $tx->type == 'credit' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }} flex items-center justify-center text-xl shadow-sm group-hover:scale-110 transition-transform">
+                                    {{ $tx->type == 'credit' ? '📥' : '📤' }}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-black text-slate-800 leading-tight">{{ $tx->description }}</p>
+                                    <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">{{ $tx->wallet->wallet_type }} • {{ $tx->created_at->diffForHumans() }}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-lg font-black {{ $tx->type == 'credit' ? 'text-emerald-600' : 'text-slate-800' }}">
+                                    {{ $tx->type == 'credit' ? '+' : '-' }}৳{{ number_format($tx->amount, 2) }}
+                                </p>
+                                <p class="text-[9px] font-black text-slate-300 uppercase">Balance: ৳{{ number_format($tx->running_balance, 2) }}</p>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="flex flex-col items-center justify-center py-20 text-center opacity-20">
+                            <span class="text-6xl mb-4">🧊</span>
+                            <p class="text-sm font-black uppercase tracking-widest">No transactions discovered</p>
+                        </div>
+                    @endforelse
                 </div>
-                <div style="margin-bottom: 1.25rem;">
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-light);">Amount (৳)</label>
-                    <input type="number" name="amount" min="1" step="0.01" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light);" required>
-                </div>
-                <button type="submit" class="btn-solid btn-primary-solid" style="width: 100%; justify-content: center;">
-                    Send Money 🚀
-                </button>
-            </form>
+            </div>
         </div>
 
-        <!-- Referral Promo -->
-        <div class="stat-card-custom" style="background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);">
-            <h3 style="color: white; opacity: 1; font-weight: 700; font-size: 1rem; margin-bottom: 1rem;">Invite & Earn</h3>
-            <p style="font-size: 0.875rem; opacity: 0.9; line-height: 1.5; margin-bottom: 1.5rem;">
-                Invite your family and friends to join CMarket using your code.
-            </p>
-            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 0.75rem; border: 1px dashed rgba(255,255,255,0.4); text-align: center;">
-                <div style="font-size: 0.75rem; opacity: 0.8; margin-bottom: 0.5rem;">YOUR CODE</div>
-                <div style="font-size: 1.5rem; font-weight: 800; letter-spacing: 0.1em;">{{ auth()->user()->referral_code ?? '---' }}</div>
+        <!-- Right Side: Transfer & Promo -->
+        <div class="space-y-8">
+            <!-- Transfer Card -->
+            <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl overflow-hidden relative group">
+                <h3 class="text-lg font-black text-slate-800 mb-8 flex items-center gap-3">
+                    Fast Transfer <span class="bg-sky-100 text-sky-600 text-[10px] p-1.5 rounded-lg">⚡</span>
+                </h3>
+
+                <form action="{{ route('wallet.transfer') }}" method="POST" class="space-y-6">
+                    @csrf
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Recipient ID / Phone</label>
+                        <input type="text" name="phone" placeholder="01XXXXXXXXX" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Source Wallet</label>
+                        <select name="wallet_type" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all" required>
+                            @foreach($wallets as $wallet)
+                                <option value="{{ $wallet->wallet_type }}">{{ ucfirst($wallet->wallet_type) }} Balance (৳{{ number_format($wallet->balance, 2) }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Transfer Amount (৳)</label>
+                        <input type="number" name="amount" min="1" step="0.01" placeholder="0.00" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-black text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300" required>
+                    </div>
+
+                    <button type="submit" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-slate-900/10 hover:bg-sky-600 hover:scale-[1.02] transition-all duration-300">
+                        Confirm Transaction 🤝
+                    </button>
+                </form>
             </div>
-            <a href="{{ route('referrals.index') }}" style="display: block; text-align: center; margin-top: 1.5rem; color: white; text-decoration: none; font-weight: 600; font-size: 0.875rem;">
-                Manage Referrals →
-            </a>
+
+            <!-- Promotion Card -->
+            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2.5rem] p-8 text-white relative overflow-hidden group shadow-2xl shadow-indigo-500/20">
+                <div class="relative z-10">
+                    <h4 class="text-xl font-black mb-2 leading-tight">Elite Networking Program</h4>
+                    <p class="text-xs font-bold text-indigo-100/70 mb-8 leading-relaxed">Earn up to 15% recurring commission by growing your sales force.</p>
+                    
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 mb-8">
+                        <p class="text-[9px] font-black uppercase tracking-tighter opacity-60 mb-1">Your Exclusive Code</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-black tracking-widest">{{ auth()->user()->referral_code ?? 'CMARKET' }}</span>
+                            <button class="p-2 transition-transform active:scale-95" title="Copy Code">📋</button>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('referrals.index') }}" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest group-hover:gap-4 transition-all hover:text-emerald-400">
+                        My Sales Network <span>→</span>
+                    </a>
+                </div>
+                <!-- Background decor -->
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-[200px] leading-none select-none font-black italic">🔗</div>
+            </div>
         </div>
     </div>
 </div>

@@ -7,19 +7,19 @@
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
     <div class="stat-card-custom" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
         <h3 class="text-[10px] font-black uppercase tracking-widest opacity-80 mb-2">Pending Requests</h3>
-        <div class="value text-3xl font-black text-white">{{ $withdrawals->where('status', 'pending')->count() }}</div>
+        <div class="value text-3xl font-black text-white">{{ number_format($stats['pending']) }}</div>
     </div>
     <div class="stat-card-custom" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
         <h3 class="text-[10px] font-black uppercase tracking-widest opacity-80 mb-2">Processed</h3>
-        <div class="value text-3xl font-black text-white">{{ $withdrawals->where('status', 'approved')->count() }}</div>
+        <div class="value text-3xl font-black text-white">{{ number_format($stats['approved']) }}</div>
     </div>
     <div class="stat-card-custom" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
         <h3 class="text-[10px] font-black uppercase tracking-widest opacity-80 mb-2">Declined</h3>
-        <div class="value text-3xl font-black text-white">{{ $withdrawals->where('status', 'rejected')->count() }}</div>
+        <div class="value text-3xl font-black text-white">{{ number_format($stats['rejected']) }}</div>
     </div>
     <div class="stat-card-custom" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
         <h3 class="text-[10px] font-black uppercase tracking-widest opacity-80 mb-2">Total Disbursed</h3>
-        <div class="value text-3xl font-black text-white">৳{{ number_format($withdrawals->where('status', 'approved')->sum('amount'), 0) }}</div>
+        <div class="value text-3xl font-black text-white">৳{{ number_format($stats['total_disbursed'], 0) }}</div>
     </div>
 </div>
 

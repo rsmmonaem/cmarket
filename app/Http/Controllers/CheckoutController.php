@@ -15,11 +15,13 @@ class CheckoutController extends Controller
 {
     protected $walletService;
     protected $packageService;
+    protected $commissionService;
 
-    public function __construct(WalletService $walletService, PackageActivationService $packageService)
+    public function __construct(WalletService $walletService, PackageActivationService $packageService, \App\Services\CommissionService $commissionService)
     {
         $this->walletService = $walletService;
         $this->packageService = $packageService;
+        $this->commissionService = $commissionService;
     }
 
     public function index()
@@ -143,7 +145,18 @@ class CheckoutController extends Controller
             session()->forget('cart');
             session()->forget('cart_count');
 
-            return redirect()->route('orders.show', $order)->with('success', 'Order placed successfully!');
+            // Handle affiliate commission if cookie exists
+            $affiliateCookie = request()->cookie('cmarket_affiliate');
+            if ($affiliateCookie) {
+                $affiliateData = json_decode($affiliateCookie, true);
+                if ($affiliateData) {
+                    $this->commissionService->processAffiliateCommission($order, $affiliateData);
+                }
+            }
+
+            return redirect()->route('orders.show', $order)
+                ->with('success', 'Order placed successfully!')
+                ->withoutCookie('cmarket_affiliate');
         });
     }
 }

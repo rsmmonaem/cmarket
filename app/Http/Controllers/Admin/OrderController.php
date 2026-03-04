@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     protected $packageService;
+    protected $commissionService;
 
-    public function __construct(PackageActivationService $packageService)
+    public function __construct(PackageActivationService $packageService, \App\Services\CommissionService $commissionService)
     {
         $this->packageService = $packageService;
+        $this->commissionService = $commissionService;
     }
     public function index()
     {
@@ -42,6 +44,7 @@ class OrderController extends Controller
 
         if ($request->status === 'delivered') {
             $order->update(['delivered_at' => now()]);
+            $this->commissionService->distribute($order);
         }
 
         // If order updated to 'paid' manually, trigger package activation logic

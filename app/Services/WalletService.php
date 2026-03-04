@@ -75,4 +75,37 @@ class WalletService
         }
         return $wallet->credit($amount, $reference, 'cashback', $description);
     }
+
+    /**
+     * Request withdrawal
+     */
+    public function requestWithdrawal(User $user, string $walletType, float $amount, string $method, array $accountDetails)
+    {
+        return DB::transaction(function () use ($user, $walletType, $amount, $method, $accountDetails) {
+            $wallet = $user->getWallet($walletType);
+
+            if (!$wallet || $wallet->is_locked) {
+                throw new \Exception("Wallet is unavailable or locked.");
+            }
+
+            if ($wallet->balance < $amount) {
+                throw new \Exception("Insufficient balance in your {$walletType} wallet.");
+            }
+
+            // Create withdrawal reference
+            $reference = 'WDR-' . strtoupper(uniqid());
+
+            // Debit user first (locking the funds)
+            $wallet->debit($amount, $reference, 'withdrawal_request', "Withdrawal request via {$method} to " . json_encode($accountDetails));
+
+            // Create record
+            return \App\Models\Withdrawal::create([
+                'wallet_id' => $wallet->id,
+                'amount' => $amount,
+                'method' => $method,
+                'account_details' => $accountDetails,
+                'status' => 'pending',
+            ]);
+        });
+    }
 }

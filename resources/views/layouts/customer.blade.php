@@ -1,180 +1,215 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Customer Dashboard') - CMarket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{{ asset('css/admin-custom.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --sidebar-w: 280px;
             --primary-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             --active-gradient: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 100%);
         }
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        
         .sidebar {
             width: var(--sidebar-w);
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 1000;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .main-content {
-            margin-left: var(--sidebar-w);
-            flex: 1;
-            padding: 2rem;
-            min-height: 100vh;
-            background-color: var(--bg-light);
+        
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0 !important; }
         }
-        .sidebar-logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            padding: 2.5rem 1.5rem;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            letter-spacing: -0.02em;
-            text-decoration: none;
-        }
-        .sidebar-logo span {
-            background: var(--info);
-            padding: 0.5rem;
-            border-radius: 0.75rem;
-            font-size: 1.25rem;
-        }
-        .sidebar-menu {
-            padding: 0 1rem;
-            list-style: none;
-        }
-        .sidebar-menu li {
-            margin-bottom: 0.25rem;
-        }
+
         .sidebar-link {
-            padding: 0.875rem 1.25rem;
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: #94a3b8;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9375rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
-        .sidebar-link:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateX(4px);
+            transition: all 0.2s ease;
         }
         .sidebar-link.active {
-            color: #3b82f6;
             background: var(--active-gradient);
+            color: #3b82f6;
+            border-left: 4px solid #3b82f6;
         }
-        .sidebar-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 20%;
-            height: 60%;
-            width: 4px;
-            background: #3b82f6;
-            border-radius: 0 4px 4px 0;
-            box-shadow: 4px 0 10px rgba(59, 130, 246, 0.5);
-        }
-        .menu-label {
-            padding: 1.5rem 1.5rem 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        /* Topbar & Other existing styles */
-        .topbar {
+        
+        .glass-topbar {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
-            padding: 1rem 2rem;
-            border-radius: 1.25rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
-        .user-info { text-align: right; }
-        .user-name { font-weight: 700; color: var(--text-light); }
-        .user-role { font-size: 0.75rem; color: #64748b; font-weight: 600; }
-        .logout-btn {
-            background: #fee2e2;
-            color: #ef4444;
-            padding: 0.625rem 1.25rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .logout-btn:hover { background: #fecaca; transform: scale(1.02); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
     </style>
 </head>
-<body>
-    <div class="dashboard-container">
-        <aside class="sidebar sidebar-solid">
-            <a href="{{ route('home') }}" class="sidebar-logo">
-                <span>🛒</span> CMarket
-            </a>
-            
-            <div class="menu-label">Main Personal</div>
-            <ul class="sidebar-menu">
-                <li><a href="{{ route('customer.dashboard') }}" class="sidebar-link {{ request()->routeIs('customer.dashboard') ? 'active' : '' }}">📊 Dashboard</a></li>
-                <li><a href="{{ route('wallet.index') }}" class="sidebar-link {{ request()->routeIs('wallet.*') ? 'active' : '' }}">💰 My Wallets</a></li>
-                <li><a href="{{ route('orders.index') }}" class="sidebar-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">🛍️ My Orders</a></li>
-                <li><a href="{{ route('referrals.index') }}" class="sidebar-link {{ request()->routeIs('referrals.*') ? 'active' : '' }}">🤝 Referrals</a></li>
-            </ul>
+<body class="text-slate-900 overflow-x-hidden">
+    <!-- Mobile Backdrop -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-            <div class="menu-label">Earnings & Rank</div>
-            <ul class="sidebar-menu">
-                <li><a href="{{ route('customer.commissions') }}" class="sidebar-link {{ request()->routeIs('customer.commissions') ? 'active' : '' }}">📈 Commissions</a></li>
-                <li><a href="{{ route('customer.designation') }}" class="sidebar-link {{ request()->routeIs('customer.designation') ? 'active' : '' }}">🏆 My Designation</a></li>
-                <li><a href="{{ route('kyc.index') }}" class="sidebar-link {{ request()->routeIs('kyc.*') ? 'active' : '' }}">🆔 KYC Verification</a></li>
-            </ul>
-
-            <div class="menu-label">Market & Settings</div>
-            <ul class="sidebar-menu">
-                <li><a href="{{ route('products.index') }}" class="sidebar-link {{ request()->routeIs('products.*') ? 'active' : '' }}">📦 Products</a></li>
-                <li><a href="{{ route('customer.profile') }}" class="sidebar-link {{ request()->routeIs('customer.profile') ? 'active' : '' }}">👤 Profile</a></li>
-                <li><a href="{{ route('customer.settings') }}" class="sidebar-link {{ request()->routeIs('customer.settings') ? 'active' : '' }}">⚙️ Settings</a></li>
-            </ul>
-        </aside>
-
-        <main class="main-content">
-            <div class="topbar">
-                <h2>@yield('page-title', 'Dashboard')</h2>
-                <div class="user-menu">
-                    <div class="user-info">
-                        <div class="user-name">{{ Auth::user()->name }}</div>
-                        <div class="user-role">{{ Auth::user()->status }}</div>
+    <div class="dashboard-container flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar sidebar-solid fixed left-0 top-0 bottom-0 z-50 overflow-y-auto bg-[#0f172a]">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-10">
+                    <a href="{{ route('home') }}" class="flex items-center gap-3 no-underline">
+                        <span class="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center text-xl shadow-lg shadow-sky-500/20">🛒</span>
+                        <span class="text-xl font-extrabold text-white tracking-tight">CMARKET</span>
+                    </a>
+                    <button class="lg:hidden text-white opacity-50 hover:opacity-100" onclick="toggleSidebar()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                
+                <div class="space-y-8">
+                    <div>
+                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Personal</div>
+                        <nav class="space-y-1">
+                            <x-customer.sidebar-link route="customer.dashboard" icon="📊" label="Dashboard" />
+                            <x-customer.sidebar-link route="wallet.index" icon="💰" label="Wallets" />
+                            <x-customer.sidebar-link route="withdrawals.index" icon="🏦" label="Withdrawals" />
+                            <x-customer.sidebar-link route="orders.index" icon="🛍️" label="Orders" />
+                            <x-customer.sidebar-link route="referrals.index" icon="🤝" label="Referrals" />
+                            <x-customer.sidebar-link route="customer.generations" icon="🌍" label="Generations" />
+                        </nav>
                     </div>
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="logout-btn">Logout</button>
-                    </form>
+
+                    <div>
+                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Earnings</div>
+                        <nav class="space-y-1">
+                            <x-customer.sidebar-link route="customer.commissions" icon="📈" label="Commissions" />
+                            <x-customer.sidebar-link route="customer.designation" icon="🏆" label="Designations" />
+                            <x-customer.sidebar-link route="kyc.index" icon="🆔" label="Verification" />
+                        </nav>
+                    </div>
+
+                    @hasanyrole('upazila|district|division|director')
+                    <div>
+                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Regional</div>
+                        <nav class="space-y-1">
+                            <x-customer.sidebar-link route="regional.dashboard" icon="🌎" label="Management" />
+                        </nav>
+                    </div>
+                    @endhasanyrole
+
+                    @role('merchant')
+                    <div>
+                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Business</div>
+                        <nav class="space-y-1">
+                            <x-customer.sidebar-link route="merchant.dashboard" icon="🏪" label="Shop Hub" />
+                            <x-customer.sidebar-link route="merchant.products.index" icon="📦" label="My Products" />
+                            <x-customer.sidebar-link route="merchant.orders.index" icon="🛍️" label="Customer Orders" />
+                            <x-customer.sidebar-link route="merchant.reports.sales" icon="📈" label="Sales Analytics" />
+                        </nav>
+                    </div>
+                    @endrole
+
+                    <div>
+                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Market</div>
+                        <nav class="space-y-1">
+                            <x-customer.sidebar-link route="products.index" icon="📦" label="Shop Products" />
+                            <x-customer.sidebar-link route="investments.index" icon="🏗️" label="Investments" />
+                            <x-customer.sidebar-link route="investments.my-shares" icon="💎" label="My Portfolio" />
+                        </nav>
+                    </div>
                 </div>
             </div>
+        </aside>
 
-            @if(session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
+        <!-- Main Content -->
+        <main class="main-content flex-1 min-h-screen lg:ml-[280px]">
+            <!-- Topbar -->
+            <header class="glass-topbar sticky top-0 z-30 px-4 py-4 md:px-8 md:py-6 flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4">
+                    <button class="p-2 lg:hidden rounded-xl hover:bg-slate-100 transition" onclick="toggleSidebar()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight">@yield('page-title', 'Dashboard')</h2>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <div class="text-sm font-bold text-slate-800">{{ Auth::user()->name }}</div>
+                        <div class="text-[10px] font-black uppercase tracking-widest text-sky-500">{{ Auth::user()->status }}</div>
+                    </div>
+                    
+                    <div class="relative group">
+                        <button class="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-lg hover:border-sky-500 transition-all">
+                            👤
+                        </button>
+                        <div class="absolute right-0 mt-3 w-48 bg-white rounded-2xl shadow-2xl border border-slate-100 py-3 hidden group-hover:block animate-fade-in z-50">
+                            <a href="{{ route('customer.profile') }}" class="block px-6 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50">Go to Profile</a>
+                            <a href="{{ route('customer.settings') }}" class="block px-6 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50">Settings</a>
+                            <div class="border-t border-slate-50 my-2"></div>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-6 py-2 text-sm font-black text-red-500 hover:bg-red-50">Logout</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-            @yield('content')
+            <!-- Page Content -->
+            <div class="px-4 md:px-8 pb-10">
+                @yield('content')
+            </div>
         </main>
     </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('show');
+            backdrop.classList.toggle('hidden');
+            if(sidebar.classList.contains('show')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // SweetAlert Notifications
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        @if(session('success'))
+            Toast.fire({
+                icon: 'success',
+                title: "{!! session('success') !!}"
+            });
+        @endif
+
+        @if(session('error'))
+            Toast.fire({
+                icon: 'error',
+                title: "{!! session('error') !!}"
+            });
+        @endif
+
+        @if(session('warning'))
+            Toast.fire({
+                icon: 'warning',
+                title: "{!! session('warning') !!}"
+            });
+        @endif
+    </script>
 </body>
 </html>

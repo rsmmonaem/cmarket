@@ -89,4 +89,10 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')
             ->with('success', 'User deleted successfully.');
     }
+
+    public function generations(User $user, \App\Services\RankService $rankService)
+    {
+        $generations = $rankService->getGenerations($user);
+        return view('admin.users.generations', compact('user', 'generations'));
+    }
 }

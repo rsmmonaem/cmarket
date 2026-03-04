@@ -1,181 +1,539 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $__env->yieldContent('title', 'Customer Dashboard'); ?> - CMarket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="<?php echo e(asset('css/admin-custom.css')); ?>">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --sidebar-w: 280px;
             --primary-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             --active-gradient: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 100%);
         }
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        
         .sidebar {
             width: var(--sidebar-w);
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 1000;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .main-content {
-            margin-left: var(--sidebar-w);
-            flex: 1;
-            padding: 2rem;
-            min-height: 100vh;
-            background-color: var(--bg-light);
+        
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0 !important; }
         }
-        .sidebar-logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            padding: 2.5rem 1.5rem;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            letter-spacing: -0.02em;
-            text-decoration: none;
-        }
-        .sidebar-logo span {
-            background: var(--info);
-            padding: 0.5rem;
-            border-radius: 0.75rem;
-            font-size: 1.25rem;
-        }
-        .sidebar-menu {
-            padding: 0 1rem;
-            list-style: none;
-        }
-        .sidebar-menu li {
-            margin-bottom: 0.25rem;
-        }
+
         .sidebar-link {
-            padding: 0.875rem 1.25rem;
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: #94a3b8;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9375rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
-        .sidebar-link:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateX(4px);
+            transition: all 0.2s ease;
         }
         .sidebar-link.active {
-            color: #3b82f6;
             background: var(--active-gradient);
+            color: #3b82f6;
+            border-left: 4px solid #3b82f6;
         }
-        .sidebar-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 20%;
-            height: 60%;
-            width: 4px;
-            background: #3b82f6;
-            border-radius: 0 4px 4px 0;
-            box-shadow: 4px 0 10px rgba(59, 130, 246, 0.5);
-        }
-        .menu-label {
-            padding: 1.5rem 1.5rem 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        /* Topbar & Other existing styles */
-        .topbar {
+        
+        .glass-topbar {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
-            padding: 1rem 2rem;
-            border-radius: 1.25rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
-        .user-info { text-align: right; }
-        .user-name { font-weight: 700; color: var(--text-light); }
-        .user-role { font-size: 0.75rem; color: #64748b; font-weight: 600; }
-        .logout-btn {
-            background: #fee2e2;
-            color: #ef4444;
-            padding: 0.625rem 1.25rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .logout-btn:hover { background: #fecaca; transform: scale(1.02); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
     </style>
 </head>
-<body>
-    <div class="dashboard-container">
-        <aside class="sidebar sidebar-solid">
-            <a href="<?php echo e(route('home')); ?>" class="sidebar-logo">
-                <span>🛒</span> CMarket
-            </a>
-            
-            <div class="menu-label">Main Personal</div>
-            <ul class="sidebar-menu">
-                <li><a href="<?php echo e(route('customer.dashboard')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customer.dashboard') ? 'active' : ''); ?>">📊 Dashboard</a></li>
-                <li><a href="<?php echo e(route('wallet.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('wallet.*') ? 'active' : ''); ?>">💰 My Wallets</a></li>
-                <li><a href="<?php echo e(route('orders.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('orders.*') ? 'active' : ''); ?>">🛍️ My Orders</a></li>
-                <li><a href="<?php echo e(route('referrals.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('referrals.*') ? 'active' : ''); ?>">🤝 Referrals</a></li>
-            </ul>
+<body class="text-slate-900 overflow-x-hidden">
+    <!-- Mobile Backdrop -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-            <div class="menu-label">Earnings & Rank</div>
-            <ul class="sidebar-menu">
-                <li><a href="<?php echo e(route('customer.commissions')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customer.commissions') ? 'active' : ''); ?>">📈 Commissions</a></li>
-                <li><a href="<?php echo e(route('customer.designation')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customer.designation') ? 'active' : ''); ?>">🏆 My Designation</a></li>
-                <li><a href="<?php echo e(route('kyc.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('kyc.*') ? 'active' : ''); ?>">🆔 KYC Verification</a></li>
-            </ul>
-
-            <div class="menu-label">Market & Settings</div>
-            <ul class="sidebar-menu">
-                <li><a href="<?php echo e(route('products.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('products.*') ? 'active' : ''); ?>">📦 Products</a></li>
-                <li><a href="<?php echo e(route('customer.profile')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customer.profile') ? 'active' : ''); ?>">👤 Profile</a></li>
-                <li><a href="<?php echo e(route('customer.settings')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customer.settings') ? 'active' : ''); ?>">⚙️ Settings</a></li>
-            </ul>
-        </aside>
-
-        <main class="main-content">
-            <div class="topbar">
-                <h2><?php echo $__env->yieldContent('page-title', 'Dashboard'); ?></h2>
-                <div class="user-menu">
-                    <div class="user-info">
-                        <div class="user-name"><?php echo e(Auth::user()->name); ?></div>
-                        <div class="user-role"><?php echo e(Auth::user()->status); ?></div>
+    <div class="dashboard-container flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar sidebar-solid fixed left-0 top-0 bottom-0 z-50 overflow-y-auto bg-[#0f172a]">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-10">
+                    <a href="<?php echo e(route('home')); ?>" class="flex items-center gap-3 no-underline">
+                        <span class="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center text-xl shadow-lg shadow-sky-500/20">🛒</span>
+                        <span class="text-xl font-extrabold text-white tracking-tight">CMARKET</span>
+                    </a>
+                    <button class="lg:hidden text-white opacity-50 hover:opacity-100" onclick="toggleSidebar()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                
+                <div class="space-y-8">
+                    <div>
+                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Personal</div>
+                        <nav class="space-y-1">
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'customer.dashboard','icon' => '📊','label' => 'Dashboard']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'customer.dashboard','icon' => '📊','label' => 'Dashboard']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'wallet.index','icon' => '💰','label' => 'Wallets']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'wallet.index','icon' => '💰','label' => 'Wallets']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'withdrawals.index','icon' => '🏦','label' => 'Withdrawals']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'withdrawals.index','icon' => '🏦','label' => 'Withdrawals']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'orders.index','icon' => '🛍️','label' => 'Orders']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'orders.index','icon' => '🛍️','label' => 'Orders']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'referrals.index','icon' => '🤝','label' => 'Referrals']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'referrals.index','icon' => '🤝','label' => 'Referrals']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'customer.generations','icon' => '🌍','label' => 'Generations']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'customer.generations','icon' => '🌍','label' => 'Generations']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                        </nav>
                     </div>
-                    <form action="<?php echo e(route('logout')); ?>" method="POST" style="display: inline;">
-                        <?php echo csrf_field(); ?>
-                        <button type="submit" class="logout-btn">Logout</button>
-                    </form>
+
+                    <div>
+                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Earnings</div>
+                        <nav class="space-y-1">
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'customer.commissions','icon' => '📈','label' => 'Commissions']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'customer.commissions','icon' => '📈','label' => 'Commissions']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'customer.designation','icon' => '🏆','label' => 'Designations']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'customer.designation','icon' => '🏆','label' => 'Designations']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'kyc.index','icon' => '🆔','label' => 'Verification']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'kyc.index','icon' => '🆔','label' => 'Verification']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                        </nav>
+                    </div>
+
+                    <?php if (\Illuminate\Support\Facades\Blade::check('hasanyrole', 'upazila|district|division|director')): ?>
+                    <div>
+                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Regional</div>
+                        <nav class="space-y-1">
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'regional.dashboard','icon' => '🌎','label' => 'Management']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'regional.dashboard','icon' => '🌎','label' => 'Management']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                        </nav>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if (\Illuminate\Support\Facades\Blade::check('role', 'merchant')): ?>
+                    <div>
+                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Business</div>
+                        <nav class="space-y-1">
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'merchant.dashboard','icon' => '🏪','label' => 'Shop Hub']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'merchant.dashboard','icon' => '🏪','label' => 'Shop Hub']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'merchant.products.index','icon' => '📦','label' => 'My Products']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'merchant.products.index','icon' => '📦','label' => 'My Products']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'merchant.orders.index','icon' => '🛍️','label' => 'Customer Orders']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'merchant.orders.index','icon' => '🛍️','label' => 'Customer Orders']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'merchant.reports.sales','icon' => '📈','label' => 'Sales Analytics']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'merchant.reports.sales','icon' => '📈','label' => 'Sales Analytics']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                        </nav>
+                    </div>
+                    <?php endif; ?>
+
+                    <div>
+                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Market</div>
+                        <nav class="space-y-1">
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'products.index','icon' => '📦','label' => 'Shop Products']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'products.index','icon' => '📦','label' => 'Shop Products']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'investments.index','icon' => '🏗️','label' => 'Investments']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'investments.index','icon' => '🏗️','label' => 'Investments']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal09b447af36c3b97597f148261cc2691d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal09b447af36c3b97597f148261cc2691d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.customer.sidebar-link','data' => ['route' => 'investments.my-shares','icon' => '💎','label' => 'My Portfolio']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('customer.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'investments.my-shares','icon' => '💎','label' => 'My Portfolio']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $attributes = $__attributesOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__attributesOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal09b447af36c3b97597f148261cc2691d)): ?>
+<?php $component = $__componentOriginal09b447af36c3b97597f148261cc2691d; ?>
+<?php unset($__componentOriginal09b447af36c3b97597f148261cc2691d); ?>
+<?php endif; ?>
+                        </nav>
+                    </div>
                 </div>
             </div>
+        </aside>
 
-            <?php if(session('success')): ?>
-                <div class="alert alert-success"><?php echo e(session('success')); ?></div>
-            <?php endif; ?>
+        <!-- Main Content -->
+        <main class="main-content flex-1 min-h-screen lg:ml-[280px]">
+            <!-- Topbar -->
+            <header class="glass-topbar sticky top-0 z-30 px-4 py-4 md:px-8 md:py-6 flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4">
+                    <button class="p-2 lg:hidden rounded-xl hover:bg-slate-100 transition" onclick="toggleSidebar()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight"><?php echo $__env->yieldContent('page-title', 'Dashboard'); ?></h2>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <div class="text-sm font-bold text-slate-800"><?php echo e(Auth::user()->name); ?></div>
+                        <div class="text-[10px] font-black uppercase tracking-widest text-sky-500"><?php echo e(Auth::user()->status); ?></div>
+                    </div>
+                    
+                    <div class="relative group">
+                        <button class="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-lg hover:border-sky-500 transition-all">
+                            👤
+                        </button>
+                        <div class="absolute right-0 mt-3 w-48 bg-white rounded-2xl shadow-2xl border border-slate-100 py-3 hidden group-hover:block animate-fade-in z-50">
+                            <a href="<?php echo e(route('customer.profile')); ?>" class="block px-6 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50">Go to Profile</a>
+                            <a href="<?php echo e(route('customer.settings')); ?>" class="block px-6 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50">Settings</a>
+                            <div class="border-t border-slate-50 my-2"></div>
+                            <form action="<?php echo e(route('logout')); ?>" method="POST">
+                                <?php echo csrf_field(); ?>
+                                <button type="submit" class="w-full text-left px-6 py-2 text-sm font-black text-red-500 hover:bg-red-50">Logout</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-            <?php echo $__env->yieldContent('content'); ?>
+            <!-- Page Content -->
+            <div class="px-4 md:px-8 pb-10">
+                <?php echo $__env->yieldContent('content'); ?>
+            </div>
         </main>
     </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('show');
+            backdrop.classList.toggle('hidden');
+            if(sidebar.classList.contains('show')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // SweetAlert Notifications
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        <?php if(session('success')): ?>
+            Toast.fire({
+                icon: 'success',
+                title: "<?php echo session('success'); ?>"
+            });
+        <?php endif; ?>
+
+        <?php if(session('error')): ?>
+            Toast.fire({
+                icon: 'error',
+                title: "<?php echo session('error'); ?>"
+            });
+        <?php endif; ?>
+
+        <?php if(session('warning')): ?>
+            Toast.fire({
+                icon: 'warning',
+                title: "<?php echo session('warning'); ?>"
+            });
+        <?php endif; ?>
+    </script>
 </body>
 </html>
 <?php /**PATH /Users/rsmmonaem/Projects/Nibiz/cmarket/resources/views/layouts/customer.blade.php ENDPATH**/ ?>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Dashboard') - CMarket</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{{ asset('css/admin-custom.css') }}">
     <script>
         // Theme initialization
@@ -55,6 +56,7 @@
                     <div class="pt-4 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4">System</div>
                     <x-admin.sidebar-link route="admin.riders.index" icon="🚴" label="Riders" />
                     <x-admin.sidebar-link route="admin.designations.index" icon="🏆" label="Designations" />
+                    <x-admin.sidebar-link route="admin.settings.index" icon="⚙️" label="Settings" />
                 </nav>
             </div>
             
@@ -92,18 +94,6 @@
             </header>
 
             <div id="content-mount">
-                @if(session('success'))
-                    <x-admin.alert type="success" class="mb-6">
-                        {{ session('success') }}
-                    </x-admin.alert>
-                @endif
-
-                @if(session('error'))
-                    <x-admin.alert type="danger" class="mb-6">
-                        {{ session('error') }}
-                    </x-admin.alert>
-                @endif
-
                 @yield('content')
             </div>
         </main>
@@ -132,6 +122,40 @@
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             updateIcons();
         });
+
+        // SweetAlert Notifications
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        @if(session('success'))
+            Toast.fire({
+                icon: 'success',
+                title: "{{ session('success') }}"
+            });
+        @endif
+
+        @if(session('error'))
+            Toast.fire({
+                icon: 'error',
+                title: "{{ session('error') }}"
+            });
+        @endif
+
+        @if(session('warning'))
+            Toast.fire({
+                icon: 'warning',
+                title: "{{ session('warning') }}"
+            });
+        @endif
     </script>
 </body>
 </html>

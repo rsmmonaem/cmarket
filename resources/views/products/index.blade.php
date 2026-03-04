@@ -1,22 +1,30 @@
 @extends('layouts.customer')
 
-@section('title', 'Marketplace')
+@section('title', 'Marketplace - CMarket')
 @section('page-title', 'Marketplace')
 
 @section('content')
-<div style="display: flex; flex-direction: column; md-flex-direction: row; gap: 2rem;">
-    <!-- Filters Sidebar -->
-    <aside style="width: 100%; md-width: 280px; flex-shrink: 0;">
-        <div class="card-solid">
-            <h3 style="margin-bottom: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
-                <span>🔍</span> Filters
-            </h3>
+<div class="flex flex-col lg:flex-row gap-10 animate-fade-in">
+    <!-- Intelligent Filtering Sidebar -->
+    <aside class="w-full lg:w-[320px] flex-shrink-0 space-y-8">
+        <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm sticky top-32">
+            <div class="flex items-center gap-3 mb-10 pl-1">
+                <span class="text-xl">🔍</span>
+                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Refine Catalog</h3>
+            </div>
             
-            <form action="{{ route('products.index') }}" method="GET">
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.75rem;">Category</label>
-                    <select name="category" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light); font-size: 0.875rem;">
-                        <option value="">All Categories</option>
+            <form action="{{ route('products.index') }}" method="GET" class="space-y-8">
+                <!-- Search -->
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Search Keywords</label>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Product name..." class="w-full bg-slate-50 border-none rounded-2xl p-4 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Category Hub</label>
+                    <select name="category" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all">
+                        <option value="">All Dynamic Categories</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
@@ -25,92 +33,122 @@
                     </select>
                 </div>
 
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.75rem;">Price Range</label>
-                    <div style="display: flex; gap: 0.75rem;">
-                        <input type="number" name="min_price" placeholder="Min" value="{{ request('min_price') }}" style="width: 50%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light); font-size: 0.875rem;">
-                        <input type="number" name="max_price" placeholder="Max" value="{{ request('max_price') }}" style="width: 50%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light); font-size: 0.875rem;">
+                <!-- Price Range -->
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Monetary Reach</label>
+                    <div class="flex gap-4">
+                        <input type="number" name="min_price" placeholder="Min" value="{{ request('min_price') }}" class="w-1/2 bg-slate-50 border-none rounded-2xl p-4 text-xs font-black text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">
+                        <input type="number" name="max_price" placeholder="Max" value="{{ request('max_price') }}" class="w-1/2 bg-slate-50 border-none rounded-2xl p-4 text-xs font-black text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">
                     </div>
                 </div>
 
-                <div style="margin-bottom: 2rem;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.75rem;">Sort By</label>
-                    <select name="sort" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light); font-size: 0.875rem;">
-                        <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Newest Arrivals</option>
-                        <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
-                        <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
-                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Alphabetical</option>
+                <!-- Sorting -->
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Sorting Priority</label>
+                    <select name="sort" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all">
+                        <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest Acquisitions</option>
+                        <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Value: Ascending</option>
+                        <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Value: Descending</option>
+                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Nomenclature</option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn-solid btn-primary-solid" style="width: 100%; justify-content: center;">
-                    Refine Results ✨
+                <button type="submit" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-slate-900/10 hover:bg-sky-600 hover:scale-[1.02] transition-all duration-300">
+                    Update Results ✨
                 </button>
+                <a href="{{ route('products.index') }}" class="block text-center text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">Reset Global Filters</a>
             </form>
         </div>
     </aside>
 
-    <!-- Products Grid -->
-    <div style="flex: 1;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem;">
+    <!-- Global Product Infrastructure -->
+    <div class="flex-1 space-y-8">
+        <!-- Results Summary -->
+        <div class="flex items-center justify-between px-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                Identified <span class="text-slate-800">{{ $products->total() }}</span> Assets in Territory
+            </p>
+        </div>
+
+        <!-- Catalog Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
             @forelse($products as $product)
-                <div class="card-solid" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <a href="{{ route('products.show', $product) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
-                        <div style="height: 200px; position: relative; background: #f1f5f9;">
-                            @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
-                            @else
-                                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem;">📦</div>
-                            @endif
-                            
-                            @if($product->cashback_percentage)
-                                <div style="position: absolute; top: 1rem; right: 1rem; background: var(--success); color: white; padding: 0.25rem 0.75rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 800; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                                    {{ $product->cashback_percentage }}% CASHBACK
-                                </div>
-                            @endif
-                        </div>
-                        
-                        <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column;">
-                            <div style="font-size: 0.75rem; color: var(--text-muted-light); font-weight: 700; text-transform: uppercase; margin-bottom: 0.25rem;">{{ $product->category->name }}</div>
-                            <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.4;">{{ $product->name }}</h3>
-                            
-                            <div style="margin-top: auto;">
-                                <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 1rem;">
-                                    @if($product->discount_price)
-                                        <span style="font-size: 1.5rem; font-weight: 900; color: var(--primary);">৳{{ number_format($product->discount_price, 2) }}</span>
-                                        <span style="font-size: 0.875rem; color: var(--text-muted-light); text-decoration: line-through;">৳{{ number_format($product->price, 2) }}</span>
-                                    @else
-                                        <span style="font-size: 1.5rem; font-weight: 900; color: var(--primary);">৳{{ number_format($product->price, 2) }}</span>
-                                    @endif
-                                </div>
-                                
-                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted-light); margin-bottom: 1.5rem;">
-                                    <span>Stock: <strong style="color: {{ $product->stock > 0 ? 'var(--success)' : 'var(--danger)' }}">{{ $product->stock }}</strong></span>
-                                    <span>Merchant: <strong>{{ $product->merchant->business_name }}</strong></span>
-                                </div>
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col">
+                    <!-- Visual Asset Container -->
+                    <div class="aspect-square relative overflow-hidden bg-slate-50">
+                        @if($product->image)
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+                        @else
+                            <div class="w-full h-full flex flex-col items-center justify-center bg-slate-50 group-hover:bg-sky-50 transition-colors">
+                                <span class="text-5xl mb-2 opacity-20">📦</span>
+                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Visual Pending</span>
                             </div>
+                        @endif
+                        
+                        <!-- Badges -->
+                        <div class="absolute top-6 right-6 flex flex-col gap-2">
+                            @if($product->cashback_percentage)
+                                <div class="px-3 py-1 bg-emerald-500 text-white rounded-full text-[9px] font-black uppercase tracking-wider shadow-lg shadow-emerald-500/20">
+                                    {{ $product->cashback_percentage }}% Cashback
+                                </div>
+                            @endif
+                            @if($product->points > 0)
+                                <div class="px-3 py-1 bg-sky-500 text-white rounded-full text-[9px] font-black uppercase tracking-wider shadow-lg shadow-sky-500/20">
+                                    +{{ $product->points }} Points
+                                </div>
+                            @endif
                         </div>
-                    </a>
+                    </div>
                     
-                    <div style="padding: 0 1.5rem 1.5rem 1.5rem; margin-top: auto;">
-                        <button onclick="addToCart({{ $product->id }})" class="btn-solid btn-primary-solid" style="width: 100%; justify-content: center; padding: 0.875rem;">
-                            <span>🛒</span> Add to Cart
-                        </button>
+                    <!-- Descriptive Block -->
+                    <div class="p-8 flex-1 flex flex-col">
+                        <p class="text-[9px] font-black text-sky-500 uppercase tracking-widest mb-2">{{ $product->category->name }}</p>
+                        <h3 class="text-lg font-black text-slate-800 mb-6 leading-tight group-hover:text-sky-600 transition-colors line-clamp-2 min-h-[3rem]">
+                            <a href="{{ route('products.show', $product) }}">{{ $product->name }}</a>
+                        </h3>
+                        
+                        <div class="mt-auto space-y-6">
+                            <!-- Monetary Evaluation -->
+                            <div class="flex items-baseline gap-3">
+                                @if($product->discount_price)
+                                    <span class="text-3xl font-black text-slate-900 tracking-tighter">৳{{ number_format($product->discount_price, 0) }}</span>
+                                    <span class="text-sm font-bold text-slate-300 line-through">৳{{ number_format($product->price, 0) }}</span>
+                                @else
+                                    <span class="text-3xl font-black text-slate-900 tracking-tighter">৳{{ number_format($product->price, 0) }}</span>
+                                @endif
+                            </div>
+                            
+                            <!-- Contextual Metadata -->
+                            <div class="flex items-center justify-between border-t border-slate-50 pt-6">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full {{ $product->stock > 10 ? 'bg-emerald-500' : 'bg-rose-500' }}"></div>
+                                    <span class="text-[10px] font-black text-slate-400 capitalize">{{ $product->stock > 0 ? $product->stock . ' units available' : 'Out of stock' }}</span>
+                                </div>
+                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">By {{ $product->merchant->business_name }}</span>
+                            </div>
+
+                            <!-- Engagement Module -->
+                            <button onclick="addToCart({{ $product->id }})" class="w-full py-4 bg-slate-50 text-slate-900 rounded-2xl border-2 border-transparent font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:shadow-xl hover:shadow-slate-900/10 transition-all duration-300 flex items-center justify-center gap-3">
+                                <span>🛒</span> Add to Terminal
+                            </button>
+                        </div>
                     </div>
                 </div>
             @empty
-                <div style="grid-column: 1 / -1; text-align: center; padding: 5rem 2rem;">
-                    <div style="font-size: 4rem; margin-bottom: 1.5rem;">🔍</div>
-                    <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">No products matched your criteria</h3>
-                    <p style="color: var(--text-muted-light); margin-top: 0.5rem;">Try adjusting your filters or search terms.</p>
+                <div class="col-span-full py-32 flex flex-col items-center text-center">
+                    <div class="text-8xl mb-8 opacity-10">🧊</div>
+                    <h3 class="text-2xl font-black text-slate-800 uppercase tracking-widest mb-2">Zero Assets Identified</h3>
+                    <p class="text-sm font-bold text-slate-400">Expansion of inventory is required to match your criteria.</p>
                 </div>
             @endforelse
         </div>
 
-        <!-- Pagination -->
-        <div style="margin-top: 3rem;">
-            {{ $products->links() }}
-        </div>
+        <!-- Infrastructure Pagination -->
+        @if($products->hasPages())
+            <div class="pt-10">
+                {{ $products->links() }}
+            </div>
+        @endif
     </div>
 </div>
 
@@ -131,15 +169,24 @@ function addToCart(productId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Added to your cart! 🛍️');
-            location.reload();
+            Toast.fire({
+                icon: 'success',
+                title: 'Item added to cart! 🛍️'
+            });
+            setTimeout(() => location.reload(), 1500);
         } else {
-            alert(data.message || 'Error occurred while adding to cart.');
+            Toast.fire({
+                icon: 'error',
+                title: data.message || 'Fulfillment error.'
+            });
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Could not add to cart. Please try again.');
+        Toast.fire({
+            icon: 'error',
+            title: 'Protocol failure.'
+        });
     });
 }
 </script>

@@ -25,35 +25,66 @@ class AuthController extends Controller
             'phone' => 'required|string|unique:users,phone|regex:/^01[0-9]{9}$/',
             'email' => 'nullable|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
+            'ref' => 'nullable|string|exists:users,referral_code',
         ]);
 
-        // Create user
-        $user = User::create([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'status' => 'free',
-        ]);
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            // Find referrer
+            $referrer = null;
+            if ($request->filled('ref')) {
+                $referrer = User::where('referral_code', $request->ref)->first();
+            }
 
-        // Assign customer role
-        $user->assignRole('customer');
+            // Create user
+            $user = User::create([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'status' => 'free',
+                'referred_by' => $referrer ? $referrer->id : null,
+            ]);
 
-        // Create main wallet
-        Wallet::create([
-            'user_id' => $user->id,
-            'wallet_type' => 'main',
-            'is_locked' => false,
-        ]);
+            // Assign customer role
+            $user->assignRole('customer');
 
-        // Log device
-        $this->logDevice($user, $request);
+            // Create main wallet
+            Wallet::create([
+                'user_id' => $user->id,
+                'wallet_type' => 'main',
+                'is_locked' => false,
+            ]);
 
-        // Auto login
-        Auth::login($user);
+            // Create Referral record and handle hierarchy
+            if ($referrer) {
+                // Direct referral (Level 1)
+                \App\Models\Referral::create([
+                    'referrer_id' => $referrer->id,
+                    'referred_id' => $user->id,
+                    'level' => 1,
+                    'referral_code' => $referrer->referral_code,
+                ]);
 
-        return redirect()->route('customer.dashboard')
-            ->with('success', 'Registration successful! Welcome to CMarket.');
+                // Bonus: You might want to track all parents in the referral table up to N levels
+                // But for now, the 'referred_by' column on users table handles the direct parent.
+            }
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            // Log device
+            $this->logDevice($user, $request);
+
+            // Auto login
+            Auth::login($user);
+
+            return redirect()->route('customer.dashboard')
+                ->with('success', 'Registration successful! Welcome to CMarket.');
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return back()->withErrors(['error' => 'Registration failed. Please try again.'])->withInput();
+        }
     }
 
     public function showLoginForm()

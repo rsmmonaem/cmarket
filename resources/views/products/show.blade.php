@@ -1,113 +1,124 @@
 @extends('layouts.customer')
 
-@section('title', $product->name)
-@section('page-title', 'Product Details')
+@section('title', $product->name . ' - CMarket')
+@section('page-title', 'Product Identification')
 
 @section('content')
-<div class="card-solid" style="padding: 0; overflow: hidden;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-        <!-- Product Image Section -->
-        <div style="background: #f8fafc; display: flex; align-items: center; justify-content: center; padding: 2.5rem; border-right: 1px solid var(--border-light);">
-            <div style="width: 100%; max-width: 500px; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
-                @if($product->image)
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="width: 100%; height: auto; display: block;">
-                @else
-                    <div style="width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: white; font-size: 6rem;">📦</div>
-                @endif
-            </div>
-        </div>
-
-        <!-- Product Details Section -->
-        <div style="padding: 3rem;">
-            <div style="margin-bottom: 0.75rem;">
-                <a href="{{ route('products.index', ['category' => $product->category_id]) }}" style="background: rgba(59, 130, 246, 0.1); color: var(--info); padding: 0.35rem 1rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 800; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em;">
-                    {{ $product->category->name }}
-                </a>
-            </div>
-            
-            <h1 style="font-size: 2.25rem; font-weight: 900; color: var(--primary); margin-bottom: 1.5rem; line-height: 1.2;">{{ $product->name }}</h1>
-            
-            <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 2rem;">
-                @if($product->discount_price)
-                    <span style="font-size: 2.5rem; font-weight: 900; color: var(--primary);">৳{{ number_format($product->discount_price, 2) }}</span>
-                    <span style="font-size: 1.25rem; color: var(--text-muted-light); text-decoration: line-through;">৳{{ number_format($product->price, 2) }}</span>
-                    <span style="background: var(--danger); color: white; padding: 0.25rem 0.75rem; border-radius: 2rem; font-size: 0.8125rem; font-weight: 800;">
-                        {{ round((($product->price - $product->discount_price) / $product->price) * 100) }}% OFF
-                    </span>
-                @else
-                    <span style="font-size: 2.5rem; font-weight: 900; color: var(--primary);">৳{{ number_format($product->price, 2) }}</span>
-                @endif
+<div class="space-y-12 animate-fade-in">
+    <!-- Macro Product Card -->
+    <div class="bg-white rounded-[3rem] border border-slate-100 shadow-xl overflow-hidden">
+        <div class="flex flex-col lg:flex-row">
+            <!-- Asset Visualization -->
+            <div class="lg:w-1/2 p-8 lg:p-16 bg-slate-50 flex items-center justify-center relative overflow-hidden group">
+                <div class="relative z-10 w-full aspect-square rounded-[2rem] overflow-hidden shadow-2xl transition-transform duration-700 group-hover:scale-105">
+                    @if($product->image)
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full flex flex-col items-center justify-center bg-white">
+                            <span class="text-8xl opacity-10">📦</span>
+                            <span class="text-[10px] font-black text-slate-300 uppercase mt-4 tracking-[0.3em]">Asset Visual Missing</span>
+                        </div>
+                    @endif
+                </div>
+                <!-- Backdrop Decor -->
+                <div class="absolute inset-0 opacity-[0.03] flex items-center justify-center text-[400px] leading-none select-none font-black italic">ASSET</div>
             </div>
 
-            @if($product->cashback_percentage)
-                <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border-left: 4px solid var(--success); padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 1rem;">
-                    <div style="font-size: 1.5rem;">🎉</div>
-                    <div>
-                        <div style="font-weight: 800; color: var(--success); font-size: 1rem;">{{ $product->cashback_percentage }}% Instant Cashback</div>
-                        <div style="color: var(--text-muted-light); font-size: 0.875rem;">Get back <strong>৳{{ number_format(($product->discount_price ?? $product->price) * $product->cashback_percentage / 100, 2) }}</strong> in your wallet!</div>
+            <!-- Intelligence Hub -->
+            <div class="lg:w-1/2 p-8 lg:p-16 flex flex-col">
+                <div class="mb-10 flex flex-wrap gap-3">
+                    <span class="px-4 py-2 bg-sky-100 text-sky-600 rounded-2xl text-[10px] font-black uppercase tracking-widest">{{ $product->category->name }}</span>
+                    @if($product->points > 0)
+                        <span class="px-4 py-2 bg-indigo-100 text-indigo-600 rounded-2xl text-[10px] font-black uppercase tracking-widest">{{ $product->points }} LP / Point</span>
+                    @endif
+                </div>
+
+                <h1 class="text-4xl lg:text-5xl font-black text-slate-800 mb-8 leading-[1.1] tracking-tight">{{ $product->name }}</h1>
+                
+                <div class="flex items-baseline gap-6 mb-12">
+                    @if($product->discount_price)
+                        <span class="text-5xl font-black text-slate-900 tracking-tighter">৳{{ number_format($product->discount_price, 0) }}</span>
+                        <div class="flex flex-col">
+                            <span class="text-lg font-bold text-slate-300 line-through">৳{{ number_format($product->price, 0) }}</span>
+                            <span class="text-[10px] font-black text-rose-500 uppercase">Save {{ round((($product->price - $product->discount_price) / $product->price) * 100) }}% Off</span>
+                        </div>
+                    @else
+                        <span class="text-5xl font-black text-slate-900 tracking-tighter">৳{{ number_format($product->price, 0) }}</span>
+                    @endif
+                </div>
+
+                @if($product->cashback_percentage)
+                    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-[2rem] p-8 text-white mb-12 shadow-xl shadow-emerald-500/20 relative overflow-hidden group/cb">
+                        <div class="relative z-10 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-1">Ecosystem Reward</p>
+                                <h4 class="text-xl font-black">৳{{ number_format(($product->discount_price ?? $product->price) * $product->cashback_percentage / 100, 2) }} Cashback</h4>
+                                <p class="text-xs font-bold text-emerald-100/70 mt-1">Automatically credited to your digital wallet.</p>
+                            </div>
+                            <div class="text-4xl group-hover/cb:rotate-12 transition-transform">🎁</div>
+                        </div>
+                    </div>
+                @endif
+
+                <div class="mb-12">
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Functional Description</h4>
+                    <p class="text-slate-600 leading-relaxed text-sm font-medium">{{ $product->description }}</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6 mb-12">
+                    <div class="p-6 bg-slate-50 rounded-3xl border border-transparent hover:border-slate-100 transition-all">
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Territory Stock</p>
+                        <p class="text-sm font-black text-slate-800">{{ $product->stock > 0 ? $product->stock . ' Units Ready' : 'Out of Stock' }}</p>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-3xl border border-transparent hover:border-slate-100 transition-all">
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Merchant Origin</p>
+                        <p class="text-sm font-black text-slate-800">{{ $product->merchant->business_name }}</p>
                     </div>
                 </div>
-            @endif
 
-            <div style="margin-bottom: 2.5rem;">
-                <h3 style="font-size: 0.875rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.05em;">Product Description</h3>
-                <p style="color: var(--text-light); line-height: 1.8; font-size: 1rem;">{{ $product->description }}</p>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem; background: var(--bg-light); padding: 1.5rem; border-radius: 1rem;">
-                <div>
-                    <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.25rem;">Availability</div>
-                    <div style="font-weight: 700; color: {{ $product->stock > 0 ? 'var(--success)' : 'var(--danger)' }}; font-size: 0.9375rem;">
-                        {{ $product->stock > 0 ? $product->stock . ' units in stock' : 'Currently Out of Stock' }}
-                    </div>
-                </div>
-                <div>
-                    <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.25rem;">Shipment</div>
-                    <div style="font-weight: 700; color: var(--text-light); font-size: 0.9375rem;">Standard Delivery</div>
-                </div>
-                <div style="grid-column: span 2;">
-                    <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted-light); text-transform: uppercase; margin-bottom: 0.25rem;">Verified Merchant</div>
-                    <div style="font-weight: 700; color: var(--text-light); font-size: 0.9375rem;">{{ $product->merchant->business_name }}</div>
+                <div class="mt-auto">
+                    @if($product->stock > 0)
+                        <button onclick="addToCart({{ $product->id }})" class="w-full py-6 bg-slate-900 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl shadow-slate-900/20 hover:bg-sky-600 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-4">
+                            <span>🛒</span> Initiate Acquisition
+                        </button>
+                    @else
+                        <button disabled class="w-full py-6 bg-slate-100 text-slate-400 rounded-[1.5rem] font-black text-xs uppercase tracking-[0.3em] cursor-not-allowed flex items-center justify-center gap-4">
+                            Inventory Depleted 📦
+                        </button>
+                    @endif
                 </div>
             </div>
-
-            @if($product->stock > 0)
-                <button onclick="addToCart({{ $product->id }})" class="btn-solid btn-primary-solid" style="width: 100%; justify-content: center; padding: 1.25rem; font-size: 1.125rem;">
-                    <span>🛒</span> Add to Cart
-                </button>
-            @else
-                <button disabled style="width: 100%; background: #e2e8f0; color: #94a3b8; padding: 1.25rem; border-radius: 0.75rem; border: none; font-weight: 700; font-size: 1.125rem; cursor: not-allowed;">
-                    Out of Stock 📦
-                </button>
-            @endif
         </div>
     </div>
+
+    <!-- Recommendations Engine -->
+    @if($relatedProducts->count() > 0)
+        <div class="pt-10">
+            <div class="flex items-center justify-between mb-10 px-4">
+                <h2 class="text-sm font-black text-slate-800 uppercase tracking-[0.2em]">Affiliated Recommendations</h2>
+                <a href="{{ route('products.index') }}" class="text-[10px] font-black text-sky-500 uppercase tracking-widest hover:text-slate-900 transition-colors">Explore Gallery</a>
+            </div>
+            
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($relatedProducts as $related)
+                    <div class="bg-white p-4 rounded-[2.5rem] border border-slate-50 hover:shadow-xl hover:-translate-y-2 transition-all group">
+                        <a href="{{ route('products.show', $related) }}">
+                            <div class="aspect-square rounded-2xl overflow-hidden bg-slate-50 mb-6">
+                                @if($related->image)
+                                    <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->name }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center opacity-10 text-4xl">📦</div>
+                                @endif
+                            </div>
+                            <h3 class="text-xs font-black text-slate-800 mb-2 truncate group-hover:text-sky-500 transition-colors">{{ $related->name }}</h3>
+                            <p class="text-sm font-black text-slate-900">৳{{ number_format($related->price, 0) }}</p>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 </div>
-
-@if($relatedProducts->count() > 0)
-    <div style="margin-top: 4rem;">
-        <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 2rem;">Recommended Products</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem;">
-            @foreach($relatedProducts as $related)
-                <div class="card-solid" style="padding: 0; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <a href="{{ route('products.show', $related) }}" style="text-decoration: none; color: inherit;">
-                        <div style="height: 180px; background: #f8fafc; border-bottom: 1px solid var(--border-light);">
-                            @if($related->image)
-                                <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->name }}" style="width: 100%; height: 100%; object-fit: cover;">
-                            @else
-                                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">📦</div>
-                            @endif
-                        </div>
-                        <div style="padding: 1.25rem;">
-                            <h3 style="font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $related->name }}</h3>
-                            <div style="font-size: 1.125rem; font-weight: 800; color: var(--primary);">৳{{ number_format($related->price, 2) }}</div>
-                        </div>
-                    </a>
-                </div>
-            @endforeach
-        </div>
-    </div>
-@endif
 
 <script>
 function addToCart(productId) {
@@ -126,15 +137,24 @@ function addToCart(productId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Selection added to your bag! 🛒');
-            window.location.href = '{{ route("cart.index") }}';
+            Toast.fire({
+                icon: 'success',
+                title: 'Deployment successful! Asset added to cart. 🛍️'
+            });
+            setTimeout(() => window.location.href = '{{ route("cart.index") }}', 1500);
         } else {
-            alert(data.message || 'Error occurred while adding to cart.');
+            Toast.fire({
+                icon: 'error',
+                title: data.message || 'Error occurred during fulfillment.'
+            });
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Could not add to cart. Please try again.');
+        Toast.fire({
+            icon: 'error',
+            title: 'Protocol communication failure.'
+        });
     });
 }
 </script>

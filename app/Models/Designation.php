@@ -12,7 +12,9 @@ class Designation extends Model
 
     protected $fillable = [
         'name', 'slug', 'description', 'criteria', 
-        'commission_rate', 'sort_order', 'is_active'
+        'commission_rate', 'percentage', 'required_points', 'required_voucher_points',
+        'sales_target', 'referral_target', 'team_building_target',
+        'sort_order', 'is_active'
     ];
 
     protected function casts(): array

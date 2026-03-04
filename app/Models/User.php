@@ -25,6 +25,14 @@ class User extends Authenticatable
         'locked_until',
         'ip_address',
         'device_info',
+        'address',
+        'upazila',
+        'district',
+        'division',
+        'referred_by',
+        'referral_code',
+        'designation_id',
+        'designation_achieved_at',
     ];
 
     protected $hidden = [
@@ -101,6 +109,11 @@ class User extends Authenticatable
     public function currentDesignation()
     {
         return $this->hasOne(UserDesignation::class)->where('is_current', true)->latest();
+    }
+
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class);
     }
 
     public function notifications()
