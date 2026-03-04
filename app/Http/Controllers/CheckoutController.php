@@ -6,12 +6,22 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Wallet;
-use App\Models\WalletLedger;
+use App\Services\WalletService;
+use App\Services\PackageActivationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
+    protected $walletService;
+    protected $packageService;
+
+    public function __construct(WalletService $walletService, PackageActivationService $packageService)
+    {
+        $this->walletService = $walletService;
+        $this->packageService = $packageService;
+    }
+
     public function index()
     {
         $cart = session()->get('cart', []);
@@ -28,16 +38,14 @@ class CheckoutController extends Controller
                 $cartItems[] = [
                     'product' => $product,
                     'quantity' => $details['quantity'],
-                    'subtotal' => $product->price * $details['quantity']
+                    'subtotal' => $product->final_price * $details['quantity']
                 ];
-                $subtotal += $product->price * $details['quantity'];
+                $subtotal += $product->final_price * $details['quantity'];
             }
         }
 
         $user = auth()->user();
-        $mainWallet = Wallet::where('user_id', $user->id)
-            ->where('wallet_type', 'main')
-            ->first();
+        $mainWallet = $user->getWallet('main');
 
         return view('checkout.index', compact('cartItems', 'subtotal', 'mainWallet'));
     }
@@ -47,7 +55,7 @@ class CheckoutController extends Controller
         $request->validate([
             'payment_method' => 'required|in:wallet,cod,gateway',
             'shipping_address' => 'required|string',
-            'phone' => 'required|string',
+            'shipping_phone' => 'required|string',
         ]);
 
         $cart = session()->get('cart', []);
@@ -55,87 +63,79 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
 
-        DB::beginTransaction();
-        try {
+        return DB::transaction(function () use ($request, $cart) {
             $user = auth()->user();
             $subtotal = 0;
             $cashbackTotal = 0;
+            $isPackageOrder = false;
 
-            // Calculate totals
+            // Calculate totals and check types
             foreach ($cart as $id => $details) {
-                $product = Product::find($id);
-                $subtotal += $product->price * $details['quantity'];
+                $product = Product::findOrFail($id);
+                $subtotal += $product->final_price * $details['quantity'];
                 if ($product->cashback_percentage) {
-                    $cashbackTotal += ($product->price * $details['quantity'] * $product->cashback_percentage / 100);
+                    $cashbackTotal += ($product->final_price * $details['quantity'] * $product->cashback_percentage / 100);
+                }
+                if ($product->type === 'package') {
+                    $isPackageOrder = true;
                 }
             }
 
             // Create order
             $order = Order::create([
                 'user_id' => $user->id,
-                'order_number' => 'ORD-' . time() . '-' . rand(1000, 9999),
                 'total_amount' => $subtotal,
+                'subtotal' => $subtotal,
+                'cashback_amount' => $cashbackTotal,
                 'payment_method' => $request->payment_method,
-                'payment_status' => $request->payment_method === 'wallet' ? 'paid' : 'pending',
+                'payment_status' => $request->payment_method === 'wallet' ? 'paid' : 'pending', // Assume wallet is instant paid
                 'status' => 'pending',
                 'shipping_address' => $request->shipping_address,
-                'phone' => $request->phone,
+                'shipping_phone' => $request->shipping_phone,
                 'notes' => $request->notes,
+                'paid_at' => $request->payment_method === 'wallet' ? now() : null,
             ]);
 
             // Create order items
             foreach ($cart as $id => $details) {
-                $product = Product::find($id);
+                $product = Product::findOrFail($id);
                 
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $product->id,
-                    'merchant_id' => $product->merchant_id,
+                    'product_name' => $product->name,
                     'quantity' => $details['quantity'],
-                    'price' => $product->price,
-                    'subtotal' => $product->price * $details['quantity'],
-                    'cashback_amount' => $product->cashback_percentage ? 
-                        ($product->price * $details['quantity'] * $product->cashback_percentage / 100) : 0,
+                    'price' => $product->final_price,
+                    'subtotal' => $product->final_price * $details['quantity'],
                 ]);
 
                 // Reduce stock
-                $product->decrement('stock', $details['quantity']);
+                if ($product->stock !== -1) { // Assuming -1 or similar means unlimited
+                    $product->decrement('stock', $details['quantity']);
+                }
             }
 
             // Process payment
             if ($request->payment_method === 'wallet') {
-                $mainWallet = Wallet::where('user_id', $user->id)
-                    ->where('wallet_type', 'main')
-                    ->first();
+                $mainWallet = $user->getWallet('main');
 
-                if ($mainWallet->balance < $subtotal) {
+                if (!$mainWallet || $mainWallet->balance < $subtotal) {
                     throw new \Exception('Insufficient wallet balance');
                 }
 
+                $reference = 'ORD-' . $order->order_number;
+                
                 // Deduct from main wallet
-                WalletLedger::create([
-                    'wallet_id' => $mainWallet->id,
-                    'type' => 'debit',
-                    'amount' => $subtotal,
-                    'description' => 'Order payment: ' . $order->order_number,
-                    'reference_type' => 'order',
-                    'reference_id' => $order->id,
-                ]);
+                $mainWallet->debit($subtotal, $reference, 'order_payment', "Payment for Order #{$order->order_number}");
 
                 // Add cashback to cashback wallet
                 if ($cashbackTotal > 0) {
-                    $cashbackWallet = Wallet::where('user_id', $user->id)
-                        ->where('wallet_type', 'cashback')
-                        ->first();
+                    $this->walletService->creditCashback($user, $cashbackTotal, $reference, "Cashback for Order #{$order->order_number}");
+                }
 
-                    WalletLedger::create([
-                        'wallet_id' => $cashbackWallet->id,
-                        'type' => 'credit',
-                        'amount' => $cashbackTotal,
-                        'description' => 'Cashback from order: ' . $order->order_number,
-                        'reference_type' => 'order',
-                        'reference_id' => $order->id,
-                    ]);
+                // If it's a package order and paid, trigger activation
+                if ($isPackageOrder) {
+                    $this->packageService->activate($order);
                 }
             }
 
@@ -143,20 +143,7 @@ class CheckoutController extends Controller
             session()->forget('cart');
             session()->forget('cart_count');
 
-            DB::commit();
-
-            // Send order confirmation email
-            try {
-                \Mail::to($user->email)->send(new \App\Mail\OrderPlaced($order));
-            } catch (\Exception $e) {
-                \Log::error('Failed to send order confirmation email: ' . $e->getMessage());
-            }
-
             return redirect()->route('orders.show', $order)->with('success', 'Order placed successfully!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        });
     }
 }

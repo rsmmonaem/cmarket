@@ -1,70 +1,98 @@
 @extends('layouts.admin')
 
+@section('title', 'Category Management')
+@section('page-title', 'Category Management')
+
 @section('content')
-<div class="p-6">
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Category Management</h1>
+<x-admin.card>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div>
+            <h2 class="text-xl font-black text-light">All Categories</h2>
+            <p class="text-xs text-muted-light font-bold uppercase tracking-widest">Organize your master catalog</p>
+        </div>
         <a href="{{ route('admin.categories.create') }}">
-            <x-button variant="primary">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                Add Category
-            </x-button>
+            <x-admin.button>
+                <span class="text-lg">➕</span> Add New Category
+            </x-admin.button>
         </a>
     </div>
 
-    <!-- Categories Table -->
-    <x-table :headers="['Name', 'Slug', 'Parent', 'Products', 'Status', 'Order']">
-        @forelse($categories as $category)
-            <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center">
-                        @if($category->image)
-                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" 
-                                 class="w-10 h-10 rounded mr-3 object-cover">
-                        @endif
-                        <div class="text-sm font-medium text-gray-900">{{ $category->name }}</div>
-                    </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ $category->slug }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ $category->parent->name ?? 'Root' }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ $category->products_count ?? 0 }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <x-badge :variant="$category->is_active ? 'success' : 'danger'">
-                        {{ $category->is_active ? 'Active' : 'Inactive' }}
-                    </x-badge>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ $category->sort_order }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <a href="{{ route('admin.categories.edit', $category) }}" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
-                    <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline" 
-                          onsubmit="return confirm('Are you sure?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        @empty
-            <tr>
-                <td colspan="7" class="px-6 py-4 text-center text-gray-500">No categories found</td>
-            </tr>
-        @endforelse
-    </x-table>
-
-    <!-- Pagination -->
-    <div class="mt-6">
-        {{ $categories->links() }}
+    <div class="overflow-x-auto -mx-6">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-light">
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Category</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Parent</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light text-center">Items</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Status</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-light">
+                @forelse($categories as $category)
+                    <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center border border-light">
+                                    @if($category->image)
+                                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover">
+                                    @else
+                                        <span class="text-xl">📂</span>
+                                    @endif
+                                </div>
+                                <div>
+                                    <div class="text-sm font-black text-light">{{ $category->name }}</div>
+                                    <div class="text-[10px] text-muted-light font-bold">{{ $category->slug }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-bold text-muted-light">
+                            {{ $category->parent->name ?? 'None' }}
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="inline-flex px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-black text-light">
+                                {{ $category->products_count ?? 0 }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            @if($category->is_active)
+                                <span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ACTIVE
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-[10px] font-black bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> HIDDEN
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ route('admin.categories.edit', $category) }}" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light hover:bg-sky-500 hover:text-white transition shadow-sm">
+                                    ✏️
+                                </a>
+                                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('Delete this category?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light hover:bg-red-500 hover:text-white transition shadow-sm">
+                                        🗑️
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-muted-light italic">No categories managed yet.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
-</div>
+
+    @if($categories->hasPages())
+        <div class="mt-8">
+            {{ $categories->links() }}
+        </div>
+    @endif
+</x-admin.card>
 @endsection

@@ -1,0 +1,88 @@
+:root {
+    /* Humanized Dark Blue Solid Palette */
+    --primary: #1e293b;
+    --primary-light: #334155;
+    --primary-dark: #0f172a;
+    
+    --secondary: #64748b;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    
+    --bg-light: #f8fafc;
+    --card-light: #ffffff;
+    --text-light: #1e293b;
+    --text-muted-light: #64748b;
+    --border-light: #e2e8f0;
+    
+    --sidebar-w: 260px;
+    --header-h: 70px;
+}
+
+/* Dark Mode Variables */
+.dark-mode {
+    --bg-light: #0f172a;
+    --card-light: #1e293b;
+    --text-light: #f1f5f9;
+    --text-muted-light: #94a3b8;
+    --border-light: #334155;
+    --primary: #38bdf8; /* Adjust primary for dark mode accessibility */
+    --primary-light: #7dd3fc;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Reusable Utility Classes */
+.card-solid {
+    background: var(--card-light);
+    border: 1px solid var(--border-light);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.btn-solid {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary-solid {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-primary-solid:hover {
+    background-color: var(--primary-light);
+}
+
+.sidebar-solid {
+    background-color: #0f172a; /* Fixed dark blue for sidebar */
+    color: #94a3b8;
+}
+
+.sidebar-link {
+    color: #94a3b8;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.2s;
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+    background-color: #1e293b;
+    color: #f1f5f9;
+}

@@ -38,6 +38,14 @@ class CartController extends Controller
 
         $cart = session()->get('cart', []);
 
+        // Logic: Cannot mix normal products and packages
+        if (count($cart) > 0) {
+            $isCartPackage = collect($cart)->contains('type', 'package');
+            if ($product->type === 'package' || $isCartPackage) {
+                return response()->json(['success' => false, 'message' => 'Cannot mix normal products and packages. Please clear your cart first.']);
+            }
+        }
+
         if (isset($cart[$productId])) {
             $cart[$productId]['quantity']++;
         } else {
@@ -45,7 +53,8 @@ class CartController extends Controller
                 'name' => $product->name,
                 'quantity' => 1,
                 'price' => $product->discount_price ?? $product->price,
-                'image' => $product->image
+                'image' => ($product->images[0] ?? null),
+                'type' => $product->type,
             ];
         }
 

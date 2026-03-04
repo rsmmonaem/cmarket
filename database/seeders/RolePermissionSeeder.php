@@ -71,18 +71,18 @@ class RolePermissionSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
         // Create roles and assign permissions
         
         // Super Admin - all permissions
-        $superAdmin = Role::create(['name' => 'super-admin']);
-        $superAdmin->givePermissionTo(Permission::all());
+        $superAdmin = Role::firstOrCreate(['name' => 'super-admin']);
+        $superAdmin->syncPermissions(Permission::all());
 
         // Admin - most permissions
-        $admin = Role::create(['name' => 'admin']);
-        $admin->givePermissionTo([
+        $admin = Role::firstOrCreate(['name' => 'admin']);
+        $admin->syncPermissions([
             'view users', 'create users', 'edit users',
             'view kyc', 'approve kyc', 'reject kyc',
             'view wallets', 'approve withdrawals',
@@ -94,22 +94,36 @@ class RolePermissionSeeder extends Seeder
         ]);
 
         // Merchant - product and order management
-        $merchant = Role::create(['name' => 'merchant']);
-        $merchant->givePermissionTo([
+        $merchant = Role::firstOrCreate(['name' => 'merchant']);
+        $merchant->syncPermissions([
             'view products', 'create products', 'edit products',
             'view orders',
         ]);
 
         // Rider - delivery management
-        $rider = Role::create(['name' => 'rider']);
-        $rider->givePermissionTo([
+        $rider = Role::firstOrCreate(['name' => 'rider']);
+        $rider->syncPermissions([
             'view orders',
         ]);
 
         // Customer - basic permissions
-        $customer = Role::create(['name' => 'customer']);
-        $customer->givePermissionTo([
+        $customer = Role::firstOrCreate(['name' => 'customer']);
+        $customer->syncPermissions([
             'view products',
         ]);
+
+        // Ecosystem Roles
+        $roles = [
+            'wallet_verified', 'bp', 'me', 'bc', 
+            'upazila', 'district', 'division', 'director'
+        ];
+
+        foreach ($roles as $roleName) {
+            $role = Role::firstOrCreate(['name' => $roleName]);
+            $role->syncPermissions([
+                'view products',
+                'view reports', // Area-wise reports for higher roles
+            ]);
+        }
     }
 }

@@ -68,42 +68,105 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $credentials = [
-            'phone' => $request->phone,
-            'password' => $request->password,
-        ];
+        $user = User::where('phone', $request->phone)->first();
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $request->session()->regenerate();
-
-            $user = Auth::user();
-
-            // Check if user is suspended
-            if ($user->status === 'suspended') {
-                Auth::logout();
-                return back()->withErrors([
-                    'phone' => 'Your account has been suspended. Please contact support.',
-                ]);
-            }
-
-            // Log device
-            $this->logDevice($user, $request);
-
-            // Redirect based on role
-            if ($user->hasRole('super-admin') || $user->hasRole('admin')) {
-                return redirect()->route('admin.dashboard');
-            } elseif ($user->hasRole('merchant')) {
-                return redirect()->route('merchant.dashboard');
-            } elseif ($user->hasRole('rider')) {
-                return redirect()->route('rider.dashboard');
-            }
-
-            return redirect()->route('customer.dashboard');
+        if (!$user) {
+            return back()->withErrors([
+                'phone' => 'The provided credentials do not match our records.',
+            ])->onlyInput('phone');
         }
 
+        // Check if account is locked
+        if ($user->isLocked()) {
+            $minutes = now()->diffInMinutes($user->locked_until);
+            return back()->withErrors([
+                'phone' => "Your account is locked due to multiple failed attempts. Please try again in {$minutes} minutes.",
+            ]);
+        }
+
+        if (Hash::check($request->password, $user->password)) {
+            // Credentials correct, now check if OTP is required
+            // For this ecosystem, we'll make OTP mandatory for extra security
+            $otp = $user->generateOtp();
+            
+            // Log attempt info
+            $user->update([
+                'ip_address' => $request->ip(),
+                'device_info' => $request->userAgent(),
+            ]);
+
+            Session::put('auth_user_id', $user->id);
+            Session::put('auth_remember', $request->filled('remember'));
+
+            // In production, send SMS. For now, we flash it.
+            return redirect()->route('auth.otp.verify.form')
+                ->with('success', 'Credentials verified. Please enter the OTP sent to your phone.')
+                ->with('otp_debug', "DEBUG OTP: {$otp}");
+        }
+
+        // Credentials incorrect
+        $user->incrementLoginAttempts();
+        
         return back()->withErrors([
             'phone' => 'The provided credentials do not match our records.',
         ])->onlyInput('phone');
+    }
+
+    public function showOtpVerifyForm()
+    {
+        if (!Session::has('auth_user_id')) {
+            return redirect()->route('login');
+        }
+        return view('auth.otp-verify');
+    }
+
+    public function verifyLoginOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|string|size:6',
+        ]);
+
+        $userId = Session::get('auth_user_id');
+        $user = User::find($userId);
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if ($user->verifyOtp($request->otp)) {
+            Auth::login($user, Session::get('auth_remember', false));
+            $request->session()->regenerate();
+            
+            Session::forget(['auth_user_id', 'auth_remember']);
+
+            // Log device/login
+            $this->logDevice($user, $request);
+
+            // Redirect based on role
+            return $this->authenticated($request, $user);
+        }
+
+        return back()->withErrors(['otp' => 'Invalid or expired OTP.']);
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->status === 'suspended') {
+            Auth::logout();
+            return redirect()->route('login')->withErrors([
+                'phone' => 'Your account has been suspended. Please contact support.',
+            ]);
+        }
+
+        if ($user->hasRole('super-admin') || $user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->hasRole('merchant')) {
+            return redirect()->route('merchant.dashboard');
+        } elseif ($user->hasRole('rider')) {
+            return redirect()->route('rider.dashboard');
+        }
+
+        return redirect()->route('customer.dashboard');
     }
 
     public function logout(Request $request)

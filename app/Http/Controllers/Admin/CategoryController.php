@@ -4,10 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageUploadService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index()
     {
         $categories = Category::with('parent')->latest()->paginate(20);
@@ -26,12 +34,19 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|unique:categories,slug',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'parent_id' => 'nullable|exists:categories,id',
             'is_active' => 'boolean',
             'sort_order' => 'nullable|integer',
         ]);
 
-        Category::create($request->all());
+        $data = $request->except('image');
+        
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->imageService->upload($request->file('image'), 'categories');
+        }
+
+        Category::create($data);
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category created successfully.');
@@ -49,12 +64,21 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|unique:categories,slug,' . $category->id,
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'parent_id' => 'nullable|exists:categories,id',
             'is_active' => 'boolean',
             'sort_order' => 'nullable|integer',
         ]);
 
-        $category->update($request->all());
+        $data = $request->except('image');
+
+        if ($request->hasFile('image')) {
+            // Delete old image
+            $this->imageService->delete($category->image);
+            $data['image'] = $this->imageService->upload($request->file('image'), 'categories');
+        }
+
+        $category->update($data);
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category updated successfully.');
@@ -62,6 +86,7 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        $this->imageService->delete($category->image);
         $category->delete();
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category deleted successfully.');

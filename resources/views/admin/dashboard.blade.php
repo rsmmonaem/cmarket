@@ -1,63 +1,101 @@
 @extends('layouts.admin')
 
 @section('title', 'Admin Dashboard')
-@section('page-title', 'Admin Dashboard')
+@section('page-title', 'Dashboard Overview')
 
 @section('content')
-<div class="stats-grid">
-    <div class="stat-card">
-        <h3>Total Users</h3>
-        <div class="value">{{ \App\Models\User::count() }}</div>
-    </div>
-    <div class="stat-card" style="border-left-color: #f093fb;">
-        <h3>Pending KYC</h3>
-        <div class="value">{{ \App\Models\Kyc::where('status', 'pending')->count() }}</div>
-    </div>
-    <div class="stat-card" style="border-left-color: #4facfe;">
-        <h3>Total Orders</h3>
-        <div class="value">{{ \App\Models\Order::count() }}</div>
-    </div>
-    <div class="stat-card" style="border-left-color: #43e97b;">
-        <h3>Active Merchants</h3>
-        <div class="value">{{ \App\Models\Merchant::where('status', 'approved')->count() }}</div>
-    </div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <x-admin.card class="border-l-4 border-l-slate-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-xs font-black uppercase tracking-widest text-muted-light mb-1">Total Users</p>
+                <h3 class="text-3xl font-black text-light">{{ \App\Models\User::count() }}</h3>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-2xl">👥</div>
+        </div>
+    </x-admin.card>
+
+    <x-admin.card class="border-l-4 border-l-sky-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-xs font-black uppercase tracking-widest text-muted-light mb-1">Pending KYC</p>
+                <h3 class="text-3xl font-black text-light">{{ \App\Models\Kyc::where('status', 'pending')->count() }}</h3>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-900/20 flex items-center justify-center text-2xl">✅</div>
+        </div>
+    </x-admin.card>
+
+    <x-admin.card class="border-l-4 border-l-emerald-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-xs font-black uppercase tracking-widest text-muted-light mb-1">Total Orders</p>
+                <h3 class="text-3xl font-black text-light">{{ \App\Models\Order::count() }}</h3>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-2xl">🛍️</div>
+        </div>
+    </x-admin.card>
+
+    <x-admin.card class="border-l-4 border-l-amber-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-xs font-black uppercase tracking-widest text-muted-light mb-1">Pending Withdrawals</p>
+                <h3 class="text-3xl font-black text-light">{{ \App\Models\Withdrawal::where('status', 'pending')->count() }}</h3>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-2xl">💸</div>
+        </div>
+    </x-admin.card>
 </div>
 
-<h3 style="margin-bottom: 15px; color: #333;">System Overview</h3>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
-    <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
-        <h4 style="margin-bottom: 10px; color: #333;">Recent Activity</h4>
-        <p style="color: #666;">No recent activity</p>
-    </div>
-    <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #f093fb;">
-        <h4 style="margin-bottom: 10px; color: #333;">Pending Approvals</h4>
-        <ul style="list-style: none; color: #666;">
-            <li>KYC Verifications: {{ \App\Models\Kyc::where('status', 'pending')->count() }}</li>
-            <li>Merchant Applications: {{ \App\Models\Merchant::where('status', 'pending')->count() }}</li>
-            <li>Withdrawal Requests: {{ \App\Models\Withdrawal::where('status', 'pending')->count() }}</li>
-        </ul>
-    </div>
-</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+    <x-admin.card title="Recent Orders">
+        <div class="space-y-4">
+            @php $recentOrders = \App\Models\Order::with('user')->latest()->take(5)->get(); @endphp
+            @forelse($recentOrders as $order)
+                <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-700 flex items-center justify-center shadow-sm">
+                            📦
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-light">#{{ $order->order_number }}</div>
+                            <div class="text-[10px] text-muted-light font-bold uppercase tracking-wider">{{ $order->user->name ?? 'Guest' }}</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-black text-light">৳{{ number_format($order->total_amount, 2) }}</div>
+                        <div class="text-[10px] font-black uppercase tracking-widest {{ $order->status === 'paid' ? 'text-emerald-500' : 'text-amber-500' }}">
+                            {{ strtoupper($order->status) }}
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <p class="text-center text-muted-light py-10">No recent orders found.</p>
+            @endforelse
+        </div>
+        <x-slot name="footer">
+            <a href="{{ route('admin.orders.index') }}" class="text-sky-500 font-bold hover:underline">View all orders →</a>
+        </x-slot>
+    </x-admin.card>
 
-<div style="margin-top: 30px;">
-    <h4 style="margin-bottom: 15px; color: #333;">Quick Actions</h4>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-        <a href="#" style="padding: 20px; background: #667eea; color: white; border-radius: 8px; text-decoration: none; text-align: center; transition: all 0.3s;">
-            <div style="font-size: 2rem; margin-bottom: 10px;">✅</div>
-            <div style="font-weight: 600;">Approve KYC</div>
-        </a>
-        <a href="#" style="padding: 20px; background: #f093fb; color: white; border-radius: 8px; text-decoration: none; text-align: center; transition: all 0.3s;">
-            <div style="font-size: 2rem; margin-bottom: 10px;">👥</div>
-            <div style="font-weight: 600;">Manage Users</div>
-        </a>
-        <a href="#" style="padding: 20px; background: #4facfe; color: white; border-radius: 8px; text-decoration: none; text-align: center; transition: all 0.3s;">
-            <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
-            <div style="font-weight: 600;">View Reports</div>
-        </a>
-        <a href="#" style="padding: 20px; background: #43e97b; color: white; border-radius: 8px; text-decoration: none; text-align: center; transition: all 0.3s;">
-            <div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>
-            <div style="font-weight: 600;">Settings</div>
-        </a>
-    </div>
+    <x-admin.card title="Quick Actions">
+        <div class="grid grid-cols-2 gap-4">
+            <a href="{{ route('admin.kyc.index') }}" class="p-6 rounded-3xl bg-slate-900 text-white hover:bg-slate-800 transition shadow-xl shadow-slate-900/10 flex flex-col items-center text-center">
+                <span class="text-3xl mb-3">✅</span>
+                <span class="text-xs font-black uppercase tracking-widest">Verify KYC</span>
+            </a>
+            <a href="{{ route('admin.users.index') }}" class="p-6 rounded-3xl bg-sky-500 text-white hover:bg-sky-400 transition shadow-xl shadow-sky-500/10 flex flex-col items-center text-center">
+                <span class="text-3xl mb-3">👥</span>
+                <span class="text-xs font-black uppercase tracking-widest">Manage Users</span>
+            </a>
+            <a href="{{ route('admin.products.index') }}" class="p-6 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition flex flex-col items-center text-center">
+                <span class="text-3xl mb-3">📦</span>
+                <span class="text-xs font-black uppercase tracking-widest text-light">Stock Check</span>
+            </a>
+            <a href="{{ route('admin.wallets.index') }}" class="p-6 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition flex flex-col items-center text-center">
+                <span class="text-3xl mb-3">💰</span>
+                <span class="text-xs font-black uppercase tracking-widest text-light">Wallet Audit</span>
+            </a>
+        </div>
+    </x-admin.card>
 </div>
 @endsection

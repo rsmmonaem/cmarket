@@ -18,6 +18,10 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+    
+    // Multi-layer Security OTP
+    Route::get('/auth/otp-verify', [AuthController::class, 'showOtpVerifyForm'])->name('auth.otp.verify.form');
+    Route::post('/auth/otp-verify', [AuthController::class, 'verifyLoginOtp'])->name('auth.otp.verify');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
@@ -33,7 +37,15 @@ Route::get('/products/search', [App\Http\Controllers\ProductController::class, '
 Route::get('/products/{product}', [App\Http\Controllers\ProductController::class, 'show'])->name('products.show');
 
 // Categories
-Route::get('/categories', function() { return view('categories.index'); })->name('categories.index');
+Route::get('/categories', function() {
+    $categories = \App\Models\Category::where('is_active', true)
+        ->whereNull('parent_id')
+        ->withCount('products')
+        ->with('children')
+        ->orderBy('sort_order')
+        ->get();
+    return view('categories.index', compact('categories'));
+})->name('categories.index');
 
 // Cart (requires auth)
 Route::middleware(['auth'])->group(function () {
@@ -53,6 +65,8 @@ Route::middleware(['auth'])->group(function () {
     
     // Wallet
     Route::get('/wallet', [App\Http\Controllers\WalletController::class, 'index'])->name('wallet.index');
+    Route::get('/wallet/preview-recipient', [App\Http\Controllers\WalletController::class, 'previewRecipient'])->name('wallet.preview-recipient');
+    Route::post('/wallet/transfer', [App\Http\Controllers\WalletController::class, 'transfer'])->name('wallet.transfer');
     
     // Referral system
     Route::post('/referral/generate', [App\Http\Controllers\ReferralController::class, 'generateCode'])->name('referral.generate');
@@ -61,6 +75,10 @@ Route::middleware(['auth'])->group(function () {
     // Invoices
     Route::get('/invoices/{order}/download', [App\Http\Controllers\InvoiceController::class, 'download'])->name('invoices.download');
     Route::get('/invoices/{order}/view', [App\Http\Controllers\InvoiceController::class, 'view'])->name('invoices.view');
+
+    // KYC
+    Route::get('/kyc', [App\Http\Controllers\KycController::class, 'index'])->name('kyc.index');
+    Route::post('/kyc', [App\Http\Controllers\KycController::class, 'store'])->name('kyc.store');
 });
 
 // Merchant registration (public)

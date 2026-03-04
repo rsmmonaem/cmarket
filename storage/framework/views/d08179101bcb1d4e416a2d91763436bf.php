@@ -1,124 +1,176 @@
+<?php $__env->startSection('title', 'Merchant Management'); ?>
+<?php $__env->startSection('page-title', 'Merchant Management'); ?>
+
 <?php $__env->startSection('content'); ?>
-<div class="p-6">
-    <!-- Header -->
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Merchant Management</h1>
-        <p class="text-gray-600 mt-1">Review and approve merchant applications</p>
-    </div>
-
-    <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white p-4 rounded-lg shadow">
-            <p class="text-sm text-gray-500">Pending</p>
-            <p class="text-2xl font-bold text-yellow-600"><?php echo e($merchants->where('status', 'pending')->count()); ?></p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow">
-            <p class="text-sm text-gray-500">Approved</p>
-            <p class="text-2xl font-bold text-green-600"><?php echo e($merchants->where('status', 'approved')->count()); ?></p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow">
-            <p class="text-sm text-gray-500">Rejected</p>
-            <p class="text-2xl font-bold text-red-600"><?php echo e($merchants->where('status', 'rejected')->count()); ?></p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow">
-            <p class="text-sm text-gray-500">Suspended</p>
-            <p class="text-2xl font-bold text-gray-600"><?php echo e($merchants->where('status', 'suspended')->count()); ?></p>
-        </div>
-    </div>
-
-    <!-- Merchants Table -->
-    <?php if (isset($component)) { $__componentOriginal163c8ba6efb795223894d5ffef5034f5 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal163c8ba6efb795223894d5ffef5034f5 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.table','data' => ['headers' => ['Business Name', 'Owner', 'Phone', 'Status', 'Applied', 'Products']]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('table'); ?>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+    <?php if (isset($component)) { $__componentOriginalad5130b5347ab6ecc017d2f5a278b926 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.card','data' => ['class' => 'border-l-4 border-l-amber-500']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.card'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['Business Name', 'Owner', 'Phone', 'Status', 'Applied', 'Products'])]); ?>
-        <?php $__empty_1 = true; $__currentLoopData = $merchants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $merchant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-            <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-gray-900"><?php echo e($merchant->business_name); ?></div>
-                    <div class="text-sm text-gray-500"><?php echo e($merchant->business_type); ?></div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <?php echo e($merchant->user->name); ?>
-
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <?php echo e($merchant->phone); ?>
-
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <?php
-                        $statusVariants = [
-                            'pending' => 'warning',
-                            'approved' => 'success',
-                            'rejected' => 'danger',
-                            'suspended' => 'default',
-                        ];
-                    ?>
-                    <?php if (isset($component)) { $__componentOriginal2ddbc40e602c342e508ac696e52f8719 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal2ddbc40e602c342e508ac696e52f8719 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.badge','data' => ['variant' => $statusVariants[$merchant->status] ?? 'default']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('badge'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['variant' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($statusVariants[$merchant->status] ?? 'default')]); ?>
-                        <?php echo e(ucfirst($merchant->status)); ?>
-
-                     <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal2ddbc40e602c342e508ac696e52f8719)): ?>
-<?php $attributes = $__attributesOriginal2ddbc40e602c342e508ac696e52f8719; ?>
-<?php unset($__attributesOriginal2ddbc40e602c342e508ac696e52f8719); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal2ddbc40e602c342e508ac696e52f8719)): ?>
-<?php $component = $__componentOriginal2ddbc40e602c342e508ac696e52f8719; ?>
-<?php unset($__componentOriginal2ddbc40e602c342e508ac696e52f8719); ?>
-<?php endif; ?>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <?php echo e($merchant->created_at->format('M d, Y')); ?>
-
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <?php echo e($merchant->products_count ?? 0); ?>
-
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <a href="<?php echo e(route('admin.merchants.show', $merchant)); ?>" class="text-indigo-600 hover:text-indigo-900">
-                        Review
-                    </a>
-                </td>
-            </tr>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-            <tr>
-                <td colspan="7" class="px-6 py-4 text-center text-gray-500">No merchants found</td>
-            </tr>
-        <?php endif; ?>
+<?php $component->withAttributes(['class' => 'border-l-4 border-l-amber-500']); ?>
+        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Pending Store Requests</p>
+        <h3 class="text-3xl font-black text-light"><?php echo e($merchants->where('status', 'pending')->count()); ?></h3>
      <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginal163c8ba6efb795223894d5ffef5034f5)): ?>
-<?php $attributes = $__attributesOriginal163c8ba6efb795223894d5ffef5034f5; ?>
-<?php unset($__attributesOriginal163c8ba6efb795223894d5ffef5034f5); ?>
+<?php if (isset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
+<?php $attributes = $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
+<?php unset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginal163c8ba6efb795223894d5ffef5034f5)): ?>
-<?php $component = $__componentOriginal163c8ba6efb795223894d5ffef5034f5; ?>
-<?php unset($__componentOriginal163c8ba6efb795223894d5ffef5034f5); ?>
+<?php if (isset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
+<?php $component = $__componentOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
+<?php unset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
 <?php endif; ?>
-
-    <!-- Pagination -->
-    <div class="mt-6">
-        <?php echo e($merchants->links()); ?>
-
-    </div>
+    <?php if (isset($component)) { $__componentOriginalad5130b5347ab6ecc017d2f5a278b926 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.card','data' => ['class' => 'border-l-4 border-l-emerald-500']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'border-l-4 border-l-emerald-500']); ?>
+        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Active Merchants</p>
+        <h3 class="text-3xl font-black text-light"><?php echo e($merchants->where('status', 'approved')->count()); ?></h3>
+     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
+<?php $attributes = $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
+<?php unset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
+<?php $component = $__componentOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
+<?php unset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
+<?php endif; ?>
+    <?php if (isset($component)) { $__componentOriginalad5130b5347ab6ecc017d2f5a278b926 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.card','data' => ['class' => 'border-l-4 border-l-red-500']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'border-l-4 border-l-red-500']); ?>
+        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Suspended Vendors</p>
+        <h3 class="text-3xl font-black text-light"><?php echo e($merchants->where('status', 'suspended')->count()); ?></h3>
+     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
+<?php $attributes = $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
+<?php unset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
+<?php $component = $__componentOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
+<?php unset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
+<?php endif; ?>
+    <?php if (isset($component)) { $__componentOriginalad5130b5347ab6ecc017d2f5a278b926 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.card','data' => ['class' => 'border-l-4 border-l-slate-900 dark:border-l-slate-700']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'border-l-4 border-l-slate-900 dark:border-l-slate-700']); ?>
+        <p class="text-[10px] font-black uppercase tracking-widest text-muted-light">Total Catalog size</p>
+        <h3 class="text-3xl font-black text-light"><?php echo e(\App\Models\Product::count()); ?></h3>
+     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
+<?php $attributes = $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
+<?php unset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
+<?php $component = $__componentOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
+<?php unset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
+<?php endif; ?>
 </div>
+
+<?php if (isset($component)) { $__componentOriginalad5130b5347ab6ecc017d2f5a278b926 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.card','data' => ['title' => 'Merchant Directory']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Merchant Directory']); ?>
+    <div class="overflow-x-auto -mx-6">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-light">
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Business Detail</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Owner Info</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light text-center">Catalog</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Account Status</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-light">
+                <?php $__empty_1 = true; $__currentLoopData = $merchants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $merchant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-black text-light"><?php echo e($merchant->business_name); ?></div>
+                            <div class="text-[10px] text-muted-light font-bold uppercase tracking-wider"><?php echo e($merchant->business_type); ?></div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-bold text-light uppercase tracking-tighter"><?php echo e($merchant->user->name); ?></div>
+                            <div class="text-[10px] text-muted-light font-black"><?php echo e($merchant->phone); ?></div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="inline-flex px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-black text-light border border-light">
+                                <?php echo e($merchant->products_count ?? 0); ?> PRODUCTS
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <?php if($merchant->status === 'approved'): ?>
+                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> APPROVED VENDOR
+                                </span>
+                            <?php elseif($merchant->status === 'pending'): ?>
+                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> PENDING REVIEW
+                                </span>
+                            <?php else: ?>
+                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> SUSPENDED
+                                </span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="<?php echo e(route('admin.merchants.show', $merchant)); ?>" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light text-[10px] font-black hover:bg-sky-500 hover:text-white transition uppercase tracking-widest shadow-sm inline-block">
+                                Review Profile
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                    <tr><td colspan="5" class="px-6 py-12 text-center text-muted-light italic">No merchants managed yet.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <?php if($merchants->hasPages()): ?>
+        <div class="mt-8"><?php echo e($merchants->links()); ?></div>
+    <?php endif; ?>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
+<?php $attributes = $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
+<?php unset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
+<?php $component = $__componentOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
+<?php unset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
+<?php endif; ?>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /Users/rsmmonaem/Projects/Nibiz/cmarket/resources/views/admin/merchants/index.blade.php ENDPATH**/ ?>

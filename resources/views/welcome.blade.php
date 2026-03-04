@@ -1,131 +1,200 @@
 @extends('layouts.public')
 
 @section('content')
-<!-- Hero Section -->
-<div class="gradient-bg text-white py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-5xl font-bold mb-4">Welcome to CMarket</h1>
-        <p class="text-xl mb-8">Shop Smart, Earn Cashback, Build Your Network</p>
-        <div class="flex justify-center space-x-4">
-            <a href="{{ route('products.index') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100">
-                Shop Now
-            </a>
-            <a href="{{ route('merchant.register') }}" class="bg-indigo-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-900">
-                Become a Merchant
-            </a>
-        </div>
-    </div>
-</div>
-
-<!-- Features -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl font-bold text-center mb-12">Why Choose CMarket?</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bg-white p-8 rounded-lg shadow-lg text-center">
-            <div class="text-5xl mb-4">💰</div>
-            <h3 class="text-xl font-semibold mb-2">Cashback Rewards</h3>
-            <p class="text-gray-600">Earn cashback on every purchase and build your wallet balance</p>
-        </div>
-        <div class="bg-white p-8 rounded-lg shadow-lg text-center">
-            <div class="text-5xl mb-4">🤝</div>
-            <h3 class="text-xl font-semibold mb-2">Referral Program</h3>
-            <p class="text-gray-600">Invite friends and earn multi-level commissions</p>
-        </div>
-        <div class="bg-white p-8 rounded-lg shadow-lg text-center">
-            <div class="text-5xl mb-4">🏆</div>
-            <h3 class="text-xl font-semibold mb-2">Achievement Levels</h3>
-            <p class="text-gray-600">Unlock designations and earn more rewards</p>
-        </div>
-    </div>
-</div>
-
-<!-- Featured Products -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-gray-50">
-    <div class="flex justify-between items-center mb-8">
-        <h2 class="text-3xl font-bold">Featured Products</h2>
-        <a href="{{ route('products.index') }}" class="text-indigo-600 hover:text-indigo-800">View All →</a>
+<!-- Premium Hero Section -->
+<div class="relative overflow-hidden bg-indigo-900 text-white py-24 sm:py-32">
+    <div class="absolute inset-0 -z-10">
+        <svg class="absolute left-[50%] top-0 h-[64rem] w-[128rem] -translate-x-[50%] [mask-image:radial-gradient(64rem_64rem_at_top,white,transparent)]" aria-hidden="true">
+            <defs>
+                <pattern id="e813992c-7d03-4cc4-a2bd-27d760b49999" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+                    <path d="M100 200V.5M.5 .5H200" fill="none" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" stroke-width="0" fill="url(#e813992c-7d03-4cc4-a2bd-27d760b49999)" />
+        </svg>
     </div>
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        @forelse($featuredProducts as $product)
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-                <a href="{{ route('products.show', $product) }}">
-                    @if($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" 
-                             class="w-full h-48 object-cover">
-                    @else
-                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                            <span class="text-gray-400 text-4xl">📦</span>
-                        </div>
-                    @endif
-                    
-                    <div class="p-4">
-                        <h3 class="font-semibold text-lg mb-2 truncate">{{ $product->name }}</h3>
-                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ $product->description }}</p>
-                        
-                        <div class="flex items-center justify-between">
-                            <div>
-                                @if($product->discount_price)
-                                    <span class="text-xl font-bold text-indigo-600">৳{{ number_format($product->discount_price, 2) }}</span>
-                                    <span class="text-sm text-gray-500 line-through ml-2">৳{{ number_format($product->price, 2) }}</span>
-                                @else
-                                    <span class="text-xl font-bold text-indigo-600">৳{{ number_format($product->price, 2) }}</span>
-                                @endif
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col items-center text-center">
+        <div class="inline-flex items-center space-x-2 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 text-indigo-200 text-sm font-medium mb-6">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+            </span>
+            <span>Next-Gen E-commerce Ecosystem</span>
+        </div>
+        
+        <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-indigo-400">
+            Welcome to CMarket
+        </h1>
+        <p class="text-lg lg:text-xl text-indigo-100 max-w-3xl mb-10 leading-relaxed">
+            Shop premium products, earn automated cashback rewards, and build your digital empire through our multi-layer affiliate network.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="{{ route('products.index') }}" class="w-full sm:w-auto px-10 py-4 bg-white text-indigo-900 rounded-2xl font-bold hover:bg-indigo-50 transition transform hover:scale-105 shadow-2xl shadow-white/10">
+                Explore Marketplace
+            </a>
+            <a href="{{ route('register') }}" class="w-full sm:w-auto px-10 py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition transform hover:scale-105 shadow-2xl shadow-indigo-500/20">
+                Join Ecosystem
+            </a>
+        </div>
+        
+        <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-indigo-300 font-medium">
+            <div class="flex flex-col items-center">
+                <span class="text-2xl font-bold text-white">50K+</span>
+                <span>Active Users</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="text-2xl font-bold text-white">200+</span>
+                <span>Merchants</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="text-2xl font-bold text-white">৳1.5M+</span>
+                <span>Cashback Paid</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="text-2xl font-bold text-white">24/7</span>
+                <span>Support</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Packages Section (MLM/Self-Logic) -->
+@if(count($featuredPackages) > 0)
+<div class="max-w-7xl mx-auto px-6 lg:px-8 py-24">
+    <div class="bg-indigo-50 rounded-[3rem] p-12 lg:p-16 relative overflow-hidden">
+        <div class="relative z-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div>
+                    <span class="text-indigo-600 font-bold tracking-widest uppercase text-sm mb-2 block">Special Access</span>
+                    <h2 class="text-3xl lg:text-5xl font-extrabold text-gray-900 leading-tight">Exclusive Business Packages</h2>
+                </div>
+                <a href="{{ route('products.index', ['type' => 'package']) }}" class="text-indigo-600 font-bold hover:text-indigo-800 border-b-2 border-indigo-200 py-1 transition">
+                    Browse All Packages →
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($featuredPackages as $package)
+                    <div class="bg-white rounded-3xl p-6 shadow-xl shadow-indigo-900/5 hover:shadow-indigo-900/10 transition-all group border border-transparent hover:border-indigo-100">
+                        <div class="aspect-square rounded-2xl bg-indigo-50 mb-6 overflow-hidden relative">
+                             @php $imgArr = is_array($package->images) ? $package->images : (json_decode($package->images, true) ?: []); $img = $imgArr[0] ?? null; @endphp
+                            @if($img)
+                                <img src="{{ asset('storage/' . $img) }}" alt="{{ $package->name }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-5xl">💎</div>
+                            @endif
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                                <span class="text-white text-xs font-bold bg-indigo-600 px-3 py-1 rounded-full">ACTIVE PACKAGE</span>
                             </div>
-                            @if($product->cashback_percentage)
-                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
-                                    {{ $product->cashback_percentage }}% Cashback
-                                </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $package->name }}</h3>
+                        <p class="text-gray-500 text-sm mb-6 line-clamp-2">{{ $package->description }}</p>
+                        
+                        <div class="flex items-center justify-between mt-auto pt-6 border-t border-gray-100">
+                            <span class="text-2xl font-black text-indigo-900">৳{{ number_format($package->price, 2) }}</span>
+                            @if($package->cashback_percentage)
+                                <div class="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-wider">
+                                    +{{ $package->cashback_percentage }}% CB
+                                </div>
                             @endif
                         </div>
                         
-                        <button onclick="addToCart({{ $product->id }})" 
-                                class="w-full mt-4 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
-                            Add to Cart
+                        <button onclick="addToCart({{ $package->id }})" class="w-full mt-6 bg-indigo-900 text-white font-bold py-4 rounded-2xl hover:bg-black transition-colors shadow-lg">
+                            Get This Package
                         </button>
                     </div>
-                </a>
+                @endforeach
             </div>
-        @empty
-            <div class="col-span-4 text-center py-12 text-gray-500">
-                No products available yet
-            </div>
-        @endforelse
+        </div>
+        <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-96 h-96 bg-indigo-200/50 rounded-full blur-3xl"></div>
     </div>
 </div>
+@endif
 
-<!-- Categories -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl font-bold text-center mb-12">Shop by Category</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<!-- Categories Section -->
+<div class="max-w-7xl mx-auto px-6 lg:px-8 py-24">
+    <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">Discover Categories</h2>
+        <p class="text-gray-500">Browse our vast collection of products curated for you</p>
+    </div>
+    
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
         @foreach($categories as $category)
-            <a href="{{ route('products.index', ['category' => $category->id]) }}" 
-               class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition text-center">
-                @if($category->image)
-                    <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" 
-                         class="w-16 h-16 mx-auto mb-3 rounded-full object-cover">
-                @else
-                    <div class="text-4xl mb-3">📂</div>
-                @endif
-                <h3 class="font-semibold">{{ $category->name }}</h3>
-                <p class="text-sm text-gray-500">{{ $category->products_count ?? 0 }} items</p>
+            <a href="{{ route('products.index', ['category' => $category->id]) }}" class="group">
+                <div class="bg-gray-50 rounded-[2.5rem] p-8 text-center border-2 border-transparent group-hover:border-indigo-600 group-hover:bg-white transition-all duration-300">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden bg-white shadow-xl shadow-gray-200 group-hover:shadow-indigo-100 transition duration-300 flex items-center justify-center">
+                        @if($category->image)
+                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover">
+                        @else
+                            <span class="text-3xl transition duration-300 group-hover:scale-125">📦</span>
+                        @endif
+                    </div>
+                    <h3 class="font-bold text-gray-900 group-hover:text-indigo-600 transition">{{ $category->name }}</h3>
+                    <span class="text-xs font-medium text-gray-400 mt-1 block tracking-wider">{{ $category->products_count ?? 0 }} ITEMS</span>
+                </div>
             </a>
         @endforeach
     </div>
 </div>
 
-<!-- CTA Section -->
-<div class="gradient-bg text-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold mb-4">Start Your Business with CMarket</h2>
-        <p class="text-xl mb-8">Join thousands of merchants and riders earning with us</p>
-        <div class="flex justify-center space-x-4">
-            <a href="{{ route('merchant.register') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100">
-                Become a Merchant
+<!-- Featured Marketplace Products -->
+<div class="bg-gray-50 py-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex justify-between items-end mb-12">
+            <div>
+                <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900">Trending Now</h2>
+                <p class="text-gray-500 mt-2">Check out what's hot in the marketplace</p>
+            </div>
+            <a href="{{ route('products.index') }}" class="px-6 py-2 bg-white rounded-xl font-bold text-gray-900 border border-gray-200 hover:border-indigo-600 transition shadow-sm">
+                View All
             </a>
-            <a href="{{ route('rider.register') }}" class="bg-indigo-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-900">
-                Become a Rider
-            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            @foreach($featuredProducts as $product)
+                <div class="bg-white rounded-[2rem] overflow-hidden group hover:shadow-2xl hover:shadow-indigo-900/5 transition duration-500">
+                    <a href="{{ route('products.show', $product) }}" class="block p-4">
+                        <div class="aspect-[4/5] rounded-2xl bg-gray-100 overflow-hidden relative">
+                             @php $imgArr = is_array($product->images) ? $product->images : (json_decode($product->images, true) ?: []); $img = $imgArr[0] ?? null; @endphp
+                            @if($img)
+                                <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-6xl">🛍️</div>
+                            @endif
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-white/90 backdrop-blur-sm text-gray-900 text-[10px] font-black px-3 py-1 rounded-full shadow-sm tracking-widest uppercase">
+                                    {{ $product->category->name ?? 'GENERAL' }}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-6 px-2">
+                            <h3 class="font-bold text-gray-900 text-lg mb-1 truncate">{{ $product->name }}</h3>
+                            <div class="flex items-baseline gap-2 mb-4">
+                                @if($product->discount_price)
+                                    <span class="text-2xl font-black text-indigo-600">৳{{ number_format($product->discount_price, 2) }}</span>
+                                    <span class="text-sm text-gray-400 line-through">৳{{ number_format($product->price, 2) }}</span>
+                                @else
+                                    <span class="text-2xl font-black text-indigo-900">৳{{ number_format($product->price, 2) }}</span>
+                                @endif
+                            </div>
+                            
+                            <div class="flex items-center justify-between gap-4">
+                                <button onclick="addToCart({{ $product->id }})" class="flex-1 bg-gray-900 text-white font-bold py-3 rounded-2xl hover:bg-indigo-600 transition shadow-lg shadow-gray-200">
+                                    Quick Add
+                                </button>
+                                <button class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-2xl hover:bg-red-50 hover:text-red-500 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
         </div>
     </div>
 </div>
@@ -159,4 +228,10 @@ function addToCart(productId) {
     });
 }
 </script>
+
+<style>
+.gradient-bg {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+}
+</style>
 @endsection

@@ -7,10 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -18,6 +19,12 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
+        'otp',
+        'otp_expires_at',
+        'login_attempts',
+        'locked_until',
+        'ip_address',
+        'device_info',
     ];
 
     protected $hidden = [
@@ -30,6 +37,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'otp_expires_at' => 'datetime',
+            'locked_until' => 'datetime',
         ];
     }
 
@@ -150,5 +159,50 @@ class User extends Authenticatable
     public function hasWallet($type)
     {
         return $this->wallets()->where('wallet_type', $type)->exists();
+    }
+
+    // Security Helpers
+    public function generateOtp()
+    {
+        $this->otp = rand(100000, 999999);
+        $this->otp_expires_at = now()->addMinutes(5);
+        $this->save();
+        return $this->otp;
+    }
+
+    public function verifyOtp($otp)
+    {
+        if ($this->otp === $otp && $this->otp_expires_at->isFuture()) {
+            $this->otp = null;
+            $this->otp_expires_at = null;
+            $this->login_attempts = 0;
+            $this->save();
+            return true;
+        }
+        return false;
+    }
+
+    public function incrementLoginAttempts()
+    {
+        $this->login_attempts++;
+        if ($this->login_attempts >= 5) {
+            $this->locked_until = now()->addMinutes(30);
+        }
+        $this->save();
+    }
+
+    public function isLocked()
+    {
+        return $this->locked_until && $this->locked_until->isFuture();
+    }
+
+    public function suspend()
+    {
+        $this->update(['status' => 'suspended']);
+    }
+
+    public function activate($status = 'free')
+    {
+        $this->update(['status' => $status]);
     }
 }

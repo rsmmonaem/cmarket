@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\PackageActivationService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    protected $packageService;
+
+    public function __construct(PackageActivationService $packageService)
+    {
+        $this->packageService = $packageService;
+    }
     public function index()
     {
         $orders = Order::with(['user', 'merchant', 'items'])->latest()->paginate(20);
@@ -24,16 +31,27 @@ class OrderController extends Controller
     {
         $request->validate([
             'status' => 'required|in:pending,paid,processing,shipped,delivered,cancelled',
+            'admin_note' => 'nullable|string|max:500',
         ]);
 
-        $order->update(['status' => $request->status]);
+        $oldStatus = $order->status;
+        $order->update([
+            'status' => $request->status,
+            'admin_note' => $request->admin_note,
+        ]);
 
         if ($request->status === 'delivered') {
             $order->update(['delivered_at' => now()]);
         }
 
+        // If order updated to 'paid' manually, trigger package activation logic
+        if ($oldStatus !== 'paid' && $request->status === 'paid') {
+            $order->update(['paid_at' => now()]);
+            $this->packageService->activate($order);
+        }
+
         return redirect()->route('admin.orders.show', $order)
-            ->with('success', 'Order status updated successfully.');
+            ->with('success', 'Order status and notes updated successfully.');
     }
 
     public function cancel(Order $order)

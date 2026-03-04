@@ -28,7 +28,7 @@ class UserController extends Controller
             'phone' => 'required|string|unique:users,phone|regex:/^01[0-9]{9}$/',
             'email' => 'nullable|email|unique:users,email',
             'password' => 'required|string|min:6',
-            'status' => 'required|in:free,wallet_verified,vendor,rider,suspended',
+            'status' => 'required|in:free,wallet_verified,merchant,rider,bp,me,bc,upazila,district,division,director,suspended',
             'role' => 'required|exists:roles,name',
         ]);
 
@@ -70,7 +70,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'required|string|regex:/^01[0-9]{9}$/|unique:users,phone,' . $user->id,
             'email' => 'nullable|email|unique:users,email,' . $user->id,
-            'status' => 'required|in:free,wallet_verified,vendor,rider,suspended',
+            'status' => 'required|in:free,wallet_verified,merchant,rider,bp,me,bc,upazila,district,division,director,suspended',
         ]);
 
         $user->update($request->only(['name', 'phone', 'email', 'status']));

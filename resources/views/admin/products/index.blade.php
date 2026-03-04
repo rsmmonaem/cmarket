@@ -1,105 +1,147 @@
 @extends('layouts.admin')
 
+@section('title', 'Product Management')
+@section('page-title', 'Product Management')
+
 @section('content')
-<div class="p-6">
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Product Management</h1>
-        <a href="{{ route('admin.products.create') }}">
-            <x-button variant="primary">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                Add Product
-            </x-button>
-        </a>
+<x-admin.card>
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+        <div>
+            <h2 class="text-xl font-black text-light">Master Product Catalog</h2>
+            <p class="text-xs text-muted-light font-bold uppercase tracking-widest">Manage inventory and business packages</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+            <a href="{{ route('admin.products.create') }}">
+                <x-admin.button>
+                    <span class="text-lg">➕</span> Add New Product
+                </x-admin.button>
+            </a>
+        </div>
     </div>
 
     <!-- Filters -->
-    <div class="bg-white p-4 rounded-lg shadow mb-6">
+    <div class="p-6 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 mb-8">
         <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <input type="text" name="search" placeholder="Search products..." 
                    value="{{ request('search') }}"
-                   class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                   class="px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition">
             
-            <select name="category" class="px-3 py-2 border border-gray-300 rounded-lg">
-                <option value="">All Categories</option>
-                <!-- Categories will be populated dynamically -->
-            </select>
-            
-            <select name="status" class="px-3 py-2 border border-gray-300 rounded-lg">
+            <select name="status" class="px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition">
                 <option value="">All Status</option>
                 <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
                 <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                 <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
             </select>
+
+            <select name="type" class="px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition">
+                <option value="">All Types</option>
+                <option value="product" {{ request('type') == 'product' ? 'selected' : '' }}>Normal Product</option>
+                <option value="package" {{ request('type') == 'package' ? 'selected' : '' }}>Business Package</option>
+            </select>
             
-            <x-button type="submit" variant="primary">Filter</x-button>
+            <x-admin.button type="submit" variant="secondary" class="w-full">
+                🔍 Apply Filters
+            </x-admin.button>
         </form>
     </div>
 
-    <!-- Products Table -->
-    <x-table :headers="['Image', 'Name', 'Category', 'Price', 'Stock', 'Status', 'Merchant']">
-        @forelse($products as $product)
-            <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/50' }}" 
-                         alt="{{ $product->name }}" class="w-12 h-12 rounded object-cover">
-                </td>
-                <td class="px-6 py-4">
-                    <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
-                    <div class="text-sm text-gray-500">SKU: {{ $product->sku ?? 'N/A' }}</div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ $product->category->name ?? 'N/A' }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-gray-900">৳{{ number_format($product->price, 2) }}</div>
-                    @if($product->discount_price)
-                        <div class="text-sm text-green-600">৳{{ number_format($product->discount_price, 2) }}</div>
-                    @endif
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="text-sm {{ $product->stock > 10 ? 'text-green-600' : 'text-red-600' }}">
-                        {{ $product->stock }}
-                    </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    @php
-                        $statusVariants = [
-                            'active' => 'success',
-                            'inactive' => 'danger',
-                            'draft' => 'warning',
-                        ];
-                    @endphp
-                    <x-badge :variant="$statusVariants[$product->status] ?? 'default'">
-                        {{ ucfirst($product->status) }}
-                    </x-badge>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ $product->merchant->business_name ?? 'N/A' }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <a href="{{ route('admin.products.show', $product) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">View</a>
-                    <a href="{{ route('admin.products.edit', $product) }}" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
-                    <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline" 
-                          onsubmit="return confirm('Are you sure?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        @empty
-            <tr>
-                <td colspan="8" class="px-6 py-4 text-center text-gray-500">No products found</td>
-            </tr>
-        @endforelse
-    </x-table>
-
-    <!-- Pagination -->
-    <div class="mt-6">
-        {{ $products->links() }}
+    <div class="overflow-x-auto -mx-6">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-light">
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Product Detail</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Category</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Pricing</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Stock</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light">Status</th>
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-light text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-light">
+                @forelse($products as $product)
+                    <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center border border-light relative">
+                                    @php $imgArr = is_array($product->images) ? $product->images : (json_decode($product->images, true) ?: []); $img = $imgArr[0] ?? null; @endphp
+                                    @if($img)
+                                        <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                    @else
+                                        <span class="text-2xl">🛍️</span>
+                                    @endif
+                                    @if($product->type === 'package')
+                                        <div class="absolute top-0 right-0 bg-sky-500 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900"></div>
+                                    @endif
+                                </div>
+                                <div>
+                                    <div class="text-sm font-black text-light line-clamp-1">{{ $product->name }}</div>
+                                    <div class="text-[10px] text-muted-light font-bold flex items-center gap-2">
+                                        <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 uppercase tracking-tighter">{{ $product->type }}</span>
+                                        SKU: {{ $product->sku ?? 'N/A' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-bold text-muted-light">
+                            {{ $product->category->name ?? 'Uncategorized' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-black text-light">৳{{ number_format($product->discount_price ?? $product->price, 2) }}</div>
+                            @if($product->discount_price)
+                                <div class="text-[10px] text-muted-light line-through font-bold">৳{{ number_format($product->price, 2) }}</div>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-24 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                    <div class="h-full {{ $product->stock > 10 ? 'bg-emerald-500' : 'bg-red-500' }}" style="width: {{ min(100, ($product->stock / 100) * 100) }}%"></div>
+                                </div>
+                                <span class="text-[10px] font-black text-light">{{ $product->stock }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            @if($product->status === 'active')
+                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ACTIVE
+                                </span>
+                            @elseif($product->status === 'draft')
+                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> DRAFT
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[10px] font-black bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> INACTIVE
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ route('admin.products.edit', $product) }}" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light hover:bg-sky-500 hover:text-white transition shadow-sm">
+                                    ✏️
+                                </a>
+                                <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('Delete this product?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-light hover:bg-red-500 hover:text-white transition shadow-sm">
+                                        🗑️
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-muted-light italic">No products found for the current selection.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
-</div>
+
+    @if($products->hasPages())
+        <div class="mt-8">
+            {{ $products->links() }}
+        </div>
+    @endif
+</x-admin.card>
 @endsection

@@ -25,15 +25,20 @@ class KycController extends Controller
     {
         $kyc->approve();
         
+        $user = $kyc->user;
+
         // Update user status
-        $kyc->user->update(['status' => 'wallet_verified']);
+        $user->update(['status' => 'wallet_verified']);
+
+        // Update role to 'wallet_verified'
+        $user->syncRoles(['wallet_verified']);
 
         // Create additional wallets
         $walletTypes = ['cashback', 'commission', 'shop', 'share'];
         foreach ($walletTypes as $type) {
-            if (!$kyc->user->hasWallet($type)) {
+            if (!$user->hasWallet($type)) {
                 \App\Models\Wallet::create([
-                    'user_id' => $kyc->user->id,
+                    'user_id' => $user->id,
                     'wallet_type' => $type,
                     'is_locked' => false,
                 ]);
@@ -41,7 +46,7 @@ class KycController extends Controller
         }
 
         return redirect()->route('admin.kyc.index')
-            ->with('success', 'KYC approved successfully.');
+            ->with('success', 'KYC approved and user upgraded to Wallet Verified status.');
     }
 
     public function reject(Request $request, Kyc $kyc)

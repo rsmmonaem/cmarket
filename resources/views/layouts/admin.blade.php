@@ -1,178 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Dashboard') - CMarket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('css/admin-custom.css') }}">
+    <script>
+        // Theme initialization
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark-mode');
+        } else {
+            document.documentElement.classList.remove('dark-mode');
+        }
+    </script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-        }
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 260px;
-            background: #1e293b;
-            color: white;
-            padding: 20px;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-        }
-        .sidebar-logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .sidebar-menu {
-            list-style: none;
-        }
-        .sidebar-menu li {
-            margin-bottom: 5px;
-        }
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 15px;
-            color: #94a3b8;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: #334155;
-            color: white;
-        }
-        .main-content {
-            margin-left: 260px;
-            flex: 1;
-            padding: 20px;
-        }
-        .topbar {
-            background: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .topbar h2 {
-            color: #333;
-        }
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .user-info {
-            text-align: right;
-        }
-        .user-name {
-            font-weight: 600;
-            color: #333;
-        }
-        .user-role {
-            font-size: 0.85rem;
-            color: #666;
-        }
-        .logout-btn {
-            padding: 8px 20px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .logout-btn:hover {
-            background: #c0392b;
-        }
-        .content-area {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid #667eea;
-        }
-        .stat-card h3 {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 10px;
-        }
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #333;
-        }
+        .sidebar { width: var(--sidebar-w); transition: all 0.3s; }
+        .main-content { margin-left: var(--sidebar-w); min-height: 100vh; transition: all 0.3s; }
+        .topbar { height: var(--header-h); }
+        
+        /* Custom scrollbar for sidebar */
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-<body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-logo">
-                🚀 CMarket Admin
+<body class="bg-light text-light font-sans antialiased">
+    <div class="dashboard-container flex">
+        <!-- Sidebar -->
+        <aside class="sidebar sidebar-solid fixed left-0 top-0 bottom-0 z-50 overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-10">
+                    <span class="text-3xl">🚀</span>
+                    <span class="text-xl font-black text-white tracking-tighter">CMARKET <span class="text-sky-400">ADMIN</span></span>
+                </div>
+                
+                <nav class="space-y-1">
+                    <x-admin.sidebar-link route="admin.dashboard" icon="📊" label="Dashboard" />
+                    
+                    <div class="pt-4 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4">Core Management</div>
+                    <x-admin.sidebar-link route="admin.users.index" icon="👥" label="Users" />
+                    <x-admin.sidebar-link route="admin.kyc.index" icon="✅" label="KYC Approvals" />
+                    <x-admin.sidebar-link route="admin.merchants.index" icon="🏪" label="Merchants" />
+                    
+                    <div class="pt-4 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4">Financials</div>
+                    <x-admin.sidebar-link route="admin.wallets.index" icon="💰" label="Wallets" />
+                    <x-admin.sidebar-link route="admin.withdrawals.index" icon="💸" label="Withdrawals" />
+                    <x-admin.sidebar-link route="admin.commissions.index" icon="💵" label="Commissions" />
+                    
+                    <div class="pt-4 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4">Marketplace</div>
+                    <x-admin.sidebar-link route="admin.categories.index" icon="📂" label="Categories" />
+                    <x-admin.sidebar-link route="admin.products.index" icon="📦" label="Products" />
+                    <x-admin.sidebar-link route="admin.orders.index" icon="🛍️" label="Orders" />
+                    
+                    <div class="pt-4 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4">System</div>
+                    <x-admin.sidebar-link route="admin.riders.index" icon="🚴" label="Riders" />
+                    <x-admin.sidebar-link route="admin.designations.index" icon="🏆" label="Designations" />
+                </nav>
             </div>
-            <ul class="sidebar-menu">
-                <li><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">📊 Dashboard</a></li>
-                <li><a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">👥 Users</a></li>
-                <li><a href="{{ route('admin.kyc.index') }}" class="{{ request()->routeIs('admin.kyc.*') ? 'active' : '' }}">✅ KYC Approvals</a></li>
-                <li><a href="{{ route('admin.wallets.index') }}" class="{{ request()->routeIs('admin.wallets.*') ? 'active' : '' }}">💰 Wallets</a></li>
-                <li><a href="{{ route('admin.withdrawals.index') }}" class="{{ request()->routeIs('admin.withdrawals.*') ? 'active' : '' }}">💸 Withdrawals</a></li>
-                <li><a href="{{ route('admin.merchants.index') }}" class="{{ request()->routeIs('admin.merchants.*') ? 'active' : '' }}">🏪 Merchants</a></li>
-                <li><a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">📂 Categories</a></li>
-                <li><a href="{{ route('admin.products.index') }}" class="{{ request()->routeIs('admin.products.*') ? 'active' : '' }}">📦 Products</a></li>
-                <li><a href="{{ route('admin.orders.index') }}" class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">🛍️ Orders</a></li>
-                <li><a href="{{ route('admin.riders.index') }}" class="{{ request()->routeIs('admin.riders.*') ? 'active' : '' }}">🚴 Riders</a></li>
-                <li><a href="{{ route('admin.commissions.index') }}" class="{{ request()->routeIs('admin.commissions.*') ? 'active' : '' }}">💵 Commissions</a></li>
-                <li><a href="{{ route('admin.designations.index') }}" class="{{ request()->routeIs('admin.designations.*') ? 'active' : '' }}">🏆 Designations</a></li>
-            </ul>
-        </aside>
-
-        <main class="main-content">
-            <div class="topbar">
-                <h2>@yield('page-title', 'Dashboard')</h2>
-                <div class="user-menu">
-                    <div class="user-info">
-                        <div class="user-name">{{ Auth::user()->name }}</div>
-                        <div class="user-role">{{ Auth::user()->getRoleNames()->first() }}</div>
-                    </div>
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+            
+            <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-800 bg-slate-900/50 backdrop-blur-md">
+                <div class="flex items-center justify-between">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
+                        <span id="theme-toggle-dark-icon" class="hidden text-xl">🌙</span>
+                        <span id="theme-toggle-light-icon" class="hidden text-xl">☀️</span>
+                    </button>
+                    <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="logout-btn">Logout</button>
+                        <button type="submit" class="text-xs font-bold text-red-400 hover:text-red-300 transition uppercase tracking-widest">Logout</button>
                     </form>
                 </div>
             </div>
+        </aside>
 
-            <div class="content-area">
+        <!-- Main Content -->
+        <main class="main-content flex-1 p-8">
+            <header class="topbar flex items-center justify-between mb-10">
+                <div>
+                    <h1 class="text-3xl font-black text-light tracking-tight">@yield('page-title', 'Dashboard')</h1>
+                    <p class="text-sm text-muted-light">Welcome back, {{ Auth::user()->name }}</p>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <div class="text-sm font-bold text-light">{{ Auth::user()->name }}</div>
+                        <div class="text-[10px] font-black uppercase tracking-widest text-sky-500">{{ Auth::user()->getRoleNames()->first() }}</div>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white font-black shadow-xl">
+                        {{ substr(Auth::user()->name, 0, 1) }}
+                    </div>
+                </div>
+            </header>
+
+            <div id="content-mount">
+                @if(session('success'))
+                    <x-admin.alert type="success" class="mb-6">
+                        {{ session('success') }}
+                    </x-admin.alert>
+                @endif
+
+                @if(session('error'))
+                    <x-admin.alert type="danger" class="mb-6">
+                        {{ session('error') }}
+                    </x-admin.alert>
+                @endif
+
                 @yield('content')
             </div>
         </main>
     </div>
+
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        function updateIcons() {
+            if (document.documentElement.classList.contains('dark-mode')) {
+                darkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+            } else {
+                darkIcon.classList.remove('hidden');
+                lightIcon.classList.add('hidden');
+            }
+        }
+
+        updateIcons();
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark-mode');
+            const isDark = document.documentElement.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcons();
+        });
+    </script>
 </body>
 </html>
