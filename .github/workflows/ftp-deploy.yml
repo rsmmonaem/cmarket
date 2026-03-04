@@ -13,23 +13,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Optional: skip .git and workflow files automatically
+      - name: Check secrets present
+        run: |
+          test -n "${{ secrets.FTP_SERVER }}" || (echo "FTP_SERVER missing" && exit 1)
+          test -n "${{ secrets.FTP_USERNAME }}" || (echo "FTP_USERNAME missing" && exit 1)
+          test -n "${{ secrets.FTP_PASSWORD }}" || (echo "FTP_PASSWORD missing" && exit 1)
+
       - name: FTP Upload
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-
-          # Change this to your FTP path on server
           server-dir: /public_html/
-
-          # Upload repository root -> server-dir
           local-dir: ./
-
           exclude: |
             **/.git*
             **/.github/**
@@ -38,4 +37,3 @@ jobs:
             **/.env
             **/.env.*
             **/storage/**
-
