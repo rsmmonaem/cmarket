@@ -1,4 +1,4 @@
-@extends('layouts.customer')
+@extends('layouts.public')
 
 @section('title', 'My Cart - CMarket')
 @section('page-title', 'Shopping Pipeline')
@@ -10,7 +10,7 @@
             <div class="text-[120px] mb-8 select-none">🛒</div>
             <h2 class="text-4xl font-black text-slate-800 mb-4 tracking-tight">Your terminal is empty</h2>
             <p class="text-slate-400 font-medium mb-10 max-w-md mx-auto leading-relaxed">Expand your territory by adding high-performance products to your acquisition pipeline.</p>
-            <a href="{{ route('products.index') }}" class="inline-flex items-center gap-4 px-10 py-5 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-slate-900/20 hover:bg-sky-600 hover:scale-105 transition-all">
+            <a href="{{ route('products.index') }}" class="inline-flex items-center gap-4 px-10 py-5 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-slate-900/20 hover:bg-primary hover:bg-primary-hover shadow-primary/20 hover:scale-105 transition-all">
                 Browse Marketplace <span class="text-lg">✨</span>
             </a>
         </div>
@@ -45,8 +45,8 @@
 
                                 <!-- Metadata -->
                                 <div class="flex-1 text-center sm:text-left">
-                                    <p class="text-[10px] font-black text-sky-500 uppercase tracking-widest mb-1">{{ $item['product']->category->name }}</p>
-                                    <h3 class="text-lg font-black text-slate-800 leading-tight mb-2 group-hover:text-sky-600 transition-colors">
+                                    <p class="text-[10px] font-black text-primary uppercase tracking-widest mb-1">{{ $item['product']->category->name }}</p>
+                                    <h3 class="text-lg font-black text-slate-800 leading-tight mb-2 group-hover:text-primary hover:text-primary-hover transition-colors">
                                         <a href="{{ route('products.show', $item['product']) }}">{{ $item['product']->name }}</a>
                                     </h3>
                                     <p class="text-sm font-black text-slate-400">৳{{ number_format($item['product']->price, 2) }} <span class="text-[9px] opacity-40">/ unit</span></p>
@@ -59,7 +59,7 @@
                                             @csrf
                                             @method('PUT')
                                             <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" max="{{ $item['product']->stock }}" class="w-12 bg-transparent border-none text-center font-black text-slate-800 focus:ring-0">
-                                            <button type="submit" class="p-2 bg-white rounded-xl shadow-sm text-sky-500 hover:bg-sky-500 hover:text-white transition-all text-[10px] font-black uppercase">Sync</button>
+                                            <button type="submit" class="p-2 bg-white rounded-xl shadow-sm text-primary hover:bg-sky-500 hover:text-white transition-all text-[10px] font-black uppercase">Sync</button>
                                         </form>
                                     </div>
 
@@ -114,7 +114,7 @@
                 </div>
 
                 <div class="text-center pt-4">
-                    <a href="{{ route('products.index') }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-sky-500 transition-colors">
+                    <a href="{{ route('products.index') }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors">
                         ← Continue Acquisition
                     </a>
                 </div>

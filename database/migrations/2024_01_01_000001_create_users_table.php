@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('email')->nullable();
             $table->string('password');
-            $table->enum('status', ['free', 'wallet_verified', 'vendor', 'rider', 'suspended'])->default('free');
+            $table->enum('status', ['free', 'wallet_verified', 'merchant', 'rider', 'suspended'])->default('free');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

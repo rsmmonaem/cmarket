@@ -28,7 +28,7 @@ class MerchantController extends Controller
         ]);
 
         // Update user status
-        $merchant->user->update(['status' => 'vendor']);
+        $merchant->user->update(['status' => 'merchant']);
 
         // Create shop wallet if not exists
         if (!$merchant->user->hasWallet('shop')) {

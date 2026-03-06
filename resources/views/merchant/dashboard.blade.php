@@ -1,106 +1,219 @@
-@extends('layouts.customer')
+@extends('layouts.merchant')
 
-@section('title', 'Merchant Hub - CMarket')
-@section('page-title', 'Business Intelligence')
+@section('title', 'Intelligence Terminal')
+@section('page-title', 'Business Intelligence Dashboard')
 
 @section('content')
-<div class="space-y-10 animate-fade-in">
-    <!-- Merchant Overview Header -->
-    <div class="bg-slate-900 rounded-[2.5rem] p-10 text-white shadow-2xl shadow-slate-900/10 relative overflow-hidden group">
-        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10">
-            <div>
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="px-4 py-2 bg-emerald-500 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-500/20">
-                        Official Merchant
-                    </span>
-                    <span class="text-white/40 text-[10px] font-black uppercase tracking-widest">Store Operations Live</span>
+<div class="space-y-10 animate-fade-in pb-10">
+    <!-- Section: Business Operational Analytics -->
+    <div class="space-y-6">
+        <div class="flex items-center justify-between">
+            <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span> Order Stream
+            </h3>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-white px-3 py-1 rounded-lg border border-slate-100">Live Telemetry</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-9 gap-4">
+            @php
+                $statuses = [
+                    ['label' => 'Pending', 'icon' => '🕒', 'color' => 'amber', 'count' => $merchant->orders()->where('status', 'pending')->count(), 'slug' => 'pending'],
+                    ['label' => 'Confirmed', 'icon' => '✅', 'color' => 'sky', 'count' => $merchant->orders()->where('status', 'confirmed')->count(), 'slug' => 'confirmed'],
+                    ['label' => 'Packaging', 'icon' => '📦', 'color' => 'indigo', 'count' => $merchant->orders()->where('status', 'packaging')->count(), 'slug' => 'packaging'],
+                    ['label' => 'Transit', 'icon' => '🚚', 'color' => 'blue', 'count' => $merchant->orders()->where('status', 'out_for_delivery')->count(), 'slug' => 'out_for_delivery'],
+                    ['label' => 'Delivered', 'icon' => '✨', 'color' => 'emerald', 'count' => $merchant->orders()->where('status', 'delivered')->count(), 'slug' => 'delivered'],
+                    ['label' => 'Canceled', 'icon' => '🚫', 'color' => 'rose', 'count' => $merchant->orders()->where('status', 'canceled')->count(), 'slug' => 'canceled'],
+                    ['label' => 'Returned', 'icon' => '↩️', 'color' => 'orange', 'count' => $merchant->orders()->where('status', 'returned')->count(), 'slug' => 'returned'],
+                    ['label' => 'Failed', 'icon' => '❌', 'color' => 'red', 'count' => $merchant->orders()->where('status', 'failed')->count(), 'slug' => 'failed'],
+                    ['label' => 'All', 'icon' => '📊', 'color' => 'slate', 'count' => $merchant->orders()->count(), 'slug' => ''],
+                ];
+            @endphp
+
+            @foreach($statuses as $s)
+                <a href="{{ route('merchant.orders.index', ['status' => $s['slug']]) }}" class="card-premium p-4 md:p-6 text-center group cursor-pointer hover:bg-{{ $s['color'] }}-500 hover:text-white transition-all duration-500">
+                    <div class="text-2xl mb-2 group-hover:scale-125 transition-transform duration-500">{{ $s['icon'] }}</div>
+                    <div class="text-[9px] font-black text-slate-400 group-hover:text-white/80 uppercase tracking-tighter truncate">{{ $s['label'] }}</div>
+                    <div class="text-xl font-black mt-1 tracking-tighter">{{ $s['count'] }}</div>
+                </a>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- Section: Economic Matrix & Analytics -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <!-- Merchant Wallet Cluster -->
+        <div class="lg:col-span-1 space-y-8">
+            <div class="card-premium p-8 bg-slate-950 text-white border-none shadow-2xl relative overflow-hidden group">
+                <div class="relative z-10 space-y-8">
+                    <h3 class="text-[10px] font-black text-sky-400 uppercase tracking-[0.2em]">Wallet Node</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="p-6 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md">
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Withdrawable Balance</p>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-4xl font-black tracking-tighter text-sky-400">৳{{ number_format(Auth::user()->getWallet('shop')?->balance ?? 0, 2) }}</span>
+                                <span class="text-[10px] font-black uppercase text-slate-500">BDT</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-white/5 border border-white/10 rounded-2xl">
+                                <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Pending Withdraw</p>
+                                <p class="text-sm font-black tracking-tight text-amber-400">৳0.00</p>
+                            </div>
+                            <div class="p-4 bg-white/5 border border-white/10 rounded-2xl">
+                                <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Commission</p>
+                                <p class="text-sm font-black tracking-tight text-emerald-400">৳0.00</p>
+                            </div>
+                            <div class="p-4 bg-white/5 border border-white/10 rounded-2xl">
+                                <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Already Withdrawn</p>
+                                <p class="text-sm font-black tracking-tight text-slate-300">৳0.00</p>
+                            </div>
+                            <div class="p-4 bg-white/5 border border-white/10 rounded-2xl">
+                                <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Collected Cash</p>
+                                <p class="text-sm font-black tracking-tight text-blue-400">৳0.00</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-white/5 space-y-3">
+                            <div class="flex justify-between text-[9px] font-black uppercase tracking-widest text-slate-500">
+                                <span>Delivery Charge Earned</span>
+                                <span class="text-white">৳0.00</span>
+                            </div>
+                            <div class="flex justify-between text-[9px] font-black uppercase tracking-widest text-slate-500">
+                                <span>Total Tax Given</span>
+                                <span class="text-rose-400">৳0.00</span>
+                            </div>
+                        </div>
+
+                        <button class="w-full py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                            Request Payout
+                        </button>
+                    </div>
                 </div>
-                <h2 class="text-4xl font-black mb-4 tracking-tight leading-none">
-                    {{ Auth::user()->merchant->business_name ?? 'Your Business Store' }}
-                </h2>
-                <p class="text-slate-400 text-xs font-bold font-mono">Managed Operations • Verified Supplier Account</p>
-            </div>
-            
-            <div class="flex flex-wrap gap-4">
-                <a href="{{ route('merchant.products.create') }}" class="px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-white/10 transition-all flex items-center gap-3">
-                    <span class="text-lg">➕</span> Add Product
-                </a>
-                <a href="{{ route('merchant.orders.index') }}" class="px-8 py-4 bg-white text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-emerald-500 hover:text-white transition-all shadow-xl shadow-white/5 flex items-center gap-3">
-                    <span class="text-lg">🛍️</span> View Orders
-                </a>
+                <div class="absolute -right-4 -bottom-4 opacity-10 text-6xl italic font-black select-none pointer-events-none">NODE</div>
             </div>
         </div>
-        <!-- Background Asset -->
-        <div class="absolute -right-10 -top-10 opacity-5 text-[300px] leading-none select-none font-black italic group-hover:scale-110 transition-transform duration-1000">🏪</div>
-    </div>
 
-    <!-- Metrics Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm relative overflow-hidden group hover:-translate-y-2 transition-all">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Total Catalog</p>
-            <h3 class="text-4xl font-black text-slate-800 mb-2">{{ number_format(Auth::user()->merchant?->products()->count() ?? 0) }}</h3>
-            <p class="text-[10px] font-black text-sky-500 uppercase tracking-tighter">Listed SKU's</p>
-            <div class="absolute -right-4 -top-4 opacity-5 text-7xl select-none group-hover:scale-110 transition-transform">📦</div>
-        </div>
+        <!-- Performance Chart Cluster -->
+        <div class="lg:col-span-2 card-premium p-8 bg-white border-slate-100 flex flex-col">
+            <div class="flex items-center justify-between mb-10">
+                <div>
+                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Revenue Analytics</h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Live Performance</p>
+                </div>
+                <div class="flex bg-slate-50 p-1 rounded-xl">
+                    <button class="px-4 py-1.5 text-[9px] font-black uppercase tracking-widest bg-white shadow-sm rounded-lg text-primary">Year</button>
+                    <button class="px-4 py-1.5 text-[9px] font-black uppercase tracking-widest text-slate-400">Month</button>
+                    <button class="px-4 py-1.5 text-[9px] font-black uppercase tracking-widest text-slate-400">Week</button>
+                </div>
+            </div>
 
-        <div class="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm relative overflow-hidden group hover:-translate-y-2 transition-all">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Cumulative Sales</p>
-            <h3 class="text-4xl font-black text-slate-800 mb-2">{{ number_format(Auth::user()->merchant?->orders()->count() ?? 0) }}</h3>
-            <p class="text-[10px] font-black text-emerald-500 uppercase tracking-tighter">Gross Order Volume</p>
-            <div class="absolute -right-4 -top-4 opacity-5 text-7xl select-none group-hover:scale-110 transition-transform">🛒</div>
-        </div>
-
-        <div class="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm relative overflow-hidden group hover:-translate-y-2 transition-all">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Store Liquidity</p>
-            <h3 class="text-4xl font-black text-slate-800 mb-2">৳{{ number_format(Auth::user()->getWallet('shop')?->balance ?? 0, 2) }}</h3>
-            <p class="text-[10px] font-black text-indigo-500 uppercase tracking-tighter">Shop Wallet Balance</p>
-            <div class="absolute -right-4 -top-4 opacity-5 text-7xl select-none group-hover:scale-110 transition-transform">💰</div>
-        </div>
-
-        <div class="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm relative overflow-hidden group hover:-translate-y-2 transition-all">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Active Pipeline</p>
-            <h3 class="text-4xl font-black text-rose-500 mb-2">{{ number_format(Auth::user()->merchant?->orders()->where('status', 'pending')->count() ?? 0) }}</h3>
-            <p class="text-[10px] font-black text-rose-400 uppercase tracking-tighter">Pending Fulfillment</p>
-            <div class="absolute -right-4 -top-4 opacity-5 text-7xl select-none group-hover:scale-110 transition-transform">🕒</div>
+            <div class="flex-1 min-h-[300px] relative">
+                <canvas id="earningChart"></canvas>
+            </div>
         </div>
     </div>
 
-    <!-- Rapid Management Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Quick Stats/Graph Placeholder -->
-        <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
-            <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-8">Performance Trajectory</h3>
-            <div class="h-64 bg-slate-50 rounded-3xl flex items-center justify-center border-2 border-dashed border-slate-200">
-                <p class="text-xs font-black text-slate-300 uppercase tracking-[0.2em]">Sales Visualization Coming Soon</p>
+    <!-- Section: Market Intelligence Tables -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <!-- Top Selling Products -->
+        <div class="card-premium p-8 bg-white border-slate-100">
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Top Selling Assets</h3>
+            <div class="space-y-6">
+                @forelse($merchant->products()->orderBy('orders_count', 'desc')->take(5)->get() as $product)
+                    <div class="flex items-center gap-4 group cursor-pointer">
+                        <div class="w-12 h-12 rounded-xl bg-slate-50 overflow-hidden flex-shrink-0 border border-slate-100 group-hover:scale-110 transition-transform">
+                            <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[11px] font-black text-slate-800 truncate uppercase">{{ $product->name }}</p>
+                            <p class="text-[9px] font-bold text-slate-400 tracking-tighter">{{ $product->orders_count ?? 0 }} Deployments</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-black text-emerald-500 tracking-tighter">৳{{ number_format($product->price, 2) }}</p>
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-center py-10 text-[10px] font-black text-slate-300 uppercase tracking-widest">No Sales Data</p>
+                @endforelse
             </div>
         </div>
 
-        <!-- Utility Navigation -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <a href="{{ route('merchant.products.index') }}" class="group bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:bg-slate-900 transition-all duration-500">
-                <div class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-2xl mb-6 group-hover:bg-white/10 group-hover:scale-110 transition-all">📦</div>
-                <h4 class="text-lg font-black text-slate-800 group-hover:text-white transition-colors">Inventory</h4>
-                <p class="text-[10px] font-bold text-slate-400 group-hover:text-slate-400 transition-colors uppercase tracking-widest mt-2">Manage Store SKU's</p>
-            </a>
+        <!-- Most Rated Products -->
+        <div class="card-premium p-8 bg-white border-slate-100">
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Asset Rating Matrix</h3>
+            <div class="space-y-6 text-center py-20 opacity-30">
+                <span class="text-5xl mb-4 block">⭐</span>
+                <p class="text-[10px] font-black uppercase tracking-widest">Reviews Signal Offline</p>
+            </div>
+        </div>
 
-            <a href="{{ route('merchant.reports.sales') }}" class="group bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:bg-emerald-600 transition-all duration-500">
-                <div class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-2xl mb-6 group-hover:bg-white/10 group-hover:scale-110 transition-all">📈</div>
-                <h4 class="text-lg font-black text-slate-800 group-hover:text-white transition-colors">Analytics</h4>
-                <p class="text-[10px] font-bold text-slate-400 group-hover:text-emerald-100/70 transition-colors uppercase tracking-widest mt-2">Sales Intelligence</p>
-            </a>
-
-            <a href="{{ route('merchant.orders.index') }}" class="group bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:bg-sky-600 transition-all duration-500">
-                <div class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-2xl mb-6 group-hover:bg-white/10 group-hover:scale-110 transition-all">🛒</div>
-                <h4 class="text-lg font-black text-slate-800 group-hover:text-white transition-colors">Orders</h4>
-                <p class="text-[10px] font-bold text-slate-400 group-hover:text-sky-100/70 transition-colors uppercase tracking-widest mt-2">Order Fulfillment</p>
-            </a>
-
-            <a href="{{ route('customer.profile') }}" class="group bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:bg-indigo-600 transition-all duration-500">
-                <div class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-2xl mb-6 group-hover:bg-white/10 group-hover:scale-110 transition-all">⚙️</div>
-                <h4 class="text-lg font-black text-slate-800 group-hover:text-white transition-colors">Settings</h4>
-                <p class="text-[10px] font-bold text-slate-400 group-hover:text-indigo-100/70 transition-colors uppercase tracking-widest mt-2">Shop Configuration</p>
-            </a>
+        <!-- Top Delivery Personnel (assigned to merchant) -->
+        <div class="card-premium p-8 bg-white border-slate-100">
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Dispatchers</h3>
+            <div class="space-y-6 text-center py-20 opacity-30">
+                <span class="text-5xl mb-4 block">🏍️</span>
+                <p class="text-[10px] font-black uppercase tracking-widest">Logistics Data Latency</p>
+            </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('earningChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
+        gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Revenue Protocol',
+                    data: [30, 45, 35, 60, 50, 75, 90, 85, 110, 105, 130, 150],
+                    borderColor: '#2563eb',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#2563eb',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: gradient
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0f172a',
+                        titleFont: { family: 'Outfit', size: 12, weight: 'bold' },
+                        bodyFont: { family: 'Outfit', size: 10 },
+                        padding: 12,
+                        cornerRadius: 12,
+                        displayColors: false
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { family: 'Outfit', size: 10, weight: '600' }, color: '#94a3b8' }
+                    },
+                    y: {
+                        grid: { borderDash: [5, 5], color: '#f1f5f9' },
+                        ticks: { font: { family: 'Outfit', size: 10, weight: '600' }, color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    });
+</script>
+@endpush
 @endsection

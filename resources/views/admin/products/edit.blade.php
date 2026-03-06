@@ -89,6 +89,56 @@
                     :value="$product->cashback_percentage"
                 />
 
+                <div class="bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200">
+                    <h3 class="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">SEO Metadata</h3>
+                    <x-input 
+                        label="Meta Title" 
+                        name="meta_title" 
+                        type="text" 
+                        :value="$product->meta_title"
+                        placeholder="Optimized SEO Title"
+                    />
+                    <div class="mb-0">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
+                        <textarea name="meta_description" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Meta description for search engines">{{ old('meta_description', $product->meta_description) }}</textarea>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200">
+                    <h3 class="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Visibility & Promotion</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <label class="flex items-center p-3 bg-white border border-gray-200 rounded-lg cursor-pointer">
+                            <input type="checkbox" name="is_featured" value="1" {{ $product->is_featured ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <span class="ml-2 text-sm font-bold text-gray-700">Featured Product</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-white border border-gray-200 rounded-lg cursor-pointer">
+                            <input type="checkbox" name="is_flash_deal" id="is_flash_deal_toggle" value="1" {{ $product->is_flash_deal ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <span class="ml-2 text-sm font-bold text-gray-700">Enable Flash Deal</span>
+                        </label>
+                    </div>
+
+                    <div id="flash_deal_config" class="{{ $product->is_flash_deal ? '' : 'hidden' }} grid grid-cols-2 gap-4">
+                        <x-input 
+                            label="Flash Deal Start" 
+                            name="flash_deal_start" 
+                            type="datetime-local" 
+                            :value="$product->flash_deal_start ? $product->flash_deal_start->format('Y-m-d\TH:i') : ''"
+                        />
+                        <x-input 
+                            label="Flash Deal End" 
+                            name="flash_deal_end" 
+                            type="datetime-local" 
+                            :value="$product->flash_deal_end ? $product->flash_deal_end->format('Y-m-d\TH:i') : ''"
+                        />
+                    </div>
+                </div>
+
+                <script>
+                    document.getElementById('is_flash_deal_toggle').addEventListener('change', function() {
+                        document.getElementById('flash_deal_config').classList.toggle('hidden', !this.checked);
+                    });
+                </script>
+
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Product Image

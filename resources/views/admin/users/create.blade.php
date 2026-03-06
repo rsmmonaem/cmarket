@@ -52,7 +52,7 @@
                     :options="[
                         'free' => 'Free',
                         'wallet_verified' => 'Wallet Verified',
-                        'vendor' => 'Vendor',
+                        'merchant' => 'Merchant',
                         'rider' => 'Rider',
                     ]"
                 />

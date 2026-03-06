@@ -106,16 +106,28 @@
                             </td>
                             <td class="px-10 py-8 text-center">
                                 @if($product->status === 'active')
-                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-emerald-50 text-emerald-600 border border-emerald-100 mb-1">
                                         LIVE
                                     </span>
                                 @elseif($product->status === 'draft')
-                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-amber-50 text-amber-600 border border-amber-100">
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-amber-50 text-amber-600 border border-amber-100 mb-1">
                                         DRAFT
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-slate-50 text-slate-400 border border-slate-100">
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-slate-50 text-slate-400 border border-slate-100 mb-1">
                                         OFFLINE
+                                    </span>
+                                @endif
+
+                                @if($product->is_featured)
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-sky-50 text-sky-600 border border-sky-100 mb-1">
+                                        FEATURED
+                                    </span>
+                                @endif
+
+                                @if($product->is_flash_deal)
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-rose-50 text-rose-600 border border-rose-100">
+                                        FLASH DEAL
                                     </span>
                                 @endif
                             </td>

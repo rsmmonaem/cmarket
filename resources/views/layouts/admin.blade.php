@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Dashboard') - CMarket</title>
+    <title>@yield('title', 'Admin Dashboard') - EcomMatrix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,17 +11,18 @@
             theme: {
                 extend: {
                     colors: {
-                        light: 'var(--text-light)',
-                        'muted-light': 'var(--text-muted-light)',
+                        primary: '#2563eb',
+                        accent: '#f97316',
                     }
                 }
             }
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/admin-custom.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
-        // Theme initialization
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark', 'dark-mode');
         } else {
@@ -29,175 +30,257 @@
         }
     </script>
     <style>
-        :root {
-            --sidebar-w: 280px;
-        }
-        .sidebar { 
-            width: var(--sidebar-w); 
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        .main-content { 
-            margin-left: var(--sidebar-w); 
-            min-height: 100vh; 
-            transition: all 0.3s; 
-        }
-        
-        @media (max-width: 1024px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.show { transform: translateX(0); }
-            .main-content { margin-left: 0 !important; padding: 1.5rem !important; }
-        }
-
-        /* Custom scrollbar for sidebar */
-        .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        [x-cloak] { display: none !important; }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-light text-light font-sans antialiased overflow-x-hidden">
+<body class="bg-[#f8fafc] dark:bg-[#0f172a] text-[#1e293b] dark:text-[#f1f5f9] font-sans antialiased overflow-x-hidden" x-data="{ sidebarOpen: false }">
     <!-- Mobile Backdrop -->
-    <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+    <div x-show="sidebarOpen" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden" 
+         @click="sidebarOpen = false"></div>
 
-    <div class="dashboard-container flex">
+    <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar sidebar-solid fixed left-0 top-0 bottom-0 z-50 overflow-y-auto">
-            <div class="p-6">
-                <div class="flex items-center justify-between mb-10">
-                    <div class="flex items-center gap-3">
-                        <span class="text-3xl">🚀</span>
-                        <span class="text-xl font-black text-white tracking-tighter">CMARKET <span class="text-sky-400">ADMIN</span></span>
-                    </div>
-                    <button class="lg:hidden text-white/50 hover:text-white" onclick="toggleSidebar()">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </div>
-                
-                <nav class="space-y-1">
-                    <x-admin.sidebar-link route="admin.dashboard" icon="📊" label="Dashboard" />
-                    
-                    <div class="pt-4 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4">Core Management</div>
-                    <x-admin.sidebar-link route="admin.users.index" icon="👥" label="Users" />
-                    <x-admin.sidebar-link route="admin.kyc.index" icon="✅" label="KYC Approvals" />
-                    <x-admin.sidebar-link route="admin.merchants.index" icon="🏪" label="Merchants" />
-                    
-                    <div class="pt-4 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4">Financials</div>
-                    <x-admin.sidebar-link route="admin.wallets.index" icon="💰" label="Wallets" />
-                    <x-admin.sidebar-link route="admin.withdrawals.index" icon="💸" label="Withdrawals" />
-                    <x-admin.sidebar-link route="admin.commissions.index" icon="💵" label="Commissions" />
-                    
-                    <div class="pt-4 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4">Marketplace</div>
-                    <x-admin.sidebar-link route="admin.categories.index" icon="📂" label="Categories" />
-                    <x-admin.sidebar-link route="admin.products.index" icon="📦" label="Products" />
-                    <x-admin.sidebar-link route="admin.orders.index" icon="🛍️" label="Orders" />
-                    
-                    <div class="pt-4 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4">System</div>
-                    <x-admin.sidebar-link route="admin.riders.index" icon="🚴" label="Riders" />
-                    <x-admin.sidebar-link route="admin.designations.index" icon="🏆" label="Designations" />
-                    <x-admin.sidebar-link route="admin.settings.index" icon="⚙️" label="Settings" />
-                </nav>
-            </div>
+        <aside class="w-[280px] bg-[#0f172a] text-slate-400 fixed inset-y-0 left-0 z-50 transform lg:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-800 shadow-2xl overflow-y-auto sidebar-scroll"
+               :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
             
-            <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-800 bg-slate-900/50 backdrop-blur-md">
-                <div class="flex items-center justify-between">
-                    <button id="theme-toggle" class="p-2 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
-                        <span id="theme-toggle-dark-icon" class="hidden text-xl">🌙</span>
-                        <span id="theme-toggle-light-icon" class="hidden text-xl">☀️</span>
-                    </button>
+            <!-- Sidebar Header / Logo -->
+            <div class="h-[70px] flex items-center px-6 border-b border-slate-800 bg-[#0f172a]/50 backdrop-blur-md sticky top-0 z-10">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-primary to-primary-light rounded-2xl flex items-center justify-center text-white text-xl shadow-lg shadow-primary/20">
+                        ⚡
+                    </div>
+                    <span class="text-xl font-black text-white tracking-tighter uppercase">Matrix <span class="text-primary">Admin</span></span>
+                </a>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <nav class="p-4 space-y-6 pb-24">
+                <!-- Dashboard Section -->
+                <div class="space-y-1">
+                    <x-admin.sidebar-link route="admin.dashboard" icon="📊" label="Dashboard" />
+                </div>
+
+                <div class="space-y-1">
+                    <p class="px-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">Core Operations</p>
+                    <x-admin.sidebar-link route="admin.merchants.index" icon="🏢" label="Merchants" />
+                    <x-admin.sidebar-link route="admin.pos.index" icon="🖱️" label="POS Terminal" />
+                    <x-admin.sidebar-link route="admin.commissions.index" icon="🤝" label="Affiliates" />
+                    <x-admin.sidebar-link route="admin.products.index" icon="🗒️" label="Procurement" />
+                </div>
+
+                <!-- Order Management -->
+                <div class="space-y-1">
+                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Sales</p>
+                    <x-admin.sidebar-dropdown icon="🛍️" label="Orders" :active="request()->is('admin/orders*')">
+                        <x-admin.sidebar-link route="admin.orders.index" icon="📦" label="All Orders" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'pending']" icon="⏳" label="Pending" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'confirmed']" icon="✅" label="Confirmed" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'packaging']" icon="📦" label="Packaging" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'out_for_delivery']" icon="🚚" label="Out for Delivery" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'delivered']" icon="🏁" label="Delivered" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'returned']" icon="🔄" label="Returned" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'failed']" icon="❌" label="Failed" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'cancelled']" icon="🚫" label="Cancelled" />
+                    </x-admin.sidebar-dropdown>
+
+                    <x-admin.sidebar-dropdown icon="💸" label="Refund Requests" :active="request()->is('admin/refunds*')">
+                        <x-admin.sidebar-link route="admin.refunds.index" icon="⏳" label="Pending" />
+                        <x-admin.sidebar-link route="admin.refunds.index" icon="✅" label="Approved" />
+                        <x-admin.sidebar-link route="admin.refunds.index" icon="💰" label="Refunded" />
+                        <x-admin.sidebar-link route="admin.refunds.index" icon="❌" label="Rejected" />
+                    </x-admin.sidebar-dropdown>
+                </div>
+
+                <!-- Product Management -->
+                <div class="space-y-1">
+                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Catalog</p>
+                    <x-admin.sidebar-dropdown icon="🧩" label="Products" :active="request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.sub-categories.*', 'admin.sub-sub-categories.*', 'admin.brands.*', 'admin.attributes.*')">
+                        <x-admin.sidebar-link route="admin.categories.index" icon="📂" label="Categories" />
+                        <x-admin.sidebar-link route="admin.sub-categories.index" :params="['type' => 'sub']" icon="📁" label="Sub Categories" />
+                        <x-admin.sidebar-link route="admin.sub-sub-categories.index" :params="['type' => 'sub-sub']" icon="📁" label="Sub-sub Categories" />
+                        <x-admin.sidebar-link route="admin.brands.index" icon="🏷️" label="Brands" />
+                        <x-admin.sidebar-link route="admin.attributes.index" icon="⚙️" label="Attributes" />
+                        <x-admin.sidebar-link route="admin.products.index" icon="📦" label="In-house Products" />
+                        <x-admin.sidebar-link route="admin.products.index" :params="['type' => 'merchant']" icon="🏪" label="Merchant Products" />
+                    </x-admin.sidebar-dropdown>
+                </div>
+
+                <!-- Promotions -->
+                <div class="space-y-1">
+                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Marketing</p>
+                    <x-admin.sidebar-dropdown icon="📣" label="Promotions" :active="request()->routeIs('admin.banners.*', 'admin.coupons.*', 'admin.flash-deals.*')">
+                        <x-admin.sidebar-link route="admin.banners.index" icon="🖼️" label="Banners" />
+                        <x-admin.sidebar-link route="admin.coupons.index" icon="🎟️" label="Coupons" />
+                        <x-admin.sidebar-link route="admin.flash-deals.index" icon="⚡" label="Flash Deals" />
+                        <x-admin.sidebar-link route="admin.flash-deals.index" :params="['type' => 'daily']" icon="📅" label="Deal of the Day" />
+                        <x-admin.sidebar-link route="admin.flash-deals.index" :params="['type' => 'featured']" icon="⭐" label="Featured Deals" />
+                    </x-admin.sidebar-dropdown>
+                </div>
+
+                <!-- Users -->
+                <div class="space-y-1">
+                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Users</p>
+                    <x-admin.sidebar-dropdown icon="👥" label="Management" :active="request()->routeIs('admin.users.*', 'admin.merchants.*', 'admin.riders.*')">
+                        <x-admin.sidebar-link route="admin.users.index" icon="👤" label="Customers" />
+                        <x-admin.sidebar-link route="admin.merchants.index" icon="🏪" label="Merchants" />
+                        <x-admin.sidebar-link route="admin.riders.index" icon="🚴" label="Delivery Man" />
+                        <x-admin.sidebar-link route="admin.kyc.index" icon="🆔" label="KYC Verifications" />
+                        <x-admin.sidebar-link route="admin.designations.index" icon="💼" label="Designations" />
+                    </x-admin.sidebar-dropdown>
+                </div>
+
+                <!-- Reports -->
+                <div class="space-y-1">
+                    <p class="px-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">Analytics</p>
+                    <x-admin.sidebar-dropdown icon="📊" label="Reports" :active="request()->is('admin/reports*')">
+                        <x-admin.sidebar-link route="admin.reports.sales" icon="💵" label="Sales Report" />
+                        <x-admin.sidebar-link route="admin.reports.financials" icon="💳" label="Transactions" />
+                        <x-admin.sidebar-link route="admin.reports.merchants" icon="🏬" label="Merchant Stats" />
+                        <x-admin.sidebar-link route="admin.products.index" icon="📦" label="Product Stats" />
+                        <x-admin.sidebar-link route="admin.orders.index" icon="🛍️" label="Order Stats" />
+                        <x-admin.sidebar-link route="admin.reports.financials" icon="📈" label="Financials" />
+                    </x-admin.sidebar-dropdown>
+                </div>
+
+                <!-- System -->
+                <div class="space-y-1">
+                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Core Settings</p>
+                    <x-admin.sidebar-link route="admin.settings.index" icon="⚙️" label="System Settings" />
+                </div>
+
+                            <!-- Sidebar Footer -->
+            <div class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">
+                <div class="flex items-center justify-between px-2">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="text-xs font-bold text-red-400 hover:text-red-300 transition uppercase tracking-widest">Logout</button>
+                        <button type="submit" class="text-[9px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400">Logout</button>
                     </form>
                 </div>
             </div>
+            </nav>
+
+
         </aside>
 
-        <!-- Main Content -->
-        <main class="main-content flex-1 p-4 md:p-8">
-            <header class="topbar flex items-center justify-between mb-10">
+        <!-- Main Workspace -->
+        <main class="flex-1 lg:ml-[280px] min-h-screen transition-all duration-300">
+            <!-- Header -->
+            <header class="h-[70px] bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 md:px-8 sticky top-0 z-40 shadow-sm">
                 <div class="flex items-center gap-4">
-                    <button class="p-2 lg:hidden rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-400 shadow-sm" onclick="toggleSidebar()">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
                     </button>
-                    <div>
-                        <h1 class="text-xl md:text-3xl font-black text-light tracking-tight">@yield('page-title', 'Dashboard')</h1>
-                        <p class="text-[10px] md:text-sm text-muted-light font-bold md:font-medium">Welcome back, {{ Auth::user()->name }}</p>
+                    
+                    <!-- Search Bar -->
+                    <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-2xl px-4 py-2 w-[400px] border border-transparent focus-within:border-primary/20 focus-within:bg-white dark:focus-within:bg-[#1e293b] transition-all group">
+                        <span class="text-slate-400 group-focus-within:text-primary transition-colors">🔍</span>
+                        <input type="text" placeholder="Global asset search..." class="bg-transparent border-none focus:ring-0 text-sm w-full ml-3 font-medium placeholder:text-slate-400 text-slate-600 dark:text-slate-200">
                     </div>
                 </div>
-                
-                <div class="flex items-center gap-6">
-                    <div class="text-right hidden sm:block">
-                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight">{{ Auth::user()->name }}</div>
-                        <div class="text-[9px] font-black uppercase tracking-[0.2em] text-sky-500 mt-1">Global Administrator</div>
+
+                <div class="flex items-center gap-2 md:gap-5">
+                    <!-- Language Loader -->
+                    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-white dark:hover:bg-slate-700 transition-all">
+                        <span class="text-xs font-black text-slate-500 uppercase">EN</span>
+                        <span class="text-[10px] text-slate-300">|</span>
+                        <span class="text-xs font-black text-primary uppercase">BN</span>
                     </div>
-                    
-                    <div class="relative group">
-                        <button class="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white font-black shadow-xl hover:scale-105 transition-transform duration-300">
-                            {{ substr(Auth::user()->name, 0, 1) }}
-                        </button>
-                        <!-- Admin Dropdown -->
-                        <div class="absolute right-0 top-full pt-3 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-3 group-hover:translate-y-0 z-50">
-                            <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
-                                <div class="p-6 border-b border-slate-50 dark:border-slate-800 mb-2">
-                                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Identified User</div>
-                                    <div class="text-sm font-black text-slate-800 dark:text-white mt-1">{{ Auth::user()->name }}</div>
-                                </div>
-                                <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-4 px-6 py-4 text-xs font-black text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-sky-600 transition-all rounded-2xl">
-                                    <span class="text-lg">⚙️</span> System Control
-                                </a>
-                                <div class="border-t border-slate-50 dark:border-slate-800 my-2"></div>
-                                <form action="{{ route('logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="w-full text-left flex items-center gap-4 px-6 py-4 text-xs font-black text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all rounded-2xl">
-                                        <span class="text-lg">🚪</span> Exit Terminal
-                                    </button>
-                                </form>
+
+                    <!-- Notification Protocol -->
+                    <button class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-white dark:hover:bg-slate-700 border border-slate-100 dark:border-slate-700 transition-all relative">
+                        <span>🔔</span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white dark:border-slate-800"></span>
+                    </button>
+
+                    <!-- Message Channel -->
+                    <button class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-accent hover:bg-white dark:hover:bg-slate-700 border border-slate-100 dark:border-slate-700 transition-all relative">
+                        <span>💬</span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-sky-500 rounded-full border-2 border-white dark:border-slate-800"></span>
+                    </button>
+
+                    <div class="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block"></div>
+
+                    <!-- Identity Node -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 p-1.5 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                            <div class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-black shadow-lg shadow-primary/20 uppercase">
+                                {{ substr(Auth::user()->name, 0, 1) }}
                             </div>
+                            <div class="text-left hidden sm:block">
+                                <div class="text-[11px] font-black text-slate-800 dark:text-white leading-none uppercase">{{ Auth::user()->name }}</div>
+                                <div class="text-[8px] font-black text-slate-400 uppercase mt-0.5 tracking-tighter">Root Administrator</div>
+                            </div>
+                            <span class="text-[10px] text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''">▼</span>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div x-show="open" 
+                             x-cloak
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             class="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-[#1e293b] rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 z-[60]">
+                            <div class="px-4 py-3 border-b border-slate-50 dark:border-slate-800 mb-2">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Signed in as</p>
+                                <p class="text-xs font-black text-slate-800 dark:text-white truncate">{{ Auth::user()->email }}</p>
+                            </div>
+                            <a href="{{ route('admin.users.edit', Auth::user()) }}" class="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-all rounded-xl">
+                                👤 Profile Metrics
+                            </a>
+                            <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-all rounded-xl">
+                                ⚙️ Protocol Settings
+                            </a>
+                            <div class="border-t border-slate-50 dark:border-slate-800 my-2"></div>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-xs font-black text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all rounded-xl">
+                                    🚪 De-authorize Session
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <div id="content-mount">
+            <!-- Page Content Inner -->
+            <div class="p-6 lg:p-10 max-w-[1600px] mx-auto">
+                {{-- Breadcrumbs placeholder --}}
+                <div class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">
+                    <a href="#" class="hover:text-primary transition-colors">Matrix</a>
+                    <span>/</span>
+                    <span class="text-slate-800 dark:text-white font-black">@yield('page-title', 'Overview')</span>
+                </div>
+
                 @yield('content')
             </div>
+
+            <!-- Footer -->
+            <footer class="p-6 lg:px-10 mt-auto border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-400 text-[10px] font-black uppercase tracking-widest">
+                <div>
+                    &copy; {{ date('Y') }} <span class="text-slate-600 dark:text-slate-500">EcomMatrix Operating System.</span> All Rights Reserved.
+                </div>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="hover:text-primary transition-colors">Documentation</a>
+                    <a href="#" class="hover:text-primary transition-colors">Quick Support</a>
+                    <a href="#" class="hover:text-primary transition-colors">Protocol v2.1.0</a>
+                </div>
+            </footer>
         </main>
     </div>
 
     <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('sidebar-backdrop');
-            sidebar.classList.toggle('show');
-            backdrop.classList.toggle('hidden');
-            if(sidebar.classList.contains('show')) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = 'auto';
-            }
-        }
-
         const themeToggleBtn = document.getElementById('theme-toggle');
-        const darkIcon = document.getElementById('theme-toggle-dark-icon');
-        const lightIcon = document.getElementById('theme-toggle-light-icon');
-
-        function updateIcons() {
-            if (document.documentElement.classList.contains('dark-mode')) {
-                darkIcon.classList.add('hidden');
-                lightIcon.classList.remove('hidden');
-            } else {
-                darkIcon.classList.remove('hidden');
-                lightIcon.classList.add('hidden');
-            }
-        }
-
-        updateIcons();
-
-        themeToggleBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            document.documentElement.classList.toggle('dark-mode');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            updateIcons();
-        });
+        // Simple theme logic if needed for sidebar specifically, 
+        // but the head script handles initial load.
 
         // SweetAlert Notifications
         const Toast = Swal.mixin({
@@ -213,25 +296,12 @@
         });
 
         @if(session('success'))
-            Toast.fire({
-                icon: 'success',
-                title: "{{ session('success') }}"
-            });
+            Toast.fire({ icon: 'success', title: "{{ session('success') }}" });
         @endif
-
         @if(session('error'))
-            Toast.fire({
-                icon: 'error',
-                title: "{{ session('error') }}"
-            });
-        @endif
-
-        @if(session('warning'))
-            Toast.fire({
-                icon: 'warning',
-                title: "{{ session('warning') }}"
-            });
+            Toast.fire({ icon: 'error', title: "{{ session('error') }}" });
         @endif
     </script>
+    @stack('scripts')
 </body>
 </html>

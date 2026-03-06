@@ -1,4 +1,4 @@
-@extends('layouts.customer')
+@extends('layouts.public')
 
 @section('title', 'Secure Settlement - CMarket')
 @section('page-title', 'Final Confirmation')
@@ -43,18 +43,18 @@
                         </div>
                         <div class="space-y-3">
                             <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Secure Contact Number</label>
-                            <input type="text" name="phone" value="{{ auth()->user()->phone ?? old('phone') }}" required placeholder="01XXXXXXXXX" class="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-black text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">
+                            <input type="text" name="phone" value="{{ auth()->user()->phone ?? old('phone') }}" required placeholder="01XXXXXXXXX" class="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-black text-slate-800 focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-300">
                         </div>
                     </div>
 
                     <div class="space-y-3">
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Physical Coordinates (Address)</label>
-                        <textarea name="shipping_address" rows="4" required placeholder="Full deployment address including district and upazila..." class="w-full bg-slate-50 border-none rounded-[2rem] p-6 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">{{ old('shipping_address') }}</textarea>
+                        <textarea name="shipping_address" rows="4" required placeholder="Full deployment address including district and upazila..." class="w-full bg-slate-50 border-none rounded-[2rem] p-6 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-300">{{ old('shipping_address') }}</textarea>
                     </div>
 
                     <div class="space-y-3">
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Special Directives (Optional)</label>
-                        <input type="text" name="notes" placeholder="Example: Leave at front gate..." class="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">
+                        <input type="text" name="notes" placeholder="Example: Leave at front gate..." class="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-300">
                     </div>
                 </div>
 
@@ -69,15 +69,15 @@
                         <!-- Internal Wallet -->
                         <label class="relative block cursor-pointer group">
                             <input type="radio" name="payment_method" value="wallet" class="peer hidden" required>
-                            <div class="p-8 rounded-[2rem] border-2 border-slate-50 bg-slate-50 peer-checked:border-sky-500 peer-checked:bg-sky-50 peer-checked:shadow-xl peer-checked:shadow-sky-500/10 transition-all duration-300 flex items-center justify-between">
+                            <div class="p-8 rounded-[2rem] border-2 border-slate-50 bg-slate-50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-xl peer-checked:shadow-primary/10 transition-all duration-300 flex items-center justify-between">
                                 <div class="flex items-center gap-6">
-                                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-sm border border-slate-100 peer-checked:border-sky-200">🏦</div>
+                                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-sm border border-slate-100 peer-checked:border-primary/20">🏦</div>
                                     <div>
                                         <h4 class="text-lg font-black text-slate-800 mb-1">Ecosystem Digital Wallet</h4>
                                         <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Instant Settlement • Liquid: <span class="text-emerald-500">৳{{ number_format($mainWallet->balance ?? 0, 2) }}</span></p>
                                     </div>
                                 </div>
-                                <div class="w-6 h-6 rounded-full border-2 border-slate-200 peer-checked:border-sky-500 peer-checked:bg-sky-500 flex items-center justify-center transition-all">
+                                <div class="w-6 h-6 rounded-full border-2 border-slate-200 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all">
                                     <div class="w-2.5 h-2.5 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-all"></div>
                                 </div>
                             </div>
@@ -115,7 +115,7 @@
                 </div>
 
                 <div class="mt-12">
-                    <button type="submit" class="w-full py-7 bg-slate-900 text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.4em] shadow-2xl shadow-slate-900/40 hover:bg-sky-600 hover:scale-[1.01] transition-all duration-500">
+                    <button type="submit" class="w-full py-7 bg-slate-900 text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.4em] shadow-2xl shadow-slate-900/40 hover:bg-primary-hover sticky top-40">
                         Initiate Final Deployment ➔
                     </button>
                     <p class="text-center text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-6">Secure end-to-end encrypted transaction module</p>

@@ -30,6 +30,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/about', [App\Http\Controllers\HomeController::class, 'about'])->name('about');
 Route::get('/contact', [App\Http\Controllers\HomeController::class, 'contact'])->name('contact');
+Route::get('/merchants', [App\Http\Controllers\HomeController::class, 'merchants'])->name('merchants.index');
 
 // Products
 Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
@@ -161,6 +162,11 @@ Route::middleware(['auth', 'role:merchant'])->prefix('merchant')->name('merchant
     // Reports
     Route::get('/reports/sales', [App\Http\Controllers\Merchant\ReportController::class, 'sales'])->name('reports.sales');
     Route::get('/reports/sales/export', [App\Http\Controllers\Merchant\ReportController::class, 'exportExcel'])->name('reports.sales.export');
+    Route::get('/reports/analytics', [MerchantDashboardController::class, 'index'])->name('reports.analytics');
+    
+    // Shop settings
+    Route::get('/shop', [App\Http\Controllers\Merchant\ShopController::class, 'index'])->name('shop.index');
+    Route::post('/shop', [App\Http\Controllers\Merchant\ShopController::class, 'update'])->name('shop.update');
 });
 
 // Rider dashboard
@@ -201,9 +207,23 @@ Route::middleware(['auth', 'role:super-admin|admin'])->prefix('admin')->name('ad
     Route::post('withdrawals/{withdrawal}/approve', [App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('withdrawals.approve');
     Route::post('withdrawals/{withdrawal}/reject', [App\Http\Controllers\Admin\WithdrawalController::class, 'reject'])->name('withdrawals.reject');
     
+    // Banner management
+    Route::patch('banners/{banner}/toggle-status', [App\Http\Controllers\Admin\BannerController::class, 'toggleStatus'])->name('banners.toggle-status');
+    Route::resource('banners', App\Http\Controllers\Admin\BannerController::class);
+
     // Category management
+    Route::patch('categories/{category}/toggle-status', [App\Http\Controllers\Admin\CategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
+    Route::get('sub-categories', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('sub-categories.index');
+    Route::get('sub-sub-categories', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('sub-sub-categories.index');
     Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class);
     
+    // POS
+    Route::get('pos', [App\Http\Controllers\Admin\PosController::class, 'index'])->name('pos.index');
+
+    // Brands & Attributes
+    Route::resource('brands', App\Http\Controllers\Admin\BrandController::class);
+    Route::resource('attributes', App\Http\Controllers\Admin\AttributeController::class);
+
     // Product management
     Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
     
@@ -212,6 +232,13 @@ Route::middleware(['auth', 'role:super-admin|admin'])->prefix('admin')->name('ad
     Route::get('orders/{order}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
     Route::post('orders/{order}/update-status', [App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
     Route::post('orders/{order}/cancel', [App\Http\Controllers\Admin\OrderController::class, 'cancel'])->name('orders.cancel');
+    
+    // Refund Management
+    Route::get('refunds', [App\Http\Controllers\Admin\RefundController::class, 'index'])->name('refunds.index');
+
+    // Promotions
+    Route::resource('coupons', App\Http\Controllers\Admin\CouponController::class);
+    Route::resource('flash-deals', App\Http\Controllers\Admin\FlashDealController::class);
     
     // Merchant management
     Route::get('merchants', [App\Http\Controllers\Admin\MerchantController::class, 'index'])->name('merchants.index');
@@ -240,4 +267,11 @@ Route::middleware(['auth', 'role:super-admin|admin'])->prefix('admin')->name('ad
     // System Settings
     Route::get('settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
+
+    // Reports
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/sales', [App\Http\Controllers\Admin\ReportController::class, 'sales'])->name('sales');
+        Route::get('/merchants', [App\Http\Controllers\Admin\ReportController::class, 'merchants'])->name('merchants');
+        Route::get('/financials', [App\Http\Controllers\Admin\ReportController::class, 'financials'])->name('financials');
+    });
 });

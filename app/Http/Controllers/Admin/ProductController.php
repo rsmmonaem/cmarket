@@ -45,6 +45,12 @@ class ProductController extends Controller
             'sku' => 'nullable|string|unique:products,sku',
             'cashback_percentage' => 'nullable|numeric|min:0|max:100',
             'status' => 'required|in:active,inactive,draft',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:1000',
+            'is_featured' => 'boolean',
+            'is_flash_deal' => 'boolean',
+            'flash_deal_start' => 'nullable|date',
+            'flash_deal_end' => 'nullable|date|after:flash_deal_start',
             'product_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -91,6 +97,12 @@ class ProductController extends Controller
             'sku' => 'nullable|string|unique:products,sku,' . $product->id,
             'cashback_percentage' => 'nullable|numeric|min:0|max:100',
             'status' => 'required|in:active,inactive,draft',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:1000',
+            'is_featured' => 'boolean',
+            'is_flash_deal' => 'boolean',
+            'flash_deal_start' => 'nullable|date',
+            'flash_deal_end' => 'nullable|date|after:flash_deal_start',
             'product_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 

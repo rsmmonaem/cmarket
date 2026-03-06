@@ -1,128 +1,127 @@
+<?php $__env->startSection('title', 'Category Logic - EcomMatrix'); ?>
+<?php $__env->startSection('page-title', 'Taxonomy Architecture'); ?>
+
 <?php $__env->startSection('content'); ?>
-<div class="p-6">
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Category Management</h1>
-        <a href="<?php echo e(route('admin.categories.create')); ?>">
-            <?php if (isset($component)) { $__componentOriginald0f1fd2689e4bb7060122a5b91fe8561 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald0f1fd2689e4bb7060122a5b91fe8561 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.button','data' => ['variant' => 'primary']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['variant' => 'primary']); ?>
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                Add Category
-             <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginald0f1fd2689e4bb7060122a5b91fe8561)): ?>
-<?php $attributes = $__attributesOriginald0f1fd2689e4bb7060122a5b91fe8561; ?>
-<?php unset($__attributesOriginald0f1fd2689e4bb7060122a5b91fe8561); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginald0f1fd2689e4bb7060122a5b91fe8561)): ?>
-<?php $component = $__componentOriginald0f1fd2689e4bb7060122a5b91fe8561; ?>
-<?php unset($__componentOriginald0f1fd2689e4bb7060122a5b91fe8561); ?>
-<?php endif; ?>
-        </a>
+<div class="space-y-10 animate-fade-in">
+    <!-- Macro Summary & Action -->
+    <div class="card-premium flex flex-col lg:flex-row justify-between items-center gap-8 md:gap-10 relative overflow-hidden group">
+        <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
+            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Taxonomy Engine</h2>
+            <p class="text-slate-400 dark:text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] ml-1">Organizing platform logic into <?php echo e($categories->total()); ?> operational nodes</p>
+        </div>
+        <div class="flex items-center gap-4 relative z-10 w-full lg:w-auto">
+            <a href="<?php echo e(route('admin.categories.create')); ?>" class="btn-matrix btn-primary-matrix w-full lg:w-auto">
+                <span class="text-lg">➕</span> Deploy New Node
+            </a>
+        </div>
+        <!-- Decor -->
+        <div class="absolute -right-10 -bottom-10 opacity-[0.03] text-[150px] md:text-[200px] leading-none select-none italic font-black group-hover:scale-110 transition-transform duration-1000 dark:text-white">MAP</div>
     </div>
 
-    <!-- Categories Table -->
-    <?php if (isset($component)) { $__componentOriginal163c8ba6efb795223894d5ffef5034f5 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal163c8ba6efb795223894d5ffef5034f5 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.table','data' => ['headers' => ['Name', 'Slug', 'Parent', 'Products', 'Status', 'Order']]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('table'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['Name', 'Slug', 'Parent', 'Products', 'Status', 'Order'])]); ?>
-        <?php $__empty_1 = true; $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-            <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center">
-                        <?php if($category->image): ?>
-                            <img src="<?php echo e(asset('storage/' . $category->image)); ?>" alt="<?php echo e($category->name); ?>" 
-                                 class="w-10 h-10 rounded mr-3 object-cover">
-                        <?php endif; ?>
-                        <div class="text-sm font-medium text-gray-900"><?php echo e($category->name); ?></div>
-                    </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <?php echo e($category->slug); ?>
+    <!-- Data Infrastructure Table -->
+    <div class="card-premium !p-0 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[900px]">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/50">
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Taxonomy Node</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Parent Protocol</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Entity Count</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Protocol Status</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-right">Operations</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+                    <?php $__empty_1 = true; $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        <tr class="group hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-all duration-300">
+                            <td class="px-10 py-8">
+                                <div class="flex items-center gap-6">
+                                    <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition-transform overflow-hidden font-black">
+                                        <?php if($category->image): ?>
+                                            <img src="<?php echo e(asset('storage/' . $category->image)); ?>" class="w-full h-full object-cover">
+                                        <?php else: ?>
+                                            📂
+                                        <?php endif; ?>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-black text-slate-800 dark:text-white mb-1"><?php echo e($category->name); ?></div>
+                                        <div class="text-[9px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest"><?php echo e($category->slug); ?></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-10 py-8">
+                                <span class="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest">
+                                    <?php echo e($category->parent->name ?? 'ROOT LEVEL'); ?>
 
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <?php echo e($category->parent->name ?? 'Root'); ?>
+                                </span>
+                            </td>
+                            <td class="px-10 py-8 text-center text-sm font-black text-slate-800 dark:text-white">
+                                <?php echo e(number_format($category->products_count)); ?>
 
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <?php echo e($category->products_count ?? 0); ?>
+                            </td>
+                            <td class="px-10 py-8 text-center">
+                                <div x-data="{ active: <?php echo e($category->is_active ? 'true' : 'false'); ?>, loading: false }">
+                                    <button 
+                                        @click="
+                                            if(loading) return;
+                                            loading = true;
+                                            fetch('<?php echo e(route('admin.categories.toggle-status', $category)); ?>', {
+                                                method: 'PATCH',
+                                                headers: {
+                                                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                                                    'Content-Type': 'application/json',
+                                                    'Accept': 'application/json'
+                                                }
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if(data.success) {
+                                                    active = data.is_active;
+                                                    Toast.fire({ icon: 'success', title: data.message });
+                                                }
+                                            })
+                                            .finally(() => loading = false);
+                                        "
+                                        :class="active ? 'bg-primary' : 'bg-slate-700'"
+                                        class="relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none shadow-inner"
+                                    >
+                                        <span :class="active ? 'translate-x-[20px]' : 'translate-x-0'"
+                                              class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                                        <div x-show="loading" class="absolute inset-0 flex items-center justify-center bg-white/20 rounded-full">
+                                            <svg class="animate-spin h-3 w-3 text-white" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="px-10 py-8 text-right">
+                                <div class="flex justify-end opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0 duration-300 gap-3">
+                                    <a href="<?php echo e(route('admin.categories.edit', $category)); ?>" class="w-10 h-10 rounded-xl bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center text-lg hover:bg-primary transition-all shadow-xl shadow-slate-900/10">
+                                        ✏️
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                        <tr>
+                            <td colspan="5" class="px-10 py-32 text-center text-slate-300 flex flex-col items-center">
+                                <span class="text-8xl mb-6 opacity-10">🗺️</span>
+                                <p class="text-lg font-black uppercase tracking-[0.2em]">Matrix is Empty</p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
 
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <?php if (isset($component)) { $__componentOriginal2ddbc40e602c342e508ac696e52f8719 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal2ddbc40e602c342e508ac696e52f8719 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.badge','data' => ['variant' => $category->is_active ? 'success' : 'danger']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('badge'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['variant' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($category->is_active ? 'success' : 'danger')]); ?>
-                        <?php echo e($category->is_active ? 'Active' : 'Inactive'); ?>
+        <?php if($categories->hasPages()): ?>
+            <div class="px-10 py-6 border-t border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30">
+                <?php echo e($categories->links()); ?>
 
-                     <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal2ddbc40e602c342e508ac696e52f8719)): ?>
-<?php $attributes = $__attributesOriginal2ddbc40e602c342e508ac696e52f8719; ?>
-<?php unset($__attributesOriginal2ddbc40e602c342e508ac696e52f8719); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal2ddbc40e602c342e508ac696e52f8719)): ?>
-<?php $component = $__componentOriginal2ddbc40e602c342e508ac696e52f8719; ?>
-<?php unset($__componentOriginal2ddbc40e602c342e508ac696e52f8719); ?>
-<?php endif; ?>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <?php echo e($category->sort_order); ?>
-
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <a href="<?php echo e(route('admin.categories.edit', $category)); ?>" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
-                    <form action="<?php echo e(route('admin.categories.destroy', $category)); ?>" method="POST" class="inline" 
-                          onsubmit="return confirm('Are you sure?');">
-                        <?php echo csrf_field(); ?>
-                        <?php echo method_field('DELETE'); ?>
-                        <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-            <tr>
-                <td colspan="7" class="px-6 py-4 text-center text-gray-500">No categories found</td>
-            </tr>
+            </div>
         <?php endif; ?>
-     <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal163c8ba6efb795223894d5ffef5034f5)): ?>
-<?php $attributes = $__attributesOriginal163c8ba6efb795223894d5ffef5034f5; ?>
-<?php unset($__attributesOriginal163c8ba6efb795223894d5ffef5034f5); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal163c8ba6efb795223894d5ffef5034f5)): ?>
-<?php $component = $__componentOriginal163c8ba6efb795223894d5ffef5034f5; ?>
-<?php unset($__componentOriginal163c8ba6efb795223894d5ffef5034f5); ?>
-<?php endif; ?>
-
-    <!-- Pagination -->
-    <div class="mt-6">
-        <?php echo e($categories->links()); ?>
-
     </div>
 </div>
 <?php $__env->stopSection(); ?>

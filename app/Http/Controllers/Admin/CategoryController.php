@@ -16,9 +16,17 @@ class CategoryController extends Controller
         $this->imageService = $imageService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::with('parent')->latest()->paginate(20);
+        $query = Category::with('parent');
+        
+        if ($request->type == 'sub') {
+            $query->whereNotNull('parent_id');
+        } elseif ($request->type == 'main') {
+            $query->whereNull('parent_id');
+        }
+        
+        $categories = $query->latest()->paginate(20);
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -90,5 +98,17 @@ class CategoryController extends Controller
         $category->delete();
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category deleted successfully.');
+    }
+
+    public function toggleStatus(Category $category)
+    {
+        $category->is_active = !$category->is_active;
+        $category->save();
+
+        return response()->json([
+            'success' => true,
+            'is_active' => $category->is_active,
+            'message' => 'Category status synchronized.'
+        ]);
     }
 }

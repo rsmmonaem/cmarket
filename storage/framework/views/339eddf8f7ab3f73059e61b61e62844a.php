@@ -1,226 +1,248 @@
-<?php $__env->startSection('title', 'Admin Command - CMarket'); ?>
-<?php $__env->startSection('page-title', 'Global Overview'); ?>
+<?php $__env->startSection('title', 'Matrix Admin Hub'); ?>
+<?php $__env->startSection('page-title', 'Administrative Hub'); ?>
 
 <?php $__env->startSection('content'); ?>
-<div class="space-y-10 animate-fade-in">
+<div class="space-y-12 animate-fade-in">
     <!-- Macro Infrastructure Summary -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Users Logic -->
-        <?php if (isset($component)) { $__componentOriginalad5130b5347ab6ecc017d2f5a278b926 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.card','data' => ['class' => 'relative overflow-hidden group border-none bg-slate-900 text-white shadow-2xl shadow-slate-900/10']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.card'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'relative overflow-hidden group border-none bg-slate-900 text-white shadow-2xl shadow-slate-900/10']); ?>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Sales Velocity -->
+        <div class="card-premium bg-gradient-to-br from-primary to-primary-dark text-white border-none shadow-2xl shadow-primary/20 relative overflow-hidden group">
             <div class="relative z-10">
                 <div class="flex items-center justify-between mb-8">
-                    <span class="text-[9px] font-black uppercase tracking-[0.2em] opacity-40">User Base Hub</span>
-                    <span class="text-xl">👥</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Total Revenue</span>
+                    <span class="text-2xl">💰</span>
                 </div>
-                <h3 class="text-4xl font-black mb-2 tracking-tighter"><?php echo e(number_format(\App\Models\User::count())); ?></h3>
-                <p class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">+<?php echo e(\App\Models\User::where('created_at', '>=', now()->subDays(7))->count()); ?> growth last 7d</p>
+                <h3 class="text-4xl font-black mb-2 tracking-tighter">৳<?php echo e(number_format(\App\Models\Order::where('status', 'paid')->sum('total_amount'), 0)); ?></h3>
+                <p class="text-[10px] font-black text-primary-light uppercase tracking-widest">+12.5% vs last cycle</p>
             </div>
-            <!-- Background element -->
-            <div class="absolute -right-2 -bottom-2 opacity-[0.03] text-8xl font-black italic">USERS</div>
-         <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
-<?php $attributes = $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
-<?php unset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
-<?php $component = $__componentOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
-<?php unset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
-<?php endif; ?>
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl font-black italic select-none">SALES</div>
+        </div>
 
-        <!-- KYC Verification Pipeline -->
-        <?php if (isset($component)) { $__componentOriginalad5130b5347ab6ecc017d2f5a278b926 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.card','data' => ['class' => 'relative overflow-hidden group border-none bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl transition-all duration-500']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.card'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'relative overflow-hidden group border-none bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl transition-all duration-500']); ?>
+        <!-- Store Network -->
+        <div class="card-premium relative overflow-hidden group">
             <div class="relative z-10">
                 <div class="flex items-center justify-between mb-8">
-                    <span class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">KYC Auth Pipeline</span>
-                    <span class="text-xl">🛡️</span>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Active Merchants</span>
+                    <span class="text-2xl">🏪</span>
                 </div>
-                <h3 class="text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tighter"><?php echo e(number_format(\App\Models\Kyc::where('status', 'pending')->count())); ?></h3>
-                <p class="text-[9px] font-black text-rose-500 uppercase tracking-widest">Awaiting Manual Audit</p>
+                <h3 class="text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tighter"><?php echo e(\App\Models\Merchant::count()); ?></h3>
+                <p class="text-[10px] font-black text-accent uppercase tracking-widest">Across all territories</p>
             </div>
-            <div class="absolute -right-2 -bottom-2 opacity-[0.03] text-8xl font-black italic text-slate-400 dark:text-white">AUTH</div>
-         <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
-<?php $attributes = $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
-<?php unset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
-<?php $component = $__componentOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
-<?php unset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
-<?php endif; ?>
+            <div class="absolute -right-4 -bottom-4 opacity-[0.03] text-8xl font-black italic select-none dark:text-white">STORES</div>
+        </div>
 
-        <!-- Order Fulfillment -->
-        <?php if (isset($component)) { $__componentOriginalad5130b5347ab6ecc017d2f5a278b926 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.card','data' => ['class' => 'relative overflow-hidden group border-none bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl transition-all duration-500']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.card'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'relative overflow-hidden group border-none bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl transition-all duration-500']); ?>
+        <!-- Asset Matrix -->
+        <div class="card-premium relative overflow-hidden group">
             <div class="relative z-10">
                 <div class="flex items-center justify-between mb-8">
-                    <span class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Orders Deployed</span>
-                    <span class="text-xl">🛍️</span>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Global Catalog</span>
+                    <span class="text-2xl">📦</span>
                 </div>
-                <h3 class="text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tighter"><?php echo e(number_format(\App\Models\Order::count())); ?></h3>
-                <p class="text-[9px] font-black text-sky-500 uppercase tracking-widest">Active Lifecycle</p>
+                <h3 class="text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tighter"><?php echo e(\App\Models\Product::count()); ?></h3>
+                <p class="text-[10px] font-black text-sky-500 uppercase tracking-widest">Synchronized Assets</p>
             </div>
-            <div class="absolute -right-2 -bottom-2 opacity-[0.03] text-8xl font-black italic text-slate-400 dark:text-white">ORDERS</div>
-         <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
-<?php $attributes = $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
-<?php unset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
-<?php $component = $__componentOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
-<?php unset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
-<?php endif; ?>
+            <div class="absolute -right-4 -bottom-4 opacity-[0.03] text-8xl font-black italic select-none dark:text-white">ASSETS</div>
+        </div>
 
-        <!-- Financial Outflow -->
-        <?php if (isset($component)) { $__componentOriginalad5130b5347ab6ecc017d2f5a278b926 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.card','data' => ['class' => 'relative overflow-hidden group border-none bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl transition-all duration-500']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.card'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'relative overflow-hidden group border-none bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl transition-all duration-500']); ?>
+        <!-- Customer Base -->
+        <div class="card-premium relative overflow-hidden group">
             <div class="relative z-10">
                 <div class="flex items-center justify-between mb-8">
-                    <span class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Pending Withdrawals</span>
-                    <span class="text-xl">💸</span>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Total Customers</span>
+                    <span class="text-2xl">👥</span>
                 </div>
-                <h3 class="text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tighter"><?php echo e(number_format(\App\Models\Withdrawal::where('status', 'pending')->count())); ?></h3>
-                <p class="text-[9px] font-black text-amber-500 uppercase tracking-widest">Liquidity Request Queue</p>
+                <h3 class="text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tighter"><?php echo e(\App\Models\User::count()); ?></h3>
+                <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Verified Consumers</p>
             </div>
-            <div class="absolute -right-2 -bottom-2 opacity-[0.03] text-8xl font-black italic text-slate-400 dark:text-white">CASH</div>
-         <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
-<?php $attributes = $__attributesOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
-<?php unset($__attributesOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926)): ?>
-<?php $component = $__componentOriginalad5130b5347ab6ecc017d2f5a278b926; ?>
-<?php unset($__componentOriginalad5130b5347ab6ecc017d2f5a278b926); ?>
-<?php endif; ?>
+            <div class="absolute -right-4 -bottom-4 opacity-[0.03] text-8xl font-black italic select-none dark:text-white">USERS</div>
+        </div>
     </div>
 
-    <!-- Active Intel Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <!-- Order Stream -->
-        <div class="lg:col-span-2 space-y-6">
-            <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
-                <div class="px-6 md:px-10 py-6 md:py-8 border-b border-slate-50 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-50/30 dark:bg-slate-800/30">
-                    <div>
-                        <h3 class="text-xs md:text-sm font-black text-slate-800 dark:text-white uppercase tracking-widest">Territory Activity Stream</h3>
-                        <p class="text-[8px] md:text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-1">Real-time order synchronization</p>
+    <!-- Order Lifecycle Protocol Cards -->
+    <div class="space-y-6">
+        <div class="flex items-center justify-between px-2">
+            <h3 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-[0.3em]">Order Flow</h3>
+            <a href="<?php echo e(route('admin.orders.index')); ?>" class="text-[10px] font-black text-primary uppercase tracking-widest hover:underline">View All Orders →</a>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <?php
+                $statuses = [
+                    ['label' => 'Pending', 'icon' => '⏳', 'color' => 'amber', 'count' => \App\Models\Order::where('status', 'pending')->count(), 'slug' => 'pending'],
+                    ['label' => 'Confirmed', 'icon' => '✅', 'color' => 'sky', 'count' => \App\Models\Order::where('status', 'confirmed')->count(), 'slug' => 'confirmed'],
+                    ['label' => 'Packaging', 'icon' => '📦', 'color' => 'indigo', 'count' => \App\Models\Order::where('status', 'packaging')->count(), 'slug' => 'packaging'],
+                    ['label' => 'In Transit', 'icon' => '🚚', 'color' => 'orange', 'count' => \App\Models\Order::where('status', 'out_for_delivery')->count(), 'slug' => 'out_for_delivery'],
+                    ['label' => 'Delivered', 'icon' => '🏁', 'color' => 'emerald', 'count' => \App\Models\Order::where('status', 'delivered')->count(), 'slug' => 'delivered'],
+                    ['label' => 'Cancelled', 'icon' => '🚫', 'color' => 'rose', 'count' => \App\Models\Order::where('status', 'cancelled')->count(), 'slug' => 'cancelled'],
+                ];
+            ?>
+
+            <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <a href="<?php echo e(route('admin.orders.index', ['status' => $status['slug']])); ?>" class="card-premium flex flex-col items-center text-center p-6 group hover:scale-105 transition-all">
+                    <div class="w-12 h-12 rounded-2xl bg-<?php echo e($status['color']); ?>-50 dark:bg-<?php echo e($status['color']); ?>-900/20 text-<?php echo e($status['color']); ?>-600 dark:text-<?php echo e($status['color']); ?>-400 flex items-center justify-center text-2xl mb-4 group-hover:rotate-12 transition-transform">
+                        <?php echo e($status['icon']); ?>
+
                     </div>
-                    <a href="<?php echo e(route('admin.orders.index')); ?>" class="text-[9px] font-black text-sky-500 uppercase tracking-widest hover:text-slate-900 dark:hover:text-white transition-colors">Global Log →</a>
+                    <div class="text-2xl font-black text-slate-800 dark:text-white mb-1"><?php echo e(number_format($status['count'])); ?></div>
+                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest"><?php echo e($status['label']); ?></div>
+                </a>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </div>
+    </div>
+
+    <!-- Analytics & Intelligence -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <!-- Sales Velocity Chart -->
+        <div class="lg:col-span-2 card-premium space-y-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-sm font-black text-slate-800 dark:text-white uppercase tracking-widest">Revenue Growth</h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mt-1">Sales Performance</p>
                 </div>
+                <div class="flex items-center gap-3">
+                    <button class="px-4 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 text-[9px] font-black text-slate-500 uppercase tracking-widest hover:text-primary transition-all">Weekly</button>
+                    <button class="px-4 py-1.5 rounded-lg bg-primary text-[9px] font-black text-white uppercase tracking-widest shadow-lg shadow-primary/20">Monthly</button>
+                </div>
+            </div>
+            
+            <div class="h-[400px] w-full bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] flex items-center justify-center overflow-hidden relative">
+                <canvas id="salesChart" class="w-full h-full p-8"></canvas>
+                
+                <div id="chartPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-20">
+                    <span class="text-6xl mb-4">📈</span>
+                    <span class="text-xs font-black uppercase tracking-[0.2em]">Analyzing Data Streams...</span>
+                </div>
+            </div>
 
-                <div class="divide-y divide-slate-50 dark:divide-slate-800">
-                    <?php $recentOrders = \App\Models\Order::with('user')->latest()->take(7)->get(); ?>
-                    <?php $__empty_1 = true; $__currentLoopData = $recentOrders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                        <div class="p-6 md:p-8 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
-                            <div class="flex items-center gap-4 md:gap-6">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-lg md:text-xl shadow-sm group-hover:scale-110 transition-transform">📦</div>
-                                <div>
-                                    <h4 class="text-xs md:text-sm font-black text-slate-800 dark:text-white">#<?php echo e($order->order_number); ?></h4>
-                                    <p class="text-[8px] md:text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest"><?php echo e($order->user->name ?? 'Protocol Guest'); ?></p>
-                                </div>
-                            </div>
-                            <div class="text-right flex items-center gap-4 md:gap-8">
-                                <div class="hidden sm:block">
-                                    <p class="text-[8px] md:text-[9px] font-black text-slate-300 dark:text-slate-600 uppercase mb-1">Valuation</p>
-                                    <p class="text-xs md:text-sm font-black text-slate-900 dark:text-white">৳<?php echo e(number_format($order->total_amount, 0)); ?></p>
-                                </div>
-                                <div class="w-24 md:w-32 text-right">
-                                    <span class="px-2 md:px-3 py-1 rounded-lg text-[7px] md:text-[8px] font-black uppercase tracking-wider
-                                        <?php if($order->status === 'paid' || $order->status === 'delivered'): ?> bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400
-                                        <?php elseif($order->status === 'pending'): ?> bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400
-                                        <?php else: ?> bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 <?php endif; ?>">
-                                        <?php echo e($order->status); ?>
-
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                        <div class="py-20 text-center opacity-20">
-                            <span class="text-6xl mb-6 flex justify-center">🧊</span>
-                            <p class="text-xs font-black uppercase tracking-widest">No Recent Stream Activity</p>
-                        </div>
-                    <?php endif; ?>
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
+                <div class="space-y-1">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Net Revenue</p>
+                    <p class="text-xl font-black text-slate-800 dark:text-white">৳1.2M</p>
+                    <div class="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full">
+                        <div class="w-2/3 h-full bg-primary rounded-full"></div>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Admin Wallet</p>
+                    <p class="text-xl font-black text-accent">৳245K</p>
+                    <div class="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full">
+                        <div class="w-1/2 h-full bg-accent rounded-full"></div>
+                    </div>
+                </div>
+                <div class="space-y-1 hidden lg:block">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Avg Order Value</p>
+                    <p class="text-xl font-black text-slate-800 dark:text-white">৳2,450</p>
+                    <div class="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full">
+                        <div class="w-3/4 h-full bg-emerald-500 rounded-full"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- System Utilities -->
+        <!-- Insight Panels -->
         <div class="space-y-8">
-            <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] p-10 border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden group">
-                <h3 class="text-sm font-black text-slate-800 dark:text-white uppercase tracking-widest mb-10 pl-1">Protocol Utility Shortcuts</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <a href="<?php echo e(route('admin.kyc.index')); ?>" class="p-6 rounded-3xl bg-slate-900 dark:bg-slate-800 text-white hover:bg-sky-600 dark:hover:bg-sky-600 transition-all shadow-xl shadow-slate-900/10 flex flex-col items-center text-center gap-4">
-                        <span class="text-3xl">🛡️</span>
-                        <span class="text-[9px] font-black uppercase tracking-widest">KYC Audit</span>
-                    </a>
-                    <a href="<?php echo e(route('admin.users.index')); ?>" class="p-6 rounded-3xl bg-indigo-600 text-white hover:bg-sky-600 transition-all shadow-xl shadow-indigo-600/10 flex flex-col items-center text-center gap-4">
-                        <span class="text-3xl">👥</span>
-                        <span class="text-[9px] font-black uppercase tracking-widest">User Base</span>
-                    </a>
-                    <a href="<?php echo e(route('admin.products.index')); ?>" class="p-6 rounded-3xl border-2 border-slate-50 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex flex-col items-center text-center gap-4 group/btn">
-                        <span class="text-3xl grayscale group-hover/btn:grayscale-0 transition-all">📦</span>
-                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Inventory</span>
-                    </a>
-                    <a href="<?php echo e(route('admin.wallets.index')); ?>" class="p-6 rounded-3xl border-2 border-slate-50 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex flex-col items-center text-center gap-4 group/btn">
-                        <span class="text-3xl grayscale group-hover/btn:grayscale-0 transition-all">💰</span>
-                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Cash Flow</span>
-                    </a>
+            <!-- Top Performers -->
+            <div class="card-premium space-y-8">
+                <h3 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest pl-1">Top Customers</h3>
+                <div class="space-y-6">
+                    <?php
+                        $topCustomers = \App\Models\User::take(4)->get(); // Mock logic
+                    ?>
+                    <?php $__currentLoopData = $topCustomers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $customer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="flex items-center justify-between group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm font-black border border-slate-200 dark:border-slate-700 group-hover:bg-primary group-hover:text-white transition-all">
+                                    <?php echo e(substr($customer->name, 0, 1)); ?>
+
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-black text-slate-800 dark:text-white"><?php echo e($customer->name); ?></h4>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">74 Order Lifetime</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[10px] font-black text-primary">৳14,200</span>
+                            </div>
+                        </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
+                <button class="w-full py-4 bg-slate-50 dark:bg-slate-800 rounded-2xl text-[9px] font-black text-slate-500 uppercase tracking-widest hover:text-primary transition-all">
+                    Expand Insights Log →
+                </button>
             </div>
 
-            <!-- Global Configuration Shortcut -->
-            <div class="bg-gradient-to-br from-rose-500 to-indigo-600 rounded-[2.5rem] p-10 text-white relative overflow-hidden group shadow-2xl shadow-indigo-500/20">
-                <div class="relative z-10">
-                    <h4 class="text-xl font-black mb-2 leading-tight">System Core Hub</h4>
-                    <p class="text-xs font-bold text-white/60 mb-8 leading-relaxed">Configure global variables, API integrations and security protocols.</p>
-                    
-                    <a href="<?php echo e(route('admin.settings.index')); ?>" class="inline-flex items-center gap-3 px-6 py-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/20 transition-all">
-                        Edit System Control ⚡
-                    </a>
+            <!-- Operational Insights -->
+            <div class="card-premium bg-[#1e293b] text-white border-none relative overflow-hidden group">
+                <h3 class="text-[10px] font-black uppercase tracking-widest opacity-60 mb-6">Best Performers</h3>
+                <div class="space-y-5 relative z-10">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400">Top Selling</span>
+                        <span class="text-xs font-black text-sky-400">Electronic Protocol X</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400">Most Popular Store</span>
+                        <span class="text-xs font-black text-accent">Matrix Tech Hub</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400">Top Delivery Rider</span>
+                        <span class="text-xs font-black text-emerald-400">Rider #2841</span>
+                    </div>
                 </div>
-                <!-- Decor -->
-                <div class="absolute -right-6 -bottom-6 opacity-10 text-[180px] select-none italic font-black">CORE</div>
+                <div class="absolute -right-4 -bottom-4 opacity-[0.05] text-7xl font-black italic select-none">INTEL</div>
             </div>
         </div>
     </div>
 </div>
+
+
+<?php $__env->startPush('scripts'); ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('salesChart');
+        if (ctx) {
+            document.getElementById('chartPlaceholder').style.display = 'none';
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Gross Revenue',
+                        data: [12000, 19000, 15000, 25000, 22000, 30000, 35000],
+                        borderColor: '#2563eb',
+                        borderWidth: 4,
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: (context) => {
+                            const ctx = context.chart.ctx;
+                            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.1)');
+                            gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
+                            return gradient;
+                        },
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { display: false },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { 
+                                color: '#94a3b8',
+                                font: { weight: '800', size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+<?php $__env->stopPush(); ?>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /Users/rsmmonaem/Projects/Nibiz/cmarket/resources/views/admin/dashboard.blade.php ENDPATH**/ ?>

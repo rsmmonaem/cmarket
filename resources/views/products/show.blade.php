@@ -1,117 +1,167 @@
-@extends('layouts.customer')
+@extends('layouts.public')
 
-@section('title', $product->name . ' - CMarket')
-@section('page-title', 'Product Identification')
+@section('title', $product->meta_title ?? $product->name . ' - EcomMatrix')
+@section('meta_description', $product->meta_description ?? Str::limit(strip_tags($product->description), 160))
 
 @section('content')
-<div class="space-y-12 animate-fade-in">
-    <!-- Macro Product Card -->
-    <div class="bg-white rounded-[3rem] border border-slate-100 shadow-xl overflow-hidden">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumbs Node -->
+    <nav class="flex mb-12 text-[10px] font-black uppercase tracking-widest text-slate-400 gap-4">
+        <a href="{{ route('home') }}" class="hover:text-primary transition-colors">Matrix Home</a>
+        <span>/</span>
+        <a href="{{ route('categories.index') }}" class="hover:text-primary transition-colors">{{ $product->category->name }}</a>
+        <span>/</span>
+        <span class="text-slate-900">{{ $product->name }}</span>
+    </nav>
+
+    <div class="bg-white rounded-[3.5rem] border border-slate-100 shadow-2xl overflow-hidden relative">
         <div class="flex flex-col lg:flex-row">
-            <!-- Asset Visualization -->
-            <div class="lg:w-1/2 p-8 lg:p-16 bg-slate-50 flex items-center justify-center relative overflow-hidden group">
-                <div class="relative z-10 w-full aspect-square rounded-[2rem] overflow-hidden shadow-2xl transition-transform duration-700 group-hover:scale-105">
-                    @if($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+            <!-- Asset Visualization Matrix -->
+            <div class="lg:w-1/2 p-4 md:p-12 lg:p-20 bg-slate-50 relative group">
+                @php 
+                    $images = is_array($product->images) ? $product->images : (json_decode($product->images, true) ?: []);
+                    $mainImage = $images[0] ?? null;
+                @endphp
+                
+                <div class="aspect-square rounded-[3rem] overflow-hidden bg-white shadow-2xl shadow-slate-200 border border-slate-100 mb-10 group-hover:scale-[1.02] transition-transform duration-700">
+                    @if($mainImage)
+                        <img id="main-display-node" src="{{ asset('storage/' . $mainImage) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                     @else
-                        <div class="w-full h-full flex flex-col items-center justify-center bg-white">
-                            <span class="text-8xl opacity-10">📦</span>
-                            <span class="text-[10px] font-black text-slate-300 uppercase mt-4 tracking-[0.3em]">Asset Visual Missing</span>
-                        </div>
+                        <div class="w-full h-full flex items-center justify-center opacity-10 text-9xl">📦</div>
                     @endif
                 </div>
-                <!-- Backdrop Decor -->
-                <div class="absolute inset-0 opacity-[0.03] flex items-center justify-center text-[400px] leading-none select-none font-black italic">ASSET</div>
+
+                <!-- Thumbnail Array -->
+                @if(count($images) > 1)
+                    <div class="flex gap-4 overflow-x-auto no-scrollbar pb-4">
+                        @foreach($images as $img)
+                            <button onclick="syncDisplayNode('{{ asset('storage/' . $img) }}')" class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-transparent hover:border-primary transition-all flex-shrink-0 bg-white">
+                                <img src="{{ asset('storage/' . $img) }}" class="w-full h-full object-cover">
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
+                
+                <div class="absolute inset-0 opacity-[0.02] pointer-events-none flex items-center justify-center text-[300px] font-black italic">NODE</div>
             </div>
 
-            <!-- Intelligence Hub -->
-            <div class="lg:w-1/2 p-8 lg:p-16 flex flex-col">
-                <div class="mb-10 flex flex-wrap gap-3">
-                    <span class="px-4 py-2 bg-sky-100 text-sky-600 rounded-2xl text-[10px] font-black uppercase tracking-widest">{{ $product->category->name }}</span>
-                    @if($product->points > 0)
-                        <span class="px-4 py-2 bg-indigo-100 text-indigo-600 rounded-2xl text-[10px] font-black uppercase tracking-widest">{{ $product->points }} LP / Point</span>
+            <!-- Intelligence Hub node -->
+            <div class="lg:w-1/2 p-8 lg:p-20 flex flex-col">
+                <div class="flex flex-wrap gap-3 mb-10">
+                    <span class="px-5 py-2.5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-slate-900/10">ID: {{ $product->sku ?? '000-NODE' }}</span>
+                    @if($product->is_featured)
+                        <span class="px-5 py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em]">Featured Asset</span>
+                    @endif
+                    @if($product->is_flash_deal)
+                        <span class="px-5 py-2.5 bg-rose-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] animate-pulse">⚡ Flash Deal Active</span>
                     @endif
                 </div>
 
-                <h1 class="text-4xl lg:text-5xl font-black text-slate-800 mb-8 leading-[1.1] tracking-tight">{{ $product->name }}</h1>
+                <h1 class="text-4xl lg:text-6xl font-black text-slate-900 mb-8 leading-[1.05] tracking-tight">{{ $product->name }}</h1>
                 
-                <div class="flex items-baseline gap-6 mb-12">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="flex text-amber-400 text-lg">★★★★☆</div>
+                    <span class="text-[10px] font-black text-slate-400 border-l border-slate-200 pl-4 uppercase tracking-widest">{{ $product->reviews_count ?? 0 }} User Feedbacks</span>
+                </div>
+
+                <div class="flex items-baseline gap-8 mb-12">
+                    <span class="text-6xl font-black text-slate-900 tracking-tighter">৳{{ number_format($product->final_price) }}</span>
                     @if($product->discount_price)
-                        <span class="text-5xl font-black text-slate-900 tracking-tighter">৳{{ number_format($product->discount_price, 0) }}</span>
                         <div class="flex flex-col">
-                            <span class="text-lg font-bold text-slate-300 line-through">৳{{ number_format($product->price, 0) }}</span>
-                            <span class="text-[10px] font-black text-rose-500 uppercase">Save {{ round((($product->price - $product->discount_price) / $product->price) * 100) }}% Off</span>
+                            <span class="text-xl font-bold text-slate-300 line-through">৳{{ number_format($product->price) }}</span>
+                            <span class="text-[10px] font-black text-primary uppercase tracking-widest mt-1">Efficiency Gain: {{ round($product->discount_percentage) }}%</span>
                         </div>
-                    @else
-                        <span class="text-5xl font-black text-slate-900 tracking-tighter">৳{{ number_format($product->price, 0) }}</span>
                     @endif
                 </div>
 
-                @if($product->cashback_percentage)
-                    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-[2rem] p-8 text-white mb-12 shadow-xl shadow-emerald-500/20 relative overflow-hidden group/cb">
+                @if($product->cashback_percentage > 0)
+                    <div class="bg-primary/5 rounded-[2.5rem] p-8 border border-primary/10 mb-12 relative overflow-hidden group/cb">
                         <div class="relative z-10 flex items-center justify-between">
                             <div>
-                                <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-1">Ecosystem Reward</p>
-                                <h4 class="text-xl font-black">৳{{ number_format(($product->discount_price ?? $product->price) * $product->cashback_percentage / 100, 2) }} Cashback</h4>
-                                <p class="text-xs font-bold text-emerald-100/70 mt-1">Automatically credited to your digital wallet.</p>
+                                <h4 class="text-lg font-black text-slate-800">৳{{ number_format($product->final_price * $product->cashback_percentage / 100, 2) }} Wallet Sync</h4>
+                                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Automated ecosystem rewards protocol</p>
                             </div>
-                            <div class="text-4xl group-hover/cb:rotate-12 transition-transform">🎁</div>
+                            <div class="text-4xl">🎁</div>
                         </div>
+                        <div class="absolute -right-4 -bottom-4 text-primary opacity-[0.03] scale-[3]">REWARD</div>
                     </div>
                 @endif
 
-                <div class="mb-12">
-                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Functional Description</h4>
-                    <p class="text-slate-600 leading-relaxed text-sm font-medium">{{ $product->description }}</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-6 mb-12">
-                    <div class="p-6 bg-slate-50 rounded-3xl border border-transparent hover:border-slate-100 transition-all">
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Territory Stock</p>
-                        <p class="text-sm font-black text-slate-800">{{ $product->stock > 0 ? $product->stock . ' Units Ready' : 'Out of Stock' }}</p>
+                <div class="space-y-12">
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Unit Inventory</p>
+                            <p class="text-sm font-black text-slate-800">{{ $product->stock > 0 ? $product->stock . ' Units available' : 'Asset Exhausted' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Origin Node</p>
+                            <a href="#" class="text-sm font-black text-primary hover:text-primary-hover transition-colors">{{ $product->merchant->business_name }} ➔</a>
+                        </div>
                     </div>
-                    <div class="p-6 bg-slate-50 rounded-3xl border border-transparent hover:border-slate-100 transition-all">
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Merchant Origin</p>
-                        <p class="text-sm font-black text-slate-800">{{ $product->merchant->business_name }}</p>
-                    </div>
-                </div>
 
-                <div class="mt-auto">
-                    @if($product->stock > 0)
-                        <button onclick="addToCart({{ $product->id }})" class="w-full py-6 bg-slate-900 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl shadow-slate-900/20 hover:bg-sky-600 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-4">
-                            <span>🛒</span> Initiate Acquisition
-                        </button>
-                    @else
-                        <button disabled class="w-full py-6 bg-slate-100 text-slate-400 rounded-[1.5rem] font-black text-xs uppercase tracking-[0.3em] cursor-not-allowed flex items-center justify-center gap-4">
-                            Inventory Depleted 📦
-                        </button>
-                    @endif
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <form action="{{ route('cart.add', $product) }}" method="POST" class="flex-1">
+                            @csrf
+                            <button type="submit" class="w-full py-6 bg-slate-900 text-white rounded-3xl font-black text-[11px] uppercase tracking-[0.3em] shadow-2xl shadow-slate-900/20 hover:bg-primary hover:scale-[1.02] active:scale-95 transition-all duration-300 flex items-center justify-center gap-4">
+                                Acquire Asset Node node
+                            </button>
+                        </form>
+                        <button class="w-20 h-20 bg-white border border-slate-100 rounded-3xl shadow-soft flex items-center justify-center text-2xl hover:text-primary transition-colors">🤍</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Recommendations Engine -->
-    @if($relatedProducts->count() > 0)
-        <div class="pt-10">
-            <div class="flex items-center justify-between mb-10 px-4">
-                <h2 class="text-sm font-black text-slate-800 uppercase tracking-[0.2em]">Affiliated Recommendations</h2>
-                <a href="{{ route('products.index') }}" class="text-[10px] font-black text-sky-500 uppercase tracking-widest hover:text-slate-900 transition-colors">Explore Gallery</a>
+    <!-- Multi-tab detail nodes -->
+    <div class="mt-20">
+        <div class="flex border-b border-slate-100 mb-12 pb-1 gap-12 text-[10px] font-black uppercase tracking-[0.2em]">
+            <button class="border-b-4 border-primary pb-5 text-slate-900">Functional Description</button>
+            <button class="text-slate-400 hover:text-primary transition-colors pb-5">Specification Protocol</button>
+            <button class="text-slate-400 hover:text-primary transition-colors pb-5">Feedback Node ({{ $product->reviews_count ?? 0 }})</button>
+        </div>
+        
+        <div class="max-w-4xl bg-white rounded-[3rem] p-12 lg:p-16 border border-slate-50 shadow-soft">
+            <h3 class="text-xl font-black mb-8 text-slate-900 uppercase tracking-tight">Node Technical Overview</h3>
+            <div class="prose prose-slate max-w-none text-slate-600 font-medium leading-loose text-sm italic">
+                {!! nl2br(e($product->description)) !!}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendation Network -->
+    @if(isset($relatedProducts) && $relatedProducts->count() > 0)
+        <div class="mt-32">
+            <div class="flex items-center justify-between mb-12">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900 tracking-tight">Affiliated Clusters</h2>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2">Highly correlated marketplace assets</p>
+                </div>
+                <a href="{{ route('products.index') }}" class="text-[10px] font-black text-primary uppercase tracking-widest">Full Network Scan ➔</a>
             </div>
             
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
                 @foreach($relatedProducts as $related)
-                    <div class="bg-white p-4 rounded-[2.5rem] border border-slate-50 hover:shadow-xl hover:-translate-y-2 transition-all group">
+                    <div class="bg-white p-5 rounded-[2.5rem] border border-slate-100 shadow-soft hover:shadow-2xl hover:-translate-y-2 transition-all group">
                         <a href="{{ route('products.show', $related) }}">
-                            <div class="aspect-square rounded-2xl overflow-hidden bg-slate-50 mb-6">
-                                @if($related->image)
-                                    <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->name }}" class="w-full h-full object-cover">
+                            <div class="aspect-square rounded-[2rem] overflow-hidden bg-slate-50 mb-8 flex items-center justify-center group-hover:scale-95 transition-transform overflow-hidden relative border border-slate-100">
+                                @php $rImgArr = is_array($related->images) ? $related->images : (json_decode($related->images, true) ?: []); $rImg = $rImgArr[0] ?? null; @endphp
+                                @if($rImg)
+                                    <img src="{{ asset('storage/' . $rImg) }}" class="w-full h-full object-cover">
                                 @else
-                                    <div class="w-full h-full flex items-center justify-center opacity-10 text-4xl">📦</div>
+                                    <span class="text-4xl opacity-10">🛍️</span>
                                 @endif
                             </div>
-                            <h3 class="text-xs font-black text-slate-800 mb-2 truncate group-hover:text-sky-500 transition-colors">{{ $related->name }}</h3>
-                            <p class="text-sm font-black text-slate-900">৳{{ number_format($related->price, 0) }}</p>
+                            <div class="space-y-3">
+                                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">{{ $related->category->name ?? 'Node' }}</p>
+                                <h3 class="text-xs font-black text-slate-700 line-clamp-1 h-4 group-hover:text-primary transition-colors uppercase">{{ $related->name }}</h3>
+                                <div class="flex items-baseline gap-2 pt-2">
+                                    <span class="text-sm font-black text-slate-900 uppercase">৳{{ number_format($related->final_price) }}</span>
+                                    @if($related->discount_price)
+                                        <span class="text-[8px] font-bold text-slate-300 line-through">৳{{ number_format($related->price) }}</span>
+                                    @endif
+                                </div>
+                            </div>
                         </a>
                     </div>
                 @endforeach
@@ -121,41 +171,8 @@
 </div>
 
 <script>
-function addToCart(productId) {
-    @guest
-        window.location.href = '{{ route("login") }}';
-        return;
-    @endguest
-    
-    fetch(`/cart/add/${productId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Toast.fire({
-                icon: 'success',
-                title: 'Deployment successful! Asset added to cart. 🛍️'
-            });
-            setTimeout(() => window.location.href = '{{ route("cart.index") }}', 1500);
-        } else {
-            Toast.fire({
-                icon: 'error',
-                title: data.message || 'Error occurred during fulfillment.'
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        Toast.fire({
-            icon: 'error',
-            title: 'Protocol communication failure.'
-        });
-    });
-}
+    function syncDisplayNode(uri) {
+        document.getElementById('main-display-node').src = uri;
+    }
 </script>
 @endsection

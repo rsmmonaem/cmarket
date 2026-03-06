@@ -137,9 +137,9 @@ class User extends Authenticatable
         return $query->where('status', 'wallet_verified');
     }
 
-    public function scopeVendors($query)
+    public function scopeMerchants($query)
     {
-        return $query->where('status', 'vendor');
+        return $query->where('status', 'merchant');
     }
 
     public function scopeRiders($query)
@@ -150,12 +150,12 @@ class User extends Authenticatable
     // Accessors
     public function getIsWalletVerifiedAttribute()
     {
-        return in_array($this->status, ['wallet_verified', 'vendor', 'rider']);
+        return in_array($this->status, ['wallet_verified', 'merchant', 'rider']);
     }
 
-    public function getIsVendorAttribute()
+    public function getIsMerchantAttribute()
     {
-        return $this->status === 'vendor';
+        return $this->status === 'merchant';
     }
 
     public function getIsRiderAttribute()

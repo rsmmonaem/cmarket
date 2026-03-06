@@ -19,6 +19,11 @@ class ProductController extends Controller
             $query->where('category_id', $request->category);
         }
 
+        // Filter by merchant
+        if ($request->has('merchant')) {
+            $query->where('merchant_id', $request->merchant);
+        }
+
         // Filter by price range
         if ($request->has('min_price')) {
             $query->where('price', '>=', $request->min_price);

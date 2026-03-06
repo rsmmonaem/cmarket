@@ -17,9 +17,29 @@ class OrderController extends Controller
         $this->packageService = $packageService;
         $this->commissionService = $commissionService;
     }
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with(['user', 'merchant', 'items'])->latest()->paginate(20);
+        $query = Order::with(['user', 'merchant', 'items']);
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $orders = $query->latest()->paginate(20)->withQueryString();
+        
         return view('admin.orders.index', compact('orders'));
     }
 

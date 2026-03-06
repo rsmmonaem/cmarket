@@ -105,16 +105,16 @@
                             </td>
                             <td class="px-10 py-8 text-right">
                                 <div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 duration-300">
-                                    <a href="<?php echo e(route('admin.users.generations', $user)); ?>" class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-lg hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all shadow-sm" title="Generation Tree">
-                                        🌍
+                                    <a href="<?php echo e(route('admin.users.show', $user)); ?>" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-lg hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all shadow-sm">
+                                        ⚖️
                                     </a>
-                                    <a href="<?php echo e(route('admin.users.edit', $user)); ?>" class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-lg hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all shadow-sm">
+                                    <a href="<?php echo e(route('admin.users.edit', $user)); ?>" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-lg hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all shadow-sm">
                                         ✏️
                                     </a>
                                     <form action="<?php echo e(route('admin.users.destroy', $user)); ?>" method="POST" class="inline" onsubmit="return confirm('Permanent node deletion confirmation?');">
                                         <?php echo csrf_field(); ?>
                                         <?php echo method_field('DELETE'); ?>
-                                        <button type="submit" class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-lg hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all shadow-sm">
+                                        <button type="submit" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-lg hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all shadow-sm">
                                             🗑️
                                         </button>
                                     </form>

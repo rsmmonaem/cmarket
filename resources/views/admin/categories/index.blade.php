@@ -1,19 +1,19 @@
 @extends('layouts.admin')
 
-@section('title', 'Category Logic - CMarket')
+@section('title', 'Category Logic - EcomMatrix')
 @section('page-title', 'Taxonomy Architecture')
 
 @section('content')
 <div class="space-y-10 animate-fade-in">
     <!-- Macro Summary & Action -->
-    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 lg:p-12 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col lg:flex-row justify-between items-center gap-8 md:gap-10 overflow-hidden relative group">
+    <div class="card-premium flex flex-col lg:flex-row justify-between items-center gap-8 md:gap-10 relative overflow-hidden group">
         <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
             <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Taxonomy Engine</h2>
-            <p class="text-slate-400 dark:text-slate-500 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em] ml-1">Organizing platform logic into {{ $categories->total() }} nodes</p>
+            <p class="text-slate-400 dark:text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] ml-1">Organizing platform logic into {{ $categories->total() }} operational nodes</p>
         </div>
         <div class="flex items-center gap-4 relative z-10 w-full lg:w-auto">
-            <a href="{{ route('admin.categories.create') }}" class="flex-1 lg:flex-none px-6 py-4 md:px-10 md:py-5 bg-slate-900 dark:bg-sky-600 text-white rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-2xl shadow-slate-900/10 hover:bg-sky-600 dark:hover:bg-sky-500 hover:scale-[1.05] transition-all flex items-center justify-center gap-3">
-                <span class="text-base md:text-lg">➕</span> Deploy New Node
+            <a href="{{ route('admin.categories.create') }}" class="btn-matrix btn-primary-matrix w-full lg:w-auto">
+                <span class="text-lg">➕</span> Deploy New Node
             </a>
         </div>
         <!-- Decor -->
@@ -21,7 +21,7 @@
     </div>
 
     <!-- Data Infrastructure Table -->
-    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+    <div class="card-premium !p-0 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[900px]">
                 <thead>
@@ -60,19 +60,45 @@
                                 {{ number_format($category->products_count) }}
                             </td>
                             <td class="px-10 py-8 text-center">
-                                @if($category->is_active)
-                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800">
-                                        ACTIVE
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-slate-800">
-                                        DORMANT
-                                    </span>
-                                @endif
+                                <div x-data="{ active: {{ $category->is_active ? 'true' : 'false' }}, loading: false }">
+                                    <button 
+                                        @click="
+                                            if(loading) return;
+                                            loading = true;
+                                            fetch('{{ route('admin.categories.toggle-status', $category) }}', {
+                                                method: 'PATCH',
+                                                headers: {
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                                    'Content-Type': 'application/json',
+                                                    'Accept': 'application/json'
+                                                }
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if(data.success) {
+                                                    active = data.is_active;
+                                                    Toast.fire({ icon: 'success', title: data.message });
+                                                }
+                                            })
+                                            .finally(() => loading = false);
+                                        "
+                                        :class="active ? 'bg-primary' : 'bg-slate-700'"
+                                        class="relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none shadow-inner"
+                                    >
+                                        <span :class="active ? 'translate-x-[20px]' : 'translate-x-0'"
+                                              class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                                        <div x-show="loading" class="absolute inset-0 flex items-center justify-center bg-white/20 rounded-full">
+                                            <svg class="animate-spin h-3 w-3 text-white" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </div>
                             </td>
                             <td class="px-10 py-8 text-right">
                                 <div class="flex justify-end opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0 duration-300 gap-3">
-                                    <a href="{{ route('admin.categories.edit', $category) }}" class="w-10 h-10 rounded-xl bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center text-lg hover:bg-sky-500 transition-all shadow-xl shadow-slate-900/10">
+                                    <a href="{{ route('admin.categories.edit', $category) }}" class="w-10 h-10 rounded-xl bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center text-lg hover:bg-primary transition-all shadow-xl shadow-slate-900/10">
                                         ✏️
                                     </a>
                                 </div>
@@ -82,7 +108,7 @@
                         <tr>
                             <td colspan="5" class="px-10 py-32 text-center text-slate-300 flex flex-col items-center">
                                 <span class="text-8xl mb-6 opacity-10">🗺️</span>
-                                <p class="text-lg font-black uppercase tracking-[0.2em]">Map is Empty</p>
+                                <p class="text-lg font-black uppercase tracking-[0.2em]">Matrix is Empty</p>
                             </td>
                         </tr>
                     @endforelse
@@ -91,7 +117,7 @@
         </div>
 
         @if($categories->hasPages())
-            <div class="p-6 md:p-10 border-t border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30">
+            <div class="px-10 py-6 border-t border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30">
                 {{ $categories->links() }}
             </div>
         @endif

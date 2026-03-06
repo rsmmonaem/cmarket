@@ -13,7 +13,10 @@ class Product extends Model
     protected $fillable = [
         'merchant_id', 'category_id', 'type', 'name', 'slug', 'description',
         'price', 'discount_price', 'stock', 'images', 'sku',
-        'cashback_percentage', 'status'
+        'cashback_percentage', 'status',
+        'meta_title', 'meta_description',
+        'is_featured', 'is_flash_deal',
+        'flash_deal_start', 'flash_deal_end'
     ];
 
     protected function casts(): array
@@ -23,6 +26,10 @@ class Product extends Model
             'discount_price' => 'decimal:2',
             'cashback_percentage' => 'decimal:2',
             'images' => 'array',
+            'is_featured' => 'boolean',
+            'is_flash_deal' => 'boolean',
+            'flash_deal_start' => 'datetime',
+            'flash_deal_end' => 'datetime',
         ];
     }
 

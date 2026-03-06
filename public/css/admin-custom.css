@@ -1,92 +1,140 @@
 :root {
-    /* Humanized Dark Blue Solid Palette */
-    --primary: #1e293b;
-    --primary-light: #334155;
-    --primary-dark: #0f172a;
+    /* EcomMatrix Premium Palette */
+    --primary: #2563eb; /* Blue */
+    --primary-light: #60a5fa;
+    --primary-dark: #1e40af;
+    
+    --accent: #f97316; /* Orange */
+    --accent-light: #fb923c;
+    --accent-dark: #ea580c;
 
-    --secondary: #64748b;
     --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
     --info: #3b82f6;
 
-    --bg-light: #f8fafc;
+    --bg-light: #f3f4f6;
     --card-light: #ffffff;
-    --text-light: #1e293b;
-    --text-muted-light: #64748b;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
     --border-light: #e2e8f0;
 
-    --sidebar-w: 260px;
+    --sidebar-w: 280px;
     --header-h: 70px;
 }
-
 
 /* Dark Mode Variables */
 .dark-mode {
     --bg-light: #0f172a;
     --card-light: #1e293b;
-    --text-light: #f1f5f9;
-    --text-muted-light: #94a3b8;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
     --border-light: #334155;
-    --primary: #38bdf8;
-    /* Adjust primary for dark mode accessibility */
-    --primary-light: #7dd3fc;
 }
 
 body {
     background-color: var(--bg-light);
-    color: var(--text-light);
+    color: var(--text-main);
     transition: background-color 0.3s, color 0.3s;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Reusable Utility Classes */
-.card-solid {
+/* Card Styling */
+.card-premium {
     background: var(--card-light);
     border: 1px solid var(--border-light);
-    border-radius: 1rem;
+    border-radius: 1.5rem;
     padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.btn-solid {
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
+.card-premium:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Button Styling */
+.btn-matrix {
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    font-size: 0.875rem;
     transition: all 0.2s;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
     border: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-.btn-primary-solid {
+.btn-primary-matrix {
     background-color: var(--primary);
     color: white;
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
 }
 
-.btn-primary-solid:hover {
-    background-color: var(--primary-light);
+.btn-primary-matrix:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
 }
 
-.sidebar-solid {
-    background-color: #0f172a;
-    /* Fixed dark blue for sidebar */
+.btn-accent-matrix {
+    background-color: var(--accent);
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.2);
+}
+
+.btn-accent-matrix:hover {
+    background-color: var(--accent-dark);
+    transform: translateY(-2px);
+}
+
+/* Sidebar Specifics */
+.sidebar-matrix {
+    background-color: #0f172a; /* Deep Navy */
     color: #94a3b8;
 }
 
-.sidebar-link {
+.sidebar-item {
     color: #94a3b8;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
+    padding: 0.875rem 1.25rem;
+    border-radius: 0.75rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
     transition: all 0.2s;
+    font-size: 0.9375rem;
+    font-weight: 500;
 }
 
-.sidebar-link:hover,
-.sidebar-link.active {
-    background-color: #1e293b;
+.sidebar-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
     color: #f1f5f9;
+}
+
+.sidebar-item.active {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: #334155;
 }
