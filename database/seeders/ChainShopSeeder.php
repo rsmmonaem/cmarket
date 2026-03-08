@@ -40,7 +40,7 @@ class ChainShopSeeder extends Seeder
         ];
 
         foreach ($shops as $shop) {
-            ChainShop::create($shop);
+            ChainShop::updateOrCreate(['name' => $shop['name']], $shop);
         }
     }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Dashboard') - EcomMatrix</title>
+    <title>@yield('title', 'Admin Dashboard') - C-Market</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -49,130 +49,100 @@
 
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside class="w-[280px] bg-[#0f172a] text-slate-400 fixed inset-y-0 left-0 z-50 transform lg:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-800 shadow-2xl overflow-y-auto sidebar-scroll"
+        <aside class="w-[260px] bg-[#1e293b] text-slate-400 fixed inset-y-0 left-0 z-50 transform lg:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-800 shadow-xl overflow-y-auto sidebar-scroll"
                :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
             
             <!-- Sidebar Header / Logo -->
-            <div class="h-[70px] flex items-center px-6 border-b border-slate-800 bg-[#0f172a]/50 backdrop-blur-md sticky top-0 z-10">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-tr from-primary to-primary-light rounded-2xl flex items-center justify-center text-white text-xl shadow-lg shadow-primary/20">
-                        ⚡
+            <div class="h-[64px] flex items-center px-6 border-b border-slate-800/50 bg-[#1e293b] sticky top-0 z-10">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold">
+                        C
                     </div>
-                    <span class="text-xl font-black text-white tracking-tighter uppercase">Matrix <span class="text-primary">Admin</span></span>
+                    <span class="text-lg font-bold text-slate-100 tracking-tight">C-Market <span class="text-primary/80 font-medium">Pro</span></span>
                 </a>
             </div>
 
             <!-- Sidebar Navigation -->
-            <nav class="p-4 space-y-6 pb-24">
-                <!-- Dashboard Section -->
-                <div class="space-y-1">
+            <nav class="py-4 pb-24">
+                <div class="px-6 mb-4">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Analytical</p>
+                </div>
+                <div class="space-y-0.5 mb-6">
                     <x-admin.sidebar-link route="admin.dashboard" icon="📊" label="Dashboard" />
                 </div>
 
-                <div class="space-y-1">
-                    <p class="px-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">Core Operations</p>
+                <div class="px-6 mb-4 mt-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Operations</p>
+                </div>
+                <div class="space-y-0.5 mb-6">
                     <x-admin.sidebar-link route="admin.merchants.index" icon="🏢" label="Merchants" />
-                    <x-admin.sidebar-link route="admin.pos.index" icon="🖱️" label="POS Terminal" />
+                    <x-admin.sidebar-link route="admin.pos.index" icon="🖥️" label="POS Terminal" />
                     <x-admin.sidebar-link route="admin.commissions.index" icon="🤝" label="Affiliates" />
-                    <x-admin.sidebar-link route="admin.products.index" icon="🗒️" label="Procurement" />
+                    <x-admin.sidebar-link route="admin.products.index" icon="📁" label="Procurement" />
                 </div>
 
-                <!-- Order Management -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Sales</p>
-                    <x-admin.sidebar-dropdown icon="🛍️" label="Orders" :active="request()->is('admin/orders*')">
-                        <x-admin.sidebar-link route="admin.orders.index" icon="📦" label="All Orders" />
-                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'pending']" icon="⏳" label="Pending" />
-                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'confirmed']" icon="✅" label="Confirmed" />
-                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'packaging']" icon="📦" label="Packaging" />
-                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'out_for_delivery']" icon="🚚" label="Out for Delivery" />
-                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'delivered']" icon="🏁" label="Delivered" />
-                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'returned']" icon="🔄" label="Returned" />
-                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'failed']" icon="❌" label="Failed" />
-                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'cancelled']" icon="🚫" label="Cancelled" />
+                <div class="px-6 mb-4 mt-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Sales & Logs</p>
+                </div>
+                <div class="space-y-0.5 mb-6">
+                    <x-admin.sidebar-dropdown icon="🛍️" label="Order Pipeline" :active="request()->is('admin/orders*')">
+                        <x-admin.sidebar-link route="admin.orders.index" label="Overview" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'pending']" label="Pending" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'confirmed']" label="Confirmed" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'packaging']" label="Infrastructure" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'delivered']" label="Completed" />
                     </x-admin.sidebar-dropdown>
 
-                    <x-admin.sidebar-dropdown icon="💸" label="Refund Requests" :active="request()->is('admin/refunds*')">
-                        <x-admin.sidebar-link route="admin.refunds.index" icon="⏳" label="Pending" />
-                        <x-admin.sidebar-link route="admin.refunds.index" icon="✅" label="Approved" />
-                        <x-admin.sidebar-link route="admin.refunds.index" icon="💰" label="Refunded" />
-                        <x-admin.sidebar-link route="admin.refunds.index" icon="❌" label="Rejected" />
+                    <x-admin.sidebar-dropdown icon="💸" label="Refunds" :active="request()->is('admin/refunds*')">
+                        <x-admin.sidebar-link route="admin.refunds.index" label="Requests" />
+                        <x-admin.sidebar-link route="admin.refunds.index" label="Settlements" />
                     </x-admin.sidebar-dropdown>
                 </div>
 
-                <!-- Product Management -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Catalog</p>
-                    <x-admin.sidebar-dropdown icon="🧩" label="Products" :active="request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.sub-categories.*', 'admin.sub-sub-categories.*', 'admin.brands.*', 'admin.attributes.*')">
-                        <x-admin.sidebar-link route="admin.categories.index" icon="📂" label="Categories" />
-                        <x-admin.sidebar-link route="admin.sub-categories.index" :params="['type' => 'sub']" icon="📁" label="Sub Categories" />
-                        <x-admin.sidebar-link route="admin.sub-sub-categories.index" :params="['type' => 'sub-sub']" icon="📁" label="Sub-sub Categories" />
-                        <x-admin.sidebar-link route="admin.brands.index" icon="🏷️" label="Brands" />
-                        <x-admin.sidebar-link route="admin.attributes.index" icon="⚙️" label="Attributes" />
-                        <x-admin.sidebar-link route="admin.products.index" icon="📦" label="In-house Products" />
-                        <x-admin.sidebar-link route="admin.products.index" :params="['type' => 'merchant']" icon="🏪" label="Merchant Products" />
+                <div class="px-6 mb-4 mt-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Asset Catalog</p>
+                </div>
+                <div class="space-y-0.5 mb-6">
+                    <x-admin.sidebar-dropdown icon="📦" label="Products" :active="request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.sub-categories.*', 'admin.sub-sub-categories.*', 'admin.brands.*', 'admin.attributes.*')">
+                        <x-admin.sidebar-link route="admin.categories.index" label="Hierarchy" />
+                        <x-admin.sidebar-link route="admin.sub-categories.index" label="Sub-Categories" />
+                        <x-admin.sidebar-link route="admin.brands.index" label="Brand Registry" />
+                        <x-admin.sidebar-link route="admin.attributes.index" label="Specifications" />
+                        <x-admin.sidebar-link route="admin.products.index" label="In-house Stocks" />
+                        <x-admin.sidebar-link route="admin.products.index" :params="['type' => 'merchant']" label="Merchant Assets" />
                     </x-admin.sidebar-dropdown>
                 </div>
 
-                <!-- Promotions -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Marketing</p>
-                    <x-admin.sidebar-dropdown icon="📣" label="Promotions" :active="request()->routeIs('admin.banners.*', 'admin.coupons.*', 'admin.flash-deals.*')">
-                        <x-admin.sidebar-link route="admin.banners.index" icon="🖼️" label="Banners" />
-                        <x-admin.sidebar-link route="admin.coupons.index" icon="🎟️" label="Coupons" />
-                        <x-admin.sidebar-link route="admin.flash-deals.index" icon="⚡" label="Flash Deals" />
-                        <x-admin.sidebar-link route="admin.flash-deals.index" :params="['type' => 'daily']" icon="📅" label="Deal of the Day" />
-                        <x-admin.sidebar-link route="admin.flash-deals.index" :params="['type' => 'featured']" icon="⭐" label="Featured Deals" />
+                <div class="px-6 mb-4 mt-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Ecosystem</p>
+                </div>
+                <div class="space-y-0.5 mb-6">
+                    <x-admin.sidebar-dropdown icon="👥" label="Stakeholders" :active="request()->routeIs('admin.users.*', 'admin.merchants.*', 'admin.riders.*', 'admin.kyc.*')">
+                        <x-admin.sidebar-link route="admin.users.index" label="Consumer Base" />
+                        <x-admin.sidebar-link route="admin.merchants.index" label="Merchant Network" />
+                        <x-admin.sidebar-link route="admin.riders.index" label="Delivery Fleet" />
+                        <x-admin.sidebar-link route="admin.kyc.index" label="Verifications" />
+                    </x-admin.sidebar-dropdown>
+
+                    <x-admin.sidebar-dropdown icon="⚡" label="Marketing" :active="request()->routeIs('admin.banners.*', 'admin.coupons.*', 'admin.flash-deals.*')">
+                        <x-admin.sidebar-link route="admin.banners.index" label="Banners" />
+                        <x-admin.sidebar-link route="admin.coupons.index" label="Vouchers" />
+                        <x-admin.sidebar-link route="admin.flash-deals.index" label="Campaigns" />
                     </x-admin.sidebar-dropdown>
                 </div>
 
-                <!-- Users -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Users</p>
-                    <x-admin.sidebar-dropdown icon="👥" label="Management" :active="request()->routeIs('admin.users.*', 'admin.merchants.*', 'admin.riders.*')">
-                        <x-admin.sidebar-link route="admin.users.index" icon="👤" label="Customers" />
-                        <x-admin.sidebar-link route="admin.merchants.index" icon="🏪" label="Merchants" />
-                        <x-admin.sidebar-link route="admin.riders.index" icon="🚴" label="Delivery Man" />
-                        <x-admin.sidebar-link route="admin.kyc.index" icon="🆔" label="KYC Verifications" />
-                        <x-admin.sidebar-link route="admin.designations.index" icon="💼" label="Designations" />
-                    </x-admin.sidebar-dropdown>
+                <div class="px-6 mb-4 mt-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Management</p>
                 </div>
-
-                <!-- Reports -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">Analytics</p>
-                    <x-admin.sidebar-dropdown icon="📊" label="Reports" :active="request()->is('admin/reports*')">
-                        <x-admin.sidebar-link route="admin.reports.sales" icon="💵" label="Sales Report" />
-                        <x-admin.sidebar-link route="admin.reports.financials" icon="💳" label="Transactions" />
-                        <x-admin.sidebar-link route="admin.reports.merchants" icon="🏬" label="Merchant Stats" />
-                        <x-admin.sidebar-link route="admin.products.index" icon="📦" label="Product Stats" />
-                        <x-admin.sidebar-link route="admin.orders.index" icon="🛍️" label="Order Stats" />
-                        <x-admin.sidebar-link route="admin.reports.financials" icon="📈" label="Financials" />
-                    </x-admin.sidebar-dropdown>
+                <div class="space-y-0.5 mb-6">
+                    <x-admin.sidebar-link route="admin.settings.index" icon="⚙️" label="System Config" />
+                    <x-admin.sidebar-link route="admin.dashboard" icon="📈" label="Financial Audits" />
                 </div>
-
-                <!-- System -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Core Settings</p>
-                    <x-admin.sidebar-link route="admin.settings.index" icon="⚙️" label="System Settings" />
-                </div>
-
-                            <!-- Sidebar Footer -->
-            <div class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">
-                <div class="flex items-center justify-between px-2">
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="text-[9px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400">Logout</button>
-                    </form>
-                </div>
-            </div>
             </nav>
-
-
         </aside>
 
         <!-- Main Workspace -->
-        <main class="flex-1 lg:ml-[280px] min-h-screen transition-all duration-300">
+        <main class="flex-1 lg:ml-[260px] min-h-screen transition-all duration-300">
             <!-- Header -->
             <header class="h-[70px] bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 md:px-8 sticky top-0 z-40 shadow-sm">
                 <div class="flex items-center gap-4">
@@ -195,13 +165,13 @@
                         <span class="text-xs font-black text-primary uppercase">BN</span>
                     </div>
 
-                    <!-- Notification Protocol -->
+                    <!-- Notifications -->
                     <button class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-white dark:hover:bg-slate-700 border border-slate-100 dark:border-slate-700 transition-all relative">
                         <span>🔔</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white dark:border-slate-800"></span>
                     </button>
 
-                    <!-- Message Channel -->
+                    <!-- Messages -->
                     <button class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-accent hover:bg-white dark:hover:bg-slate-700 border border-slate-100 dark:border-slate-700 transition-all relative">
                         <span>💬</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-sky-500 rounded-full border-2 border-white dark:border-slate-800"></span>
@@ -209,7 +179,7 @@
 
                     <div class="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block"></div>
 
-                    <!-- Identity Node -->
+                    <!-- Profile Dropdown -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 p-1.5 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                             <div class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-black shadow-lg shadow-primary/20 uppercase">
@@ -217,7 +187,7 @@
                             </div>
                             <div class="text-left hidden sm:block">
                                 <div class="text-[11px] font-black text-slate-800 dark:text-white leading-none uppercase">{{ Auth::user()->name }}</div>
-                                <div class="text-[8px] font-black text-slate-400 uppercase mt-0.5 tracking-tighter">Root Administrator</div>
+                                <div class="text-[8px] font-black text-slate-400 uppercase mt-0.5 tracking-tighter">Administrator</div>
                             </div>
                             <span class="text-[10px] text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''">▼</span>
                         </button>
@@ -234,16 +204,16 @@
                                 <p class="text-xs font-black text-slate-800 dark:text-white truncate">{{ Auth::user()->email }}</p>
                             </div>
                             <a href="{{ route('admin.users.edit', Auth::user()) }}" class="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-all rounded-xl">
-                                👤 Profile Metrics
+                                👤 My Profile
                             </a>
                             <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-all rounded-xl">
-                                ⚙️ Protocol Settings
+                                ⚙️ System Settings
                             </a>
                             <div class="border-t border-slate-50 dark:border-slate-800 my-2"></div>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-xs font-black text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all rounded-xl">
-                                    🚪 De-authorize Session
+                                    🚪 Sign Out
                                 </button>
                             </form>
                         </div>
@@ -253,25 +223,25 @@
 
             <!-- Page Content Inner -->
             <div class="p-6 lg:p-10 max-w-[1600px] mx-auto">
-                {{-- Breadcrumbs placeholder --}}
-                <div class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">
-                    <a href="#" class="hover:text-primary transition-colors">Matrix</a>
+                {{-- Breadcrumbs --}}
+                <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-6">
+                    <a href="{{ route('admin.dashboard') }}" class="hover:text-primary transition-colors">Admin Hub</a>
                     <span>/</span>
-                    <span class="text-slate-800 dark:text-white font-black">@yield('page-title', 'Overview')</span>
+                    <span class="text-slate-800 dark:text-slate-200">@yield('page-title', 'Dashboard')</span>
                 </div>
 
                 @yield('content')
             </div>
 
             <!-- Footer -->
-            <footer class="p-6 lg:px-10 mt-auto border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-400 text-[10px] font-black uppercase tracking-widest">
+            <footer class="p-6 lg:px-10 mt-auto border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-400 text-[11px] font-medium tracking-wide">
                 <div>
-                    &copy; {{ date('Y') }} <span class="text-slate-600 dark:text-slate-500">EcomMatrix Operating System.</span> All Rights Reserved.
+                    &copy; {{ date('Y') }} <span class="text-slate-600 dark:text-slate-500 font-semibold">C-Market Pro.</span> Platform Management
                 </div>
                 <div class="flex items-center gap-6">
-                    <a href="#" class="hover:text-primary transition-colors">Documentation</a>
-                    <a href="#" class="hover:text-primary transition-colors">Quick Support</a>
-                    <a href="#" class="hover:text-primary transition-colors">Protocol v2.1.0</a>
+                    <a href="#" class="hover:text-primary transition-colors">Reference</a>
+                    <a href="#" class="hover:text-primary transition-colors">Support</a>
+                    <a href="#" class="hover:text-primary transition-colors">v2.4.0</a>
                 </div>
             </footer>
         </main>

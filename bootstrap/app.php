@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'wallet_verified' => \App\Http\Middleware\EnsureWalletIsVerified::class,
         ]);
     })
+    ->withProviders([
+        \Nwidart\Modules\LaravelModulesServiceProvider::class,
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

@@ -36,21 +36,15 @@ unset($__defined_vars); ?>
     if (!empty($params)) {
         $isActive = request()->fullUrl() === $generatedUrl;
     } else {
-        // If no params, ensure the current full URL doesn't have extra params that shouldn't belong here
         $isActive = request()->url() === $generatedUrl && empty(request()->query());
     }
 ?>
 
 <a href="<?php echo e($generatedUrl); ?>" 
-   class="flex items-center justify-between group px-4 py-3 rounded-xl transition-all duration-300 <?php echo e($isActive ? 'bg-primary text-white shadow-xl shadow-primary/30 active-node' : 'text-slate-400 hover:text-white hover:bg-white/5'); ?>">
-    <div class="flex items-center gap-3">
-        <?php if(isset($icon)): ?>
-            <span class="text-lg opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-transform"><?php echo e($icon); ?></span>
-        <?php endif; ?>
-        <span class="font-black text-[11px] uppercase tracking-wider"><?php echo e($label); ?></span>
-    </div>
-    <?php if($isActive): ?>
-        <div class="w-1.5 h-1.5 rounded-full bg-white shadow-sm"></div>
+   class="flex items-center gap-3 px-6 py-2.5 transition-all duration-200 group <?php echo e($isActive ? 'text-white bg-slate-800/50 border-r-4 border-primary' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'); ?>">
+    <?php if(isset($icon)): ?>
+        <span class="text-lg opacity-70 group-hover:opacity-100 transition-opacity"><?php echo e($icon); ?></span>
     <?php endif; ?>
+    <span class="text-[13px] font-semibold tracking-tight"><?php echo e($label); ?></span>
 </a>
 <?php /**PATH /Users/rsmmonaem/Projects/Nibiz/cmarket/resources/views/components/admin/sidebar-link.blade.php ENDPATH**/ ?>

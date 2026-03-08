@@ -37,7 +37,7 @@ class InitialSystemSeeder extends Seeder
 
         // Initial Settings
         $settings = [
-            ['key' => 'site_name', 'value' => 'EcomMatrix', 'type' => 'string', 'group' => 'general', 'description' => 'Global Platform Name'],
+            ['key' => 'site_name', 'value' => 'C-Market', 'type' => 'string', 'group' => 'general', 'description' => 'Global Platform Name'],
             ['key' => 'referral_commission', 'value' => '10', 'type' => 'decimal', 'group' => 'commission', 'description' => 'Standard Referral Reward Percentage'],
             ['key' => 'enable_flash_deals', 'value' => '1', 'type' => 'boolean', 'group' => 'ui_toggles', 'description' => 'Toggle Flash Deals Matrix on Homepage'],
             ['key' => 'enable_popup_banner', 'value' => '1', 'type' => 'boolean', 'group' => 'ui_toggles', 'description' => 'Toggle Global Entry Popup'],

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $__env->yieldContent('title', 'Admin Dashboard'); ?> - EcomMatrix</title>
+    <title><?php echo $__env->yieldContent('title', 'Admin Dashboard'); ?> - C-Market</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -49,23 +49,25 @@
 
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside class="w-[280px] bg-[#0f172a] text-slate-400 fixed inset-y-0 left-0 z-50 transform lg:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-800 shadow-2xl overflow-y-auto sidebar-scroll"
+        <aside class="w-[260px] bg-[#1e293b] text-slate-400 fixed inset-y-0 left-0 z-50 transform lg:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-800 shadow-xl overflow-y-auto sidebar-scroll"
                :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
             
             <!-- Sidebar Header / Logo -->
-            <div class="h-[70px] flex items-center px-6 border-b border-slate-800 bg-[#0f172a]/50 backdrop-blur-md sticky top-0 z-10">
-                <a href="<?php echo e(route('admin.dashboard')); ?>" class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-tr from-primary to-primary-light rounded-2xl flex items-center justify-center text-white text-xl shadow-lg shadow-primary/20">
-                        ⚡
+            <div class="h-[64px] flex items-center px-6 border-b border-slate-800/50 bg-[#1e293b] sticky top-0 z-10">
+                <a href="<?php echo e(route('admin.dashboard')); ?>" class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold">
+                        C
                     </div>
-                    <span class="text-xl font-black text-white tracking-tighter uppercase">Matrix <span class="text-primary">Admin</span></span>
+                    <span class="text-lg font-bold text-slate-100 tracking-tight">C-Market <span class="text-primary/80 font-medium">Pro</span></span>
                 </a>
             </div>
 
             <!-- Sidebar Navigation -->
-            <nav class="p-4 space-y-6 pb-24">
-                <!-- Dashboard Section -->
-                <div class="space-y-1">
+            <nav class="py-4 pb-24">
+                <div class="px-6 mb-4">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Analytical</p>
+                </div>
+                <div class="space-y-0.5 mb-6">
                     <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.dashboard','icon' => '📊','label' => 'Dashboard']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -88,8 +90,10 @@
 <?php endif; ?>
                 </div>
 
-                <div class="space-y-1">
-                    <p class="px-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">Core Operations</p>
+                <div class="px-6 mb-4 mt-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Operations</p>
+                </div>
+                <div class="space-y-0.5 mb-6">
                     <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.merchants.index','icon' => '🏢','label' => 'Merchants']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -112,14 +116,14 @@
 <?php endif; ?>
                     <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.pos.index','icon' => '🖱️','label' => 'POS Terminal']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.pos.index','icon' => '🖥️','label' => 'POS Terminal']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.pos.index','icon' => '🖱️','label' => 'POS Terminal']); ?>
+<?php $component->withAttributes(['route' => 'admin.pos.index','icon' => '🖥️','label' => 'POS Terminal']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -152,14 +156,14 @@
 <?php endif; ?>
                     <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => '#','icon' => '🗒️','label' => 'Procurement']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.products.index','icon' => '📁','label' => 'Procurement']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => '#','icon' => '🗒️','label' => 'Procurement']); ?>
+<?php $component->withAttributes(['route' => 'admin.products.index','icon' => '📁','label' => 'Procurement']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -172,29 +176,30 @@
 <?php endif; ?>
                 </div>
 
-                <!-- Order Management -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Sales</p>
+                <div class="px-6 mb-4 mt-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Sales & Logs</p>
+                </div>
+                <div class="space-y-0.5 mb-6">
                     <?php if (isset($component)) { $__componentOriginal1ec1143df31c70ac0673c8a3095ec97b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1ec1143df31c70ac0673c8a3095ec97b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '🛍️','label' => 'Orders','active' => request()->is('admin/orders*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '🛍️','label' => 'Order Pipeline','active' => request()->is('admin/orders*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-dropdown'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['icon' => '🛍️','label' => 'Orders','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->is('admin/orders*'))]); ?>
+<?php $component->withAttributes(['icon' => '🛍️','label' => 'Order Pipeline','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->is('admin/orders*'))]); ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','icon' => '📦','label' => 'All Orders']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','label' => 'Overview']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.orders.index','icon' => '📦','label' => 'All Orders']); ?>
+<?php $component->withAttributes(['route' => 'admin.orders.index','label' => 'Overview']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -207,14 +212,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'pending'],'icon' => '⏳','label' => 'Pending']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'pending'],'label' => 'Pending']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'pending']),'icon' => '⏳','label' => 'Pending']); ?>
+<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'pending']),'label' => 'Pending']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -227,14 +232,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'confirmed'],'icon' => '✅','label' => 'Confirmed']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'confirmed'],'label' => 'Confirmed']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'confirmed']),'icon' => '✅','label' => 'Confirmed']); ?>
+<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'confirmed']),'label' => 'Confirmed']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -247,14 +252,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'packaging'],'icon' => '📦','label' => 'Packaging']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'packaging'],'label' => 'Infrastructure']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'packaging']),'icon' => '📦','label' => 'Packaging']); ?>
+<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'packaging']),'label' => 'Infrastructure']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -267,94 +272,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'out_for_delivery'],'icon' => '🚚','label' => 'Out for Delivery']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'delivered'],'label' => 'Completed']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'out_for_delivery']),'icon' => '🚚','label' => 'Out for Delivery']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'delivered'],'icon' => '🏁','label' => 'Delivered']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'delivered']),'icon' => '🏁','label' => 'Delivered']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'returned'],'icon' => '🔄','label' => 'Returned']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'returned']),'icon' => '🔄','label' => 'Returned']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'failed'],'icon' => '❌','label' => 'Failed']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'failed']),'icon' => '❌','label' => 'Failed']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.orders.index','params' => ['status' => 'cancelled'],'icon' => '🚫','label' => 'Cancelled']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'cancelled']),'icon' => '🚫','label' => 'Cancelled']); ?>
+<?php $component->withAttributes(['route' => 'admin.orders.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['status' => 'delivered']),'label' => 'Completed']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -378,24 +303,24 @@
 
                     <?php if (isset($component)) { $__componentOriginal1ec1143df31c70ac0673c8a3095ec97b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1ec1143df31c70ac0673c8a3095ec97b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '💸','label' => 'Refund Requests','active' => request()->is('admin/refunds*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '💸','label' => 'Refunds','active' => request()->is('admin/refunds*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-dropdown'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['icon' => '💸','label' => 'Refund Requests','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->is('admin/refunds*'))]); ?>
+<?php $component->withAttributes(['icon' => '💸','label' => 'Refunds','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->is('admin/refunds*'))]); ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.refunds.index','icon' => '⏳','label' => 'Pending']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.refunds.index','label' => 'Requests']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.refunds.index','icon' => '⏳','label' => 'Pending']); ?>
+<?php $component->withAttributes(['route' => 'admin.refunds.index','label' => 'Requests']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -408,54 +333,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.refunds.index','icon' => '✅','label' => 'Approved']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.refunds.index','label' => 'Settlements']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.refunds.index','icon' => '✅','label' => 'Approved']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.refunds.index','icon' => '💰','label' => 'Refunded']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.refunds.index','icon' => '💰','label' => 'Refunded']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.refunds.index','icon' => '❌','label' => 'Rejected']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.refunds.index','icon' => '❌','label' => 'Rejected']); ?>
+<?php $component->withAttributes(['route' => 'admin.refunds.index','label' => 'Settlements']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -478,29 +363,30 @@
 <?php endif; ?>
                 </div>
 
-                <!-- Product Management -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Catalog</p>
+                <div class="px-6 mb-4 mt-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Asset Catalog</p>
+                </div>
+                <div class="space-y-0.5 mb-6">
                     <?php if (isset($component)) { $__componentOriginal1ec1143df31c70ac0673c8a3095ec97b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1ec1143df31c70ac0673c8a3095ec97b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '🧩','label' => 'Products','active' => request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.sub-categories.*', 'admin.sub-sub-categories.*', 'admin.brands.*', 'admin.attributes.*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '📦','label' => 'Products','active' => request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.sub-categories.*', 'admin.sub-sub-categories.*', 'admin.brands.*', 'admin.attributes.*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-dropdown'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['icon' => '🧩','label' => 'Products','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.sub-categories.*', 'admin.sub-sub-categories.*', 'admin.brands.*', 'admin.attributes.*'))]); ?>
+<?php $component->withAttributes(['icon' => '📦','label' => 'Products','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.sub-categories.*', 'admin.sub-sub-categories.*', 'admin.brands.*', 'admin.attributes.*'))]); ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.categories.index','icon' => '📂','label' => 'Categories']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.categories.index','label' => 'Hierarchy']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.categories.index','icon' => '📂','label' => 'Categories']); ?>
+<?php $component->withAttributes(['route' => 'admin.categories.index','label' => 'Hierarchy']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -513,14 +399,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.sub-categories.index','params' => ['type' => 'sub'],'icon' => '📁','label' => 'Sub Categories']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.sub-categories.index','label' => 'Sub-Categories']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.sub-categories.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['type' => 'sub']),'icon' => '📁','label' => 'Sub Categories']); ?>
+<?php $component->withAttributes(['route' => 'admin.sub-categories.index','label' => 'Sub-Categories']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -533,14 +419,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.sub-sub-categories.index','params' => ['type' => 'sub-sub'],'icon' => '📁','label' => 'Sub-sub Categories']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.brands.index','label' => 'Brand Registry']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.sub-sub-categories.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['type' => 'sub-sub']),'icon' => '📁','label' => 'Sub-sub Categories']); ?>
+<?php $component->withAttributes(['route' => 'admin.brands.index','label' => 'Brand Registry']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -553,14 +439,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.brands.index','icon' => '🏷️','label' => 'Brands']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.attributes.index','label' => 'Specifications']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.brands.index','icon' => '🏷️','label' => 'Brands']); ?>
+<?php $component->withAttributes(['route' => 'admin.attributes.index','label' => 'Specifications']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -573,14 +459,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.attributes.index','icon' => '⚙️','label' => 'Attributes']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.products.index','label' => 'In-house Stocks']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.attributes.index','icon' => '⚙️','label' => 'Attributes']); ?>
+<?php $component->withAttributes(['route' => 'admin.products.index','label' => 'In-house Stocks']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -593,34 +479,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.products.index','icon' => '📦','label' => 'In-house Products']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.products.index','params' => ['type' => 'merchant'],'label' => 'Merchant Assets']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.products.index','icon' => '📦','label' => 'In-house Products']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.products.index','params' => ['type' => 'merchant'],'icon' => '🏪','label' => 'Merchant Products']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.products.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['type' => 'merchant']),'icon' => '🏪','label' => 'Merchant Products']); ?>
+<?php $component->withAttributes(['route' => 'admin.products.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['type' => 'merchant']),'label' => 'Merchant Assets']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -643,29 +509,30 @@
 <?php endif; ?>
                 </div>
 
-                <!-- Promotions -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Marketing</p>
+                <div class="px-6 mb-4 mt-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Ecosystem</p>
+                </div>
+                <div class="space-y-0.5 mb-6">
                     <?php if (isset($component)) { $__componentOriginal1ec1143df31c70ac0673c8a3095ec97b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1ec1143df31c70ac0673c8a3095ec97b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '📣','label' => 'Promotions','active' => request()->routeIs('admin.banners.*', 'admin.coupons.*', 'admin.flash-deals.*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '👥','label' => 'Stakeholders','active' => request()->routeIs('admin.users.*', 'admin.merchants.*', 'admin.riders.*', 'admin.kyc.*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-dropdown'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['icon' => '📣','label' => 'Promotions','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->routeIs('admin.banners.*', 'admin.coupons.*', 'admin.flash-deals.*'))]); ?>
+<?php $component->withAttributes(['icon' => '👥','label' => 'Stakeholders','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->routeIs('admin.users.*', 'admin.merchants.*', 'admin.riders.*', 'admin.kyc.*'))]); ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.banners.index','icon' => '🖼️','label' => 'Banners']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.users.index','label' => 'Consumer Base']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.banners.index','icon' => '🖼️','label' => 'Banners']); ?>
+<?php $component->withAttributes(['route' => 'admin.users.index','label' => 'Consumer Base']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -678,14 +545,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.coupons.index','icon' => '🎟️','label' => 'Coupons']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.merchants.index','label' => 'Merchant Network']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.coupons.index','icon' => '🎟️','label' => 'Coupons']); ?>
+<?php $component->withAttributes(['route' => 'admin.merchants.index','label' => 'Merchant Network']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -698,14 +565,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.flash-deals.index','icon' => '⚡','label' => 'Flash Deals']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.riders.index','label' => 'Delivery Fleet']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.flash-deals.index','icon' => '⚡','label' => 'Flash Deals']); ?>
+<?php $component->withAttributes(['route' => 'admin.riders.index','label' => 'Delivery Fleet']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -718,34 +585,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.flash-deals.index','params' => ['type' => 'daily'],'icon' => '📅','label' => 'Deal of the Day']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.kyc.index','label' => 'Verifications']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.flash-deals.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['type' => 'daily']),'icon' => '📅','label' => 'Deal of the Day']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.flash-deals.index','params' => ['type' => 'featured'],'icon' => '⭐','label' => 'Featured Deals']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.flash-deals.index','params' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['type' => 'featured']),'icon' => '⭐','label' => 'Featured Deals']); ?>
+<?php $component->withAttributes(['route' => 'admin.kyc.index','label' => 'Verifications']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -766,31 +613,27 @@
 <?php $component = $__componentOriginal1ec1143df31c70ac0673c8a3095ec97b; ?>
 <?php unset($__componentOriginal1ec1143df31c70ac0673c8a3095ec97b); ?>
 <?php endif; ?>
-                </div>
 
-                <!-- Users -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Users</p>
                     <?php if (isset($component)) { $__componentOriginal1ec1143df31c70ac0673c8a3095ec97b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1ec1143df31c70ac0673c8a3095ec97b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '👥','label' => 'Management','active' => request()->routeIs('admin.users.*', 'admin.merchants.*', 'admin.riders.*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '⚡','label' => 'Marketing','active' => request()->routeIs('admin.banners.*', 'admin.coupons.*', 'admin.flash-deals.*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-dropdown'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['icon' => '👥','label' => 'Management','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->routeIs('admin.users.*', 'admin.merchants.*', 'admin.riders.*'))]); ?>
+<?php $component->withAttributes(['icon' => '⚡','label' => 'Marketing','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->routeIs('admin.banners.*', 'admin.coupons.*', 'admin.flash-deals.*'))]); ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.users.index','icon' => '👤','label' => 'Customers']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.banners.index','label' => 'Banners']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.users.index','icon' => '👤','label' => 'Customers']); ?>
+<?php $component->withAttributes(['route' => 'admin.banners.index','label' => 'Banners']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -803,14 +646,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.merchants.index','icon' => '🏪','label' => 'Merchants']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.coupons.index','label' => 'Vouchers']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.merchants.index','icon' => '🏪','label' => 'Merchants']); ?>
+<?php $component->withAttributes(['route' => 'admin.coupons.index','label' => 'Vouchers']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -823,54 +666,14 @@
 <?php endif; ?>
                         <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.riders.index','icon' => '🚴','label' => 'Delivery Man']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.flash-deals.index','label' => 'Campaigns']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.riders.index','icon' => '🚴','label' => 'Delivery Man']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.kyc.index','icon' => '🆔','label' => 'KYC Verifications']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.kyc.index','icon' => '🆔','label' => 'KYC Verifications']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.designations.index','icon' => '💼','label' => 'Designations']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.designations.index','icon' => '💼','label' => 'Designations']); ?>
+<?php $component->withAttributes(['route' => 'admin.flash-deals.index','label' => 'Campaigns']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -893,164 +696,40 @@
 <?php endif; ?>
                 </div>
 
-                <!-- Reports -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">Analytics</p>
-                    <?php if (isset($component)) { $__componentOriginal1ec1143df31c70ac0673c8a3095ec97b = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal1ec1143df31c70ac0673c8a3095ec97b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-dropdown','data' => ['icon' => '📊','label' => 'Reports','active' => request()->is('admin/reports*')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-dropdown'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['icon' => '📊','label' => 'Reports','active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->is('admin/reports*'))]); ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => '#','icon' => '💵','label' => 'Sales Report']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => '#','icon' => '💵','label' => 'Sales Report']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => '#','icon' => '💳','label' => 'Transactions']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => '#','icon' => '💳','label' => 'Transactions']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => '#','icon' => '🏬','label' => 'Merchant Stats']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => '#','icon' => '🏬','label' => 'Merchant Stats']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => '#','icon' => '📦','label' => 'Product Stats']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => '#','icon' => '📦','label' => 'Product Stats']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => '#','icon' => '🛍️','label' => 'Order Stats']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => '#','icon' => '🛍️','label' => 'Order Stats']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                        <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => '#','icon' => '📈','label' => 'Financials']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin.sidebar-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['route' => '#','icon' => '📈','label' => 'Financials']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
-<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
-<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
-<?php endif; ?>
-                     <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal1ec1143df31c70ac0673c8a3095ec97b)): ?>
-<?php $attributes = $__attributesOriginal1ec1143df31c70ac0673c8a3095ec97b; ?>
-<?php unset($__attributesOriginal1ec1143df31c70ac0673c8a3095ec97b); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal1ec1143df31c70ac0673c8a3095ec97b)): ?>
-<?php $component = $__componentOriginal1ec1143df31c70ac0673c8a3095ec97b; ?>
-<?php unset($__componentOriginal1ec1143df31c70ac0673c8a3095ec97b); ?>
-<?php endif; ?>
+                <div class="px-6 mb-4 mt-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Management</p>
                 </div>
-
-                <!-- System -->
-                <div class="space-y-1">
-                    <p class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Core Settings</p>
+                <div class="space-y-0.5 mb-6">
                     <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.settings.index','icon' => '⚙️','label' => 'System Settings']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.settings.index','icon' => '⚙️','label' => 'System Config']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('admin.sidebar-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['route' => 'admin.settings.index','icon' => '⚙️','label' => 'System Settings']); ?>
+<?php $component->withAttributes(['route' => 'admin.settings.index','icon' => '⚙️','label' => 'System Config']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
+<?php $attributes = $__attributesOriginal25b36b426f30fd196f9d947e60e48c56; ?>
+<?php unset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
+<?php $component = $__componentOriginal25b36b426f30fd196f9d947e60e48c56; ?>
+<?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
+<?php endif; ?>
+                    <?php if (isset($component)) { $__componentOriginal25b36b426f30fd196f9d947e60e48c56 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal25b36b426f30fd196f9d947e60e48c56 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.sidebar-link','data' => ['route' => 'admin.dashboard','icon' => '📈','label' => 'Financial Audits']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['route' => 'admin.dashboard','icon' => '📈','label' => 'Financial Audits']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal25b36b426f30fd196f9d947e60e48c56)): ?>
@@ -1062,23 +741,11 @@
 <?php unset($__componentOriginal25b36b426f30fd196f9d947e60e48c56); ?>
 <?php endif; ?>
                 </div>
-
-                            <!-- Sidebar Footer -->
-            <div class="px-4 text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">
-                <div class="flex items-center justify-between px-2">
-                    <form action="<?php echo e(route('logout')); ?>" method="POST">
-                        <?php echo csrf_field(); ?>
-                        <button type="submit" class="text-[9px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400">Logout</button>
-                    </form>
-                </div>
-            </div>
             </nav>
-
-
         </aside>
 
         <!-- Main Workspace -->
-        <main class="flex-1 lg:ml-[280px] min-h-screen transition-all duration-300">
+        <main class="flex-1 lg:ml-[260px] min-h-screen transition-all duration-300">
             <!-- Header -->
             <header class="h-[70px] bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 md:px-8 sticky top-0 z-40 shadow-sm">
                 <div class="flex items-center gap-4">
@@ -1101,13 +768,13 @@
                         <span class="text-xs font-black text-primary uppercase">BN</span>
                     </div>
 
-                    <!-- Notification Protocol -->
+                    <!-- Notifications -->
                     <button class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-white dark:hover:bg-slate-700 border border-slate-100 dark:border-slate-700 transition-all relative">
                         <span>🔔</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white dark:border-slate-800"></span>
                     </button>
 
-                    <!-- Message Channel -->
+                    <!-- Messages -->
                     <button class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-accent hover:bg-white dark:hover:bg-slate-700 border border-slate-100 dark:border-slate-700 transition-all relative">
                         <span>💬</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-sky-500 rounded-full border-2 border-white dark:border-slate-800"></span>
@@ -1115,7 +782,7 @@
 
                     <div class="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block"></div>
 
-                    <!-- Identity Node -->
+                    <!-- Profile Dropdown -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 p-1.5 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                             <div class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-black shadow-lg shadow-primary/20 uppercase">
@@ -1124,7 +791,7 @@
                             </div>
                             <div class="text-left hidden sm:block">
                                 <div class="text-[11px] font-black text-slate-800 dark:text-white leading-none uppercase"><?php echo e(Auth::user()->name); ?></div>
-                                <div class="text-[8px] font-black text-slate-400 uppercase mt-0.5 tracking-tighter">Root Administrator</div>
+                                <div class="text-[8px] font-black text-slate-400 uppercase mt-0.5 tracking-tighter">Administrator</div>
                             </div>
                             <span class="text-[10px] text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''">▼</span>
                         </button>
@@ -1141,16 +808,16 @@
                                 <p class="text-xs font-black text-slate-800 dark:text-white truncate"><?php echo e(Auth::user()->email); ?></p>
                             </div>
                             <a href="<?php echo e(route('admin.users.edit', Auth::user())); ?>" class="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-all rounded-xl">
-                                👤 Profile Metrics
+                                👤 My Profile
                             </a>
                             <a href="<?php echo e(route('admin.settings.index')); ?>" class="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-all rounded-xl">
-                                ⚙️ Protocol Settings
+                                ⚙️ System Settings
                             </a>
                             <div class="border-t border-slate-50 dark:border-slate-800 my-2"></div>
                             <form action="<?php echo e(route('logout')); ?>" method="POST">
                                 <?php echo csrf_field(); ?>
                                 <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-xs font-black text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all rounded-xl">
-                                    🚪 De-authorize Session
+                                    🚪 Sign Out
                                 </button>
                             </form>
                         </div>
@@ -1161,24 +828,24 @@
             <!-- Page Content Inner -->
             <div class="p-6 lg:p-10 max-w-[1600px] mx-auto">
                 
-                <div class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">
-                    <a href="#" class="hover:text-primary transition-colors">Matrix</a>
+                <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-6">
+                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="hover:text-primary transition-colors">Admin Hub</a>
                     <span>/</span>
-                    <span class="text-slate-800 dark:text-white font-black"><?php echo $__env->yieldContent('page-title', 'Overview'); ?></span>
+                    <span class="text-slate-800 dark:text-slate-200"><?php echo $__env->yieldContent('page-title', 'Dashboard'); ?></span>
                 </div>
 
                 <?php echo $__env->yieldContent('content'); ?>
             </div>
 
             <!-- Footer -->
-            <footer class="p-6 lg:px-10 mt-auto border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-400 text-[10px] font-black uppercase tracking-widest">
+            <footer class="p-6 lg:px-10 mt-auto border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-400 text-[11px] font-medium tracking-wide">
                 <div>
-                    &copy; <?php echo e(date('Y')); ?> <span class="text-slate-600 dark:text-slate-500">EcomMatrix Operating System.</span> All Rights Reserved.
+                    &copy; <?php echo e(date('Y')); ?> <span class="text-slate-600 dark:text-slate-500 font-semibold">C-Market Pro.</span> Platform Management
                 </div>
                 <div class="flex items-center gap-6">
-                    <a href="#" class="hover:text-primary transition-colors">Documentation</a>
-                    <a href="#" class="hover:text-primary transition-colors">Quick Support</a>
-                    <a href="#" class="hover:text-primary transition-colors">Protocol v2.1.0</a>
+                    <a href="#" class="hover:text-primary transition-colors">Reference</a>
+                    <a href="#" class="hover:text-primary transition-colors">Support</a>
+                    <a href="#" class="hover:text-primary transition-colors">v2.4.0</a>
                 </div>
             </footer>
         </main>

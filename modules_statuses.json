@@ -1,0 +1,8 @@
+{
+    "Admin": true,
+    "Merchant": true,
+    "Customer": true,
+    "Affiliate": true,
+    "Rider": true,
+    "Ecommerce": true
+}

@@ -29,7 +29,9 @@
     25 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
     26 => 'Carbon\\Laravel\\ServiceProvider',
     27 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    28 => 'Spatie\\Permission\\PermissionServiceProvider',
+    28 => 'Nwidart\\Modules\\LaravelModulesServiceProvider',
+    29 => 'Spatie\\Permission\\PermissionServiceProvider',
+    30 => 'Nwidart\\Modules\\LaravelModulesServiceProvider',
   ),
   'eager' => 
   array (
@@ -48,7 +50,9 @@
     12 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
     13 => 'Carbon\\Laravel\\ServiceProvider',
     14 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    15 => 'Spatie\\Permission\\PermissionServiceProvider',
+    15 => 'Nwidart\\Modules\\LaravelModulesServiceProvider',
+    16 => 'Spatie\\Permission\\PermissionServiceProvider',
+    17 => 'Nwidart\\Modules\\LaravelModulesServiceProvider',
   ),
   'deferred' => 
   array (

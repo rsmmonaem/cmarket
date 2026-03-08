@@ -26,7 +26,10 @@ class DatabaseSeeder extends Seeder
         // 4. Investment Marketplace Core
         $this->call(ChainShopSeeder::class);
 
-        // 5. Super Admin Initialization (Safe Deployment)
+        // 5. Ecommerce Demo Data (Products, Categories, Banners)
+        $this->call(EcommerceDemoSeeder::class);
+
+        // 6. Super Admin Initialization (Safe Deployment)
         $superAdmin = User::updateOrCreate(
             ['email' => 'admin@cmarket.com'],
             [
@@ -41,7 +44,7 @@ class DatabaseSeeder extends Seeder
             $superAdmin->assignRole('super-admin');
         }
 
-        // 6. Mandatory Wallet Infrastructure for Admin
+        // 7. Mandatory Wallet Infrastructure for Admin
         $walletTypes = ['main', 'cashback', 'commission', 'shop', 'share'];
         foreach ($walletTypes as $type) {
             Wallet::firstOrCreate([
