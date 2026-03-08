@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Sales Performance Analytics')
-@section('page-title', 'Revenue Narrative')
+@section('title', 'Sales Report - CMarket')
+@section('page-title', 'Sales Report')
 
 @section('content')
 <div class="space-y-10 animate-fade-in">

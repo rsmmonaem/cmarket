@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title', 'Merchant Performance')
-@section('page-title', 'Merchant Stats')
+@section('title', 'Merchant Report')
+@section('page-title', 'Merchant Report')
 
 @section('content')
 <div class="space-y-6">
     <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm">
         <div class="px-8 py-5 border-b border-slate-50 dark:border-slate-800 flex items-center justify-between">
-            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Merchant Performance Matrix</h4>
+            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Merchant Performance Overview</h4>
             <span class="text-[10px] font-black text-slate-400 uppercase">{{ $merchants->total() }} total</span>
         </div>
         <table class="w-full text-left">

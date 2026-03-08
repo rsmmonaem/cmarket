@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'User Generations')
+@section('title', 'User Referrals')
 @section('page-title')
     Downline for <span class="text-primary">{{ $user->name }}</span>
 @endsection
@@ -72,7 +72,7 @@
                             <td class="py-4 text-[10px] text-muted-light font-medium">{{ $member->created_at->format('d M Y') }}</td>
                             <td class="py-4 text-right">
                                 <a href="{{ route('admin.users.show', $member->id) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-slate-900 text-white text-[8px] font-black uppercase hover:bg-primary transition">View Profile</a>
-                                <a href="{{ route('admin.users.generations', $member->id) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-light text-[8px] font-black uppercase hover:bg-slate-200 transition">View Tree</a>
+                                <a href="{{ route('admin.users.generations', $member->id) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-light text-[8px] font-black uppercase hover:bg-slate-200 transition">View Referrals</a>
                             </td>
                         </tr>
                         @endforeach

@@ -18,16 +18,17 @@ class CartController extends Controller
         foreach ($cart as $id => $details) {
             $product = Product::find($id);
             if ($product) {
+                $price = $product->final_price ?? $product->price;
                 $cartItems[] = [
-                    'product' => $product,
+                    'product'  => $product,
                     'quantity' => $details['quantity'],
-                    'subtotal' => $product->price * $details['quantity']
+                    'subtotal' => $price * $details['quantity'],
                 ];
-                $total += $product->price * $details['quantity'];
+                $total += $price * $details['quantity'];
             }
         }
 
-        return view('cart.index', compact('cartItems', 'total'));
+        return view('ecommerce::cart.index', compact('cartItems', 'total'));
     }
 
     public function add(Request $request, $productId)

@@ -51,7 +51,7 @@ class CheckoutController extends Controller
         $user = auth()->user();
         $mainWallet = $user->getWallet('main');
 
-        return view('checkout.index', compact('cartItems', 'subtotal', 'mainWallet'));
+        return view('ecommerce::checkout.index', compact('cartItems', 'subtotal', 'mainWallet'));
     }
 
     public function process(Request $request)
@@ -59,7 +59,7 @@ class CheckoutController extends Controller
         $request->validate([
             'payment_method' => 'required|in:wallet,cod,gateway',
             'shipping_address' => 'required|string',
-            'shipping_phone' => 'required|string',
+            'phone'            => 'required|string',
         ]);
 
         $cart = session()->get('cart', []);
@@ -95,7 +95,7 @@ class CheckoutController extends Controller
                 'payment_status' => $request->payment_method === 'wallet' ? 'paid' : 'pending', // Assume wallet is instant paid
                 'status' => 'pending',
                 'shipping_address' => $request->shipping_address,
-                'shipping_phone' => $request->shipping_phone,
+                'shipping_phone'   => $request->phone,
                 'notes' => $request->notes,
                 'paid_at' => $request->payment_method === 'wallet' ? now() : null,
             ]);

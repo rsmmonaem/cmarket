@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Participant File - CMarket')
-@section('page-title', 'Participant Audit')
+@section('title', 'User Profile - CMarket')
+@section('page-title', 'User Profile')
 
 @section('content')
 <div class="max-w-6xl mx-auto animate-fade-in space-y-10 pb-20">
-    <!-- Header Node -->
+    <!-- Header -->
     <div class="bg-slate-900 rounded-[3rem] p-8 md:p-12 text-white shadow-2xl shadow-slate-900/10 flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden group">
         <div class="relative z-10 flex items-center gap-6">
             <div class="w-20 h-20 rounded-[2rem] bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-4xl shadow-2xl">
@@ -21,7 +21,7 @@
         </div>
         <div class="relative z-10 w-full md:w-auto">
             <a href="{{ route('admin.users.edit', $user) }}" class="block text-center px-10 py-5 bg-white text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-sky-500 hover:text-white transition-all shadow-xl">
-                ✏️ Reconfigure Node
+                ✏️ Edit
             </a>
         </div>
         <div class="absolute -right-10 -bottom-10 opacity-5 text-[150px] leading-none select-none italic font-black">USER</div>
@@ -33,7 +33,7 @@
             <div class="bg-white rounded-[2.5rem] p-8 md:p-10 border border-slate-100 shadow-sm space-y-10">
                 <div class="flex items-center gap-4">
                     <span class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-lg">🪪</span>
-                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Identity Matrix</h3>
+                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Identity Overview</h3>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
@@ -56,13 +56,13 @@
                         </div>
                     </div>
                     <div class="space-y-1.5">
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-0.5">Protocol Entry Date</p>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-0.5">Joined Date</p>
                         <p class="text-sm font-black text-slate-800">{{ $user->created_at->format('M d, Y') }} <span class="text-[10px] text-slate-400 opacity-60">({{ $user->created_at->diffForHumans() }})</span></p>
                     </div>
                 </div>
             </div>
 
-            <!-- Operational Activity -->
+            <!-- Active Activity -->
             <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
                 <div class="px-10 py-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
                     <h3 class="text-xs font-black text-slate-800 uppercase tracking-widest">Recent Commerce Stream</h3>
@@ -91,7 +91,7 @@
             </div>
         </div>
 
-        <!-- Wallet Infrastructure -->
+        <!-- Wallet Settings -->
         <div class="space-y-10">
             <div class="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
                 <h3 class="text-xs font-black text-slate-800 uppercase tracking-widest text-center">Liquidity Reservoirs</h3>
@@ -110,7 +110,7 @@
 
             <div class="bg-gradient-to-br from-sky-500 to-indigo-600 rounded-[2.5rem] p-10 text-white text-center shadow-xl shadow-sky-500/20">
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">🔑</div>
-                <h4 class="text-xs font-black uppercase tracking-widest mb-2">Protocol Access</h4>
+                <h4 class="text-xs font-black uppercase tracking-widest mb-2">Permissions</h4>
                 <p class="text-[9px] font-bold text-white/60 leading-relaxed mb-8">This node is verified and operates within standard platform security parameters.</p>
                 <a href="{{ route('admin.users.generations', $user) }}" class="inline-block w-full py-4 bg-white text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg">
                     View Network Tree 🌍

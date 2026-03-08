@@ -1,214 +1,208 @@
 @extends('layouts.public')
 
-@section('title', 'Secure Settlement - CMarket')
-@section('page-title', 'Final Confirmation')
+@section('title', 'Checkout - CMarket')
 
 @section('content')
-<div class="space-y-12 animate-fade-in">
-    <!-- Top Progress Indicator -->
-    <div class="flex items-center justify-between px-10 max-w-2xl mx-auto mb-16 relative">
-        <div class="flex flex-col items-center gap-4 relative z-10">
-            <div class="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm font-black shadow-lg shadow-emerald-500/20">1</div>
-            <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Inventory</p>
+<div class="max-w-5xl mx-auto px-4 py-10">
+
+    {{-- Step Indicator --}}
+    <div class="flex items-center gap-3 mb-10 max-w-xs">
+        <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center">1</div>
+            <span class="text-xs font-semibold text-emerald-600">Cart</span>
         </div>
-        <div class="flex-1 h-0.5 bg-emerald-500 mx-4"></div>
-        <div class="flex flex-col items-center gap-4 relative z-10">
-            <div class="w-12 h-12 rounded-full bg-slate-900 text-white flex items-center justify-center text-sm font-black shadow-lg shadow-slate-900/20">2</div>
-            <p class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Settlement</p>
+        <div class="flex-1 h-px bg-slate-200"></div>
+        <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">2</div>
+            <span class="text-xs font-bold text-slate-900">Checkout</span>
         </div>
-        <div class="flex-1 h-0.5 bg-slate-100 mx-4"></div>
-        <div class="flex flex-col items-center gap-4 relative z-10">
-            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-sm font-black">3</div>
-            <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Deployment</p>
+        <div class="flex-1 h-px bg-slate-100"></div>
+        <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 text-xs font-bold flex items-center justify-center">3</div>
+            <span class="text-xs font-semibold text-slate-300">Confirm</span>
         </div>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-12">
-        <!-- Main Checkout Intelligence -->
-        <div class="lg:w-2/3 space-y-8">
+    <div class="flex flex-col lg:flex-row gap-8">
+
+        {{-- Left: Shipping + Payment --}}
+        <div class="flex-1">
             <form action="{{ route('checkout.process') }}" method="POST" id="checkoutForm">
                 @csrf
 
-                <!-- Deployment Logistics -->
-                <div class="bg-white rounded-[3rem] p-10 lg:p-12 border border-slate-100 shadow-sm space-y-10">
-                    <div class="flex items-center gap-4 mb-12 border-b border-slate-50 pb-8">
-                        <span class="text-3xl">📍</span>
-                        <h3 class="text-xl font-black text-slate-800 tracking-tight">Logistics Command</h3>
-                    </div>
+                {{-- Shipping Info --}}
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-5">
+                    <h2 class="text-sm font-bold text-slate-800 mb-5 flex items-center gap-2">
+                        <span>📍</span> Delivery Information
+                    </h2>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="space-y-3">
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Asset Receiver</label>
-                            <input type="text" value="{{ auth()->user()->name }}" readonly class="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-400 cursor-not-allowed">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 mb-1.5">Full Name</label>
+                            <input type="text" value="{{ auth()->user()->name }}" readonly
+                                   class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-sm text-slate-400 cursor-not-allowed">
                         </div>
-                        <div class="space-y-3">
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Secure Contact Number</label>
-                            <input type="text" name="phone" value="{{ auth()->user()->phone ?? old('phone') }}" required placeholder="01XXXXXXXXX" class="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-black text-slate-800 focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-300">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 mb-1.5">Phone Number <span class="text-rose-500">*</span></label>
+                            <input type="text" name="phone"
+                                   value="{{ auth()->user()->phone ?? old('phone') }}"
+                                   required placeholder="01XXXXXXXXX"
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none placeholder:text-slate-300 transition-all">
                         </div>
                     </div>
 
-                    <div class="space-y-3">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Physical Coordinates (Address)</label>
-                        <textarea name="shipping_address" rows="4" required placeholder="Full deployment address including district and upazila..." class="w-full bg-slate-50 border-none rounded-[2rem] p-6 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-300">{{ old('shipping_address') }}</textarea>
+                    <div class="mb-4">
+                        <label class="block text-xs font-semibold text-slate-500 mb-1.5">Delivery Address <span class="text-rose-500">*</span></label>
+                        <textarea name="shipping_address" rows="3" required
+                                  placeholder="Full address including city, district..."
+                                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none placeholder:text-slate-300 transition-all resize-none">{{ old('shipping_address') }}</textarea>
                     </div>
 
-                    <div class="space-y-3">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Special Directives (Optional)</label>
-                        <input type="text" name="notes" placeholder="Example: Leave at front gate..." class="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-300">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1.5">Order Notes <span class="text-slate-300">(optional)</span></label>
+                        <input type="text" name="notes"
+                               placeholder="e.g. Leave at reception..."
+                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none placeholder:text-slate-300 transition-all">
                     </div>
                 </div>
 
-                <!-- Financial Gateway -->
-                <div class="bg-white rounded-[3rem] p-10 lg:p-12 border border-slate-100 shadow-sm space-y-10 mt-10">
-                    <div class="flex items-center gap-4 mb-12 border-b border-slate-50 pb-8">
-                        <span class="text-3xl">💳</span>
-                        <h3 class="text-xl font-black text-slate-800 tracking-tight">Monetary Protocol</h3>
-                    </div>
+                {{-- Payment Method --}}
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-6">
+                    <h2 class="text-sm font-bold text-slate-800 mb-5 flex items-center gap-2">
+                        <span>💳</span> Payment Method
+                    </h2>
 
-                    <div class="grid grid-cols-1 gap-6">
-                        <!-- Internal Wallet -->
-                        <label class="relative block cursor-pointer group">
-                            <input type="radio" name="payment_method" value="wallet" class="peer hidden" required>
-                            <div class="p-8 rounded-[2rem] border-2 border-slate-50 bg-slate-50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-xl peer-checked:shadow-primary/10 transition-all duration-300 flex items-center justify-between">
-                                <div class="flex items-center gap-6">
-                                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-sm border border-slate-100 peer-checked:border-primary/20">🏦</div>
-                                    <div>
-                                        <h4 class="text-lg font-black text-slate-800 mb-1">Ecosystem Digital Wallet</h4>
-                                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Instant Settlement • Liquid: <span class="text-emerald-500">৳{{ number_format($mainWallet->balance ?? 0, 2) }}</span></p>
-                                    </div>
-                                </div>
-                                <div class="w-6 h-6 rounded-full border-2 border-slate-200 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all">
-                                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-all"></div>
-                                </div>
+                    <div class="space-y-3">
+                        {{-- Wallet --}}
+                        <label class="flex items-center gap-4 p-4 rounded-xl border-2 border-slate-100 bg-slate-50 hover:border-primary/30 peer-checked:border-primary cursor-pointer transition-all group">
+                            <input type="radio" name="payment_method" value="wallet" class="accent-primary" required>
+                            <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-xl shadow-sm">🏦</div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-slate-800">Wallet Balance</p>
+                                <p class="text-xs text-slate-400">Available: <span class="text-emerald-600 font-semibold">৳{{ number_format($mainWallet->balance ?? 0, 2) }}</span></p>
                             </div>
                         </label>
 
-                        <!-- COD -->
-                        <label class="relative block cursor-pointer group">
-                            <input type="radio" name="payment_method" value="cod" class="peer hidden">
-                            <div class="p-8 rounded-[2rem] border-2 border-slate-50 bg-slate-50 peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:shadow-xl peer-checked:shadow-slate-900/10 transition-all duration-300 flex items-center justify-between">
-                                <div class="flex items-center gap-6">
-                                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-sm border border-slate-100 peer-checked:border-slate-800">🚚</div>
-                                    <div>
-                                        <h4 class="text-lg font-black text-slate-800 peer-checked:text-white mb-1 transition-colors">Physical Fiat (COD)</h4>
-                                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest peer-checked:text-slate-400">Settlement upon territory arrival</p>
-                                    </div>
-                                </div>
-                                <div class="w-6 h-6 rounded-full border-2 border-slate-200 peer-checked:border-white peer-checked:bg-white flex items-center justify-center transition-all">
-                                    <div class="w-2.5 h-2.5 rounded-full bg-slate-900 opacity-0 peer-checked:opacity-100 transition-all"></div>
-                                </div>
+                        {{-- COD --}}
+                        <label class="flex items-center gap-4 p-4 rounded-xl border-2 border-slate-100 bg-slate-50 hover:border-slate-300 cursor-pointer transition-all">
+                            <input type="radio" name="payment_method" value="cod" class="accent-slate-900">
+                            <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-xl shadow-sm">🚚</div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-slate-800">Cash on Delivery</p>
+                                <p class="text-xs text-slate-400">Pay when your order arrives</p>
                             </div>
                         </label>
 
-                        <!-- Disabled Gateway -->
-                        <div class="p-8 rounded-[2rem] border-2 border-dashed border-slate-100 bg-slate-50/50 flex items-center justify-between opacity-50 grayscale">
-                            <div class="flex items-center gap-6">
-                                <div class="w-14 h-14 rounded-2xl bg-white/50 flex items-center justify-center text-2xl shadow-sm border border-slate-100">🛡️</div>
-                                <div>
-                                    <h4 class="text-lg font-black text-slate-400 mb-1">Credit / Debit Matrix</h4>
-                                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Protocol implementation pending</p>
-                                </div>
+                        {{-- Card (disabled) --}}
+                        <div class="flex items-center gap-4 p-4 rounded-xl border-2 border-dashed border-slate-100 opacity-40 cursor-not-allowed">
+                            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xl">🛡️</div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-slate-500">Credit / Debit Card</p>
+                                <p class="text-xs text-slate-400">Coming soon</p>
                             </div>
-                            <span class="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl text-[8px] font-black uppercase tracking-[0.2em]">Restricted</span>
+                            <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg uppercase">Soon</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-12">
-                    <button type="submit" class="w-full py-7 bg-slate-900 text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.4em] shadow-2xl shadow-slate-900/40 hover:bg-primary-hover sticky top-40">
-                        Initiate Final Deployment ➔
-                    </button>
-                    <p class="text-center text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-6">Secure end-to-end encrypted transaction module</p>
-                </div>
+                <button type="submit"
+                        class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-primary transition-colors shadow-sm">
+                    Place Order →
+                </button>
+                <p class="text-center text-xs text-slate-400 mt-3">Your order details are securely processed.</p>
             </form>
         </div>
 
-        <!-- Order Infrastructure Summary -->
-        <div class="lg:w-1/3">
-            <div class="sticky top-32 space-y-6">
-                <!-- Main Breakdown -->
-                <div class="bg-white rounded-[3rem] border border-slate-100 shadow-xl overflow-hidden">
-                    <div class="p-10 border-b border-slate-50 bg-slate-50/50">
-                        <h3 class="text-xs font-black text-slate-800 uppercase tracking-[0.2em]">Batch Inventory</h3>
-                    </div>
+        {{-- Right: Order Summary --}}
+        <div class="lg:w-80 shrink-0">
+            <div class="sticky top-24 space-y-4">
 
-                    <div class="p-10 max-h-[400px] overflow-y-auto space-y-6 scrollbar-hide">
+                {{-- Items --}}
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-slate-50/50">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Your Items ({{ count($cartItems) }})</h3>
+                    </div>
+                    <div class="p-5 space-y-4 max-h-60 overflow-y-auto">
                         @foreach($cartItems as $item)
-                            <div class="flex justify-between items-start gap-6">
-                                <div class="flex-1">
-                                    <h4 class="text-xs font-black text-slate-800 mb-1 leading-tight">{{ $item['product']->name }}</h4>
-                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Qty: {{ $item['quantity'] }} × ৳{{ number_format($item['product']->price, 0) }}</p>
+                            <div class="flex justify-between items-start gap-3">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xs font-semibold text-slate-800 truncate">{{ $item['product']->name }}</p>
+                                    <p class="text-[11px] text-slate-400">× {{ $item['quantity'] }} @ ৳{{ number_format($item['product']->price, 0) }}</p>
                                 </div>
-                                <span class="text-xs font-black text-slate-900">৳{{ number_format($item['subtotal'], 0) }}</span>
+                                <span class="text-xs font-bold text-slate-900 shrink-0">৳{{ number_format($item['subtotal'], 0) }}</span>
                             </div>
                         @endforeach
                     </div>
 
                     {{-- Coupon --}}
-                    <div class="px-10 py-6 border-t border-slate-50 bg-white">
+                    <div class="px-5 py-4 border-t border-slate-100">
                         @if(session('coupon'))
-                        @php $coup = session('coupon'); @endphp
-                        <div class="flex items-center justify-between bg-emerald-50 border border-emerald-100 rounded-2xl px-4 py-3">
-                            <div>
-                                <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">🎟 {{ $coup['code'] }} applied</span>
-                                <p class="text-xs font-black text-emerald-700">-৳{{ number_format($coup['discount'], 2) }} saved</p>
+                            @php $coup = session('coupon'); @endphp
+                            <div class="flex items-center justify-between bg-emerald-50 border border-emerald-100 rounded-xl px-3 py-2">
+                                <div>
+                                    <p class="text-xs font-bold text-emerald-700">🎟 {{ $coup['code'] }} applied</p>
+                                    <p class="text-[11px] text-emerald-600">-৳{{ number_format($coup['discount'], 2) }} saved</p>
+                                </div>
+                                <form action="{{ route('checkout.remove-coupon') }}" method="POST">
+                                    @csrf
+                                    <button class="text-xs font-bold text-rose-400 hover:text-rose-600 transition">✕</button>
+                                </form>
                             </div>
-                            <form action="{{ route('checkout.remove-coupon') }}" method="POST"><@csrf<button class="text-[9px] font-black text-rose-400 uppercase hover:text-rose-600 transition">✕ Remove</button></form>
-                        </div>
                         @else
-                        <form action="{{ route('checkout.apply-coupon') }}" method="POST" class="flex gap-2">
-                            @csrf
-                            <input type="text" name="coupon_code" placeholder="Coupon code" class="flex-1 px-4 py-3 rounded-2xl bg-slate-50 border-transparent focus:border-primary/30 text-xs font-bold transition-all">
-                            <button type="submit" class="px-5 py-3 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-all">Apply</button>
-                        </form>
-                        @if(session('coupon_error'))<p class="text-rose-500 text-[10px] font-bold mt-2">{{ session('coupon_error') }}</p>@endif
+                            <form action="{{ route('checkout.apply-coupon') }}" method="POST" class="flex gap-2">
+                                @csrf
+                                <input type="text" name="coupon_code" placeholder="Coupon code"
+                                       class="flex-1 px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:outline-none">
+                                <button type="submit"
+                                        class="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-primary transition-colors">Apply</button>
+                            </form>
+                            @if(session('coupon_error'))
+                                <p class="text-rose-500 text-[11px] mt-2">{{ session('coupon_error') }}</p>
+                            @endif
                         @endif
                     </div>
 
-                    <div class="p-10 bg-slate-900 text-white space-y-6">
-                        <div class="flex justify-between items-center text-white/50">
-                            <span class="text-[9px] font-black uppercase tracking-widest">Subtotal</span>
-                            <span class="text-xs font-black">৳{{ number_format($subtotal, 0) }}</span>
+                    {{-- Totals --}}
+                    <div class="px-5 py-4 border-t border-slate-100 space-y-2.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Subtotal</span>
+                            <span class="font-semibold text-slate-800">৳{{ number_format($subtotal, 0) }}</span>
                         </div>
                         @if(session('coupon'))
-                        <div class="flex justify-between items-center">
-                            <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Coupon Discount</span>
-                            <span class="text-xs font-black text-emerald-400">-৳{{ number_format(session('coupon.discount'), 0) }}</span>
-                        </div>
-                        <input type="hidden" name="coupon_code" value="{{ session('coupon.code') }}" form="checkoutForm">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-emerald-600">Coupon Discount</span>
+                                <span class="font-semibold text-emerald-600">-৳{{ number_format(session('coupon.discount'), 0) }}</span>
+                            </div>
+                            <input type="hidden" name="coupon_code" value="{{ session('coupon.code') }}" form="checkoutForm">
                         @endif
-                        <div class="flex justify-between items-center">
-                            <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Shipping</span>
-                            <span class="text-xs font-black text-emerald-400 tracking-widest">FREE</span>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Shipping</span>
+                            <span class="font-semibold text-emerald-600">Free</span>
                         </div>
-                        <div class="border-t border-white/10 pt-8 flex justify-between items-baseline">
-                            <span class="text-sm font-black uppercase tracking-[0.3em]">Total</span>
-                            <span class="text-3xl font-black tracking-tighter">৳{{ number_format($subtotal - (session('coupon.discount') ?? 0), 0) }}</span>
+                        <div class="border-t border-slate-100 pt-3 flex justify-between items-center">
+                            <span class="text-sm font-bold text-slate-800">Total</span>
+                            <span class="text-lg font-bold text-slate-900">৳{{ number_format($subtotal - (session('coupon.discount') ?? 0), 0) }}</span>
                         </div>
                     </div>
                 </div>
 
-
-                <!-- Reward Potential -->
-                <div class="bg-gradient-to-br from-indigo-500 to-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
-                    <div class="relative z-10 flex items-center gap-5">
-                        <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-xl">🎁</div>
-                        <div>
-                            <h4 class="text-xs font-black uppercase tracking-widest mb-1 text-indigo-200">Growth Reward</h4>
-                            <p class="text-sm font-bold opacity-70">Cashback & Points will be credited upon delivery completion.</p>
-                        </div>
+                {{-- Cashback note --}}
+                <div class="bg-indigo-50 rounded-2xl p-4 flex items-start gap-3">
+                    <span class="text-xl">🎁</span>
+                    <div>
+                        <p class="text-xs font-bold text-indigo-700">Earn Cashback & Points</p>
+                        <p class="text-[11px] text-indigo-500 mt-0.5">Rewards will be credited after delivery.</p>
                     </div>
-                    <!-- Decor -->
-                    <div class="absolute -right-4 -bottom-4 opacity-10 text-6xl">📈</div>
                 </div>
 
-                <div class="text-center pt-4">
-                    <a href="{{ route('cart.index') }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors">
-                        ← Modification of Batch
+                <div class="text-center">
+                    <a href="{{ route('cart.index') }}" class="text-xs text-slate-400 hover:text-slate-700 font-medium transition-colors">
+                        ← Back to Cart
                     </a>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 @endsection

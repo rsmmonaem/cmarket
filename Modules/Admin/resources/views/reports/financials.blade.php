@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('title', 'Financial Intelligence')
-@section('page-title', 'Financial Overview')
+@section('title', 'Finance Report')
+@section('page-title', 'Finance Report')
 
 @section('content')
 <div class="space-y-6">

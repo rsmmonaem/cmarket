@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Logistics Terminal - CMarket')
-@section('page-title', 'Delivery Network Protocol')
+@section('title', 'Riders - CMarket')
+@section('page-title', 'Riders')
 
 @section('content')
 <div class="space-y-10 animate-fade-in">
-    <!-- Macro Summary -->
+    <!-- Summary -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="bg-white dark:bg-slate-900 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden group">
             <div class="relative z-10">
@@ -23,7 +23,7 @@
         </div>
         <div class="bg-white dark:bg-slate-900 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden group">
             <div class="relative z-10">
-                <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-6 font-black tracking-[0.2em]">Total Entities</p>
+                <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-6 font-black tracking-[0.2em]">Total Records</p>
                 <h3 class="text-4xl font-black text-slate-800 dark:text-white leading-none">{{ $riders->total() }}</h3>
             </div>
             <div class="absolute -right-2 -bottom-2 opacity-[0.03] text-6xl font-black italic text-slate-400 dark:text-white">GLOBAL</div>
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <!-- Data Infrastructure Table -->
+    <!-- Data Table -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[900px]">
@@ -46,7 +46,7 @@
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Logistics Node</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Vector Asset</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Comm Channel</th>
-                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Protocol Level</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Level</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-right">Operations</th>
                     </tr>
                 </thead>

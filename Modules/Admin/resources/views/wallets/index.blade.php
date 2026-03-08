@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Financial Controller - CMarket')
-@section('page-title', 'Global Wallet Infrastructure')
+@section('title', 'Finance - CMarket')
+@section('page-title', 'Wallets')
 
 @section('content')
 <div class="space-y-10 animate-fade-in">
-    <!-- Macro Summary -->
+    <!-- Summary -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 lg:p-12 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col lg:flex-row justify-between items-center gap-8 md:gap-10 overflow-hidden relative group">
         <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
             <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Internal Ledger</h2>
@@ -34,7 +34,7 @@
         <div class="absolute -right-10 -bottom-10 opacity-[0.03] text-[150px] md:text-[200px] leading-none select-none italic font-black group-hover:scale-110 transition-transform duration-1000 dark:text-white">LEDGER</div>
     </div>
 
-    <!-- Data Infrastructure Table -->
+    <!-- Data Table -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[900px]">
@@ -43,7 +43,7 @@
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Reservoir Node</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Class</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Liquidity Level</th>
-                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Protocol Status</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Status</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-right">Operations</th>
                     </tr>
                 </thead>

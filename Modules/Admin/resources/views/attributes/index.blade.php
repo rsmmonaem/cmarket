@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title', 'Attributes')
-@section('page-title', 'Product Attributes')
+@section('page-title', 'Attributes')
 
 @section('content')
 <div class="space-y-6">

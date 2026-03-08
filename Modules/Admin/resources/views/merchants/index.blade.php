@@ -1,23 +1,23 @@
 @extends('layouts.admin')
 
-@section('title', 'Merchant Directory - CMarket')
-@section('page-title', 'Global Merchant Network')
+@section('title', 'Merchants - CMarket')
+@section('page-title', 'Merchants')
 
 @section('content')
 <div class="space-y-10 animate-fade-in">
-    <!-- Macro Summary -->
+    <!-- Summary -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 lg:p-12 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col lg:flex-row justify-between items-center gap-8 md:gap-10 overflow-hidden relative group">
         <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
-            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Merchant Network</h2>
-            <p class="text-slate-400 dark:text-slate-500 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em] ml-1">Protocol Partners • {{ $merchants->total() }} Identified Entities</p>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Merchants</h2>
+            <p class="text-slate-400 dark:text-slate-500 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em] ml-1">Active Partners • {{ $merchants->total() }} Total Merchants</p>
         </div>
         <div class="grid grid-cols-2 lg:flex items-center gap-3 md:gap-4 relative z-10 w-full lg:w-auto">
             <div class="px-6 py-4 md:px-8 md:py-6 rounded-2xl md:rounded-3xl bg-slate-950 text-white text-center flex-1 lg:w-32 shadow-xl shadow-slate-900/20">
-                <div class="text-[7px] md:text-[8px] font-black text-sky-400 uppercase mb-1">Live Nodes</div>
+                <div class="text-[7px] md:text-[8px] font-black text-sky-400 uppercase mb-1">Active</div>
                 <div class="text-base md:text-xl font-black">{{ $merchants->where('status', 'active')->count() }}</div>
             </div>
             <div class="px-6 py-4 md:px-8 md:py-6 rounded-2xl md:rounded-3xl bg-amber-500 text-white text-center flex-1 lg:w-32 shadow-xl shadow-amber-500/20">
-                <div class="text-[7px] md:text-[8px] font-black text-amber-900 uppercase mb-1">Waitlist</div>
+                <div class="text-[7px] md:text-[8px] font-black text-amber-900 uppercase mb-1">Pending</div>
                 <div class="text-base md:text-xl font-black">{{ $merchants->where('status', 'pending')->count() }}</div>
             </div>
         </div>
@@ -25,16 +25,16 @@
         <div class="absolute -right-10 -bottom-10 opacity-[0.03] text-[150px] md:text-[200px] leading-none select-none italic font-black group-hover:scale-110 transition-transform duration-1000 dark:text-white">NODES</div>
     </div>
 
-    <!-- Data Infrastructure Table -->
+    <!-- Data Table -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[1000px]">
                 <thead>
                     <tr class="bg-slate-50/50 dark:bg-slate-800/50">
-                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Merchant Entity</th>
-                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Auth Controller</th>
-                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Catalog Vector</th>
-                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Operational Status</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Merchant</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Approval</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Products</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Status</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-right">Operations</th>
                     </tr>
                 </thead>
@@ -79,7 +79,7 @@
                             <td class="px-10 py-8 text-right">
                                 <div class="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 duration-300">
                                     <a href="{{ route('admin.merchants.show', $merchant) }}" class="px-6 py-3 rounded-xl bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest hover:bg-sky-500 transition-all shadow-xl shadow-slate-900/10">
-                                        Inspect Node ⚡
+                                        View Details ⚡
                                     </a>
                                 </div>
                             </td>

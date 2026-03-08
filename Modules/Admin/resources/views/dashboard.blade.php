@@ -1,17 +1,17 @@
 @extends('layouts.admin')
 
-@section('title', 'Matrix Admin Hub')
-@section('page-title', 'Administrative Hub')
+@section('title', 'Dashboard - CMarket')
+@section('page-title', 'Dashboard')
 
 @section('content')
 <div class="space-y-12 animate-fade-in">
-    <!-- Global Statistics -->
+    <!-- Statistics -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Sales Velocity -->
+        <!-- Sales Speed -->
         <div class="card-premium bg-gradient-to-br from-primary to-primary-dark text-white border-none shadow-2xl shadow-primary/20 relative overflow-hidden group">
             <div class="relative z-10">
                 <div class="flex items-center justify-between mb-8">
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Revenue Performance</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Total Revenue</span>
                     <span class="text-2xl">💰</span>
                 </div>
                 <h3 class="text-4xl font-black mb-2 tracking-tighter">৳{{ number_format(\App\Models\Order::where('status', 'paid')->sum('total_amount'), 0) }}</h3>
@@ -41,7 +41,7 @@
                     <span class="text-2xl">📦</span>
                 </div>
                 <h3 class="text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tighter">{{ \App\Models\Product::count() }}</h3>
-                <p class="text-[10px] font-black text-sky-500 uppercase tracking-widest">Global Inventory</p>
+                <p class="text-[10px] font-black text-sky-500 uppercase tracking-widest">Total Products</p>
             </div>
             <div class="absolute -right-4 -bottom-4 opacity-[0.03] text-8xl font-black italic select-none dark:text-white">ASSETS</div>
         </div>
@@ -63,7 +63,7 @@
     <!-- Order Operations -->
     <div class="space-y-6">
         <div class="flex items-center justify-between px-2">
-            <h3 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-[0.3em]">Order Pipeline</h3>
+            <h3 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-[0.3em]">Orders</h3>
             <a href="{{ route('admin.orders.index') }}" class="text-[10px] font-black text-primary uppercase tracking-widest hover:underline">View All Orders →</a>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
@@ -92,7 +92,7 @@
 
     <!-- Analytics & Intelligence -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <!-- Sales Velocity Chart -->
+        <!-- Sales Speed Chart -->
         <div class="lg:col-span-2 card-premium space-y-8">
             <div class="flex items-center justify-between">
                 <div>
@@ -110,7 +110,7 @@
                 {{-- Mock data indicator if no real chart --}}
                 <div id="chartPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-20">
                     <span class="text-6xl mb-4">📈</span>
-                    <span class="text-xs font-black uppercase tracking-[0.2em]">Generating Data Insights...</span>
+                    <span class="text-xs font-black uppercase tracking-[0.2em]">Loading Chart...</span>
                 </div>
             </div>
 
@@ -170,17 +170,17 @@
                 </button>
             </div>
 
-            <!-- Operational Insights -->
+            <!-- Active Insights -->
             <div class="card-premium bg-[#1e293b] text-white border-none relative overflow-hidden group">
                 <h3 class="text-[10px] font-black uppercase tracking-widest opacity-60 mb-6">Best Performers</h3>
                 <div class="space-y-5 relative z-10">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-slate-400">Top Selling</span>
-                        <span class="text-xs font-black text-sky-400">High Performance Series</span>
+                        <span class="text-xs font-black text-sky-400">Best Sellers</span>
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-slate-400">Most Popular Store</span>
-                        <span class="text-xs font-black text-accent">Matrix Tech Hub</span>
+                        <span class="text-xs font-black text-accent">Overview Tech Hub</span>
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-slate-400">Top Delivery Rider</span>

@@ -1,20 +1,20 @@
 @extends('layouts.admin')
 
-@section('title', 'Deploy Taxonomy Node - C-Market')
-@section('page-title', 'Protocol Deployment')
+@section('title', 'Add Category - C-Market')
+@section('page-title', 'Create Banner')
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-12 animate-fade-in">
-    <!-- Header Node -->
+    <!-- Header -->
     <div class="card-premium bg-[#0f172a] p-10 md:p-14 text-white border-none shadow-2xl relative overflow-hidden group">
         <div class="relative z-10 lg:w-2/3">
-            <h2 class="text-3xl md:text-4xl font-black mb-4 md:mb-6 tracking-tight">Deploy Taxonomy Node</h2>
-            <p class="text-slate-400 font-medium leading-relaxed text-sm md:text-base">Initialize a new logic branch within the marketplace architecture. Define its parameters and assets for global synchronization.</p>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 md:mb-6 tracking-tight">Deploy Category</h2>
+            <p class="text-slate-400 font-medium leading-relaxed text-sm md:text-base">Initialize a new logic branch within the marketplace architecture. Define its parameters and items for global synchronization.</p>
         </div>
         <div class="absolute -right-10 -bottom-10 opacity-5 text-[200px] leading-none select-none italic font-black">NODE</div>
     </div>
 
-    <!-- Deployment Form -->
+    <!-- Setup Form -->
     <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data" class="space-y-12">
         @csrf
 
@@ -41,7 +41,7 @@
                             <div class="space-y-2">
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Hierarchy Link (Parent)</label>
                                 <select name="parent_id" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all shadow-sm">
-                                    <option value="">ROOT PROTOCOL</option>
+                                    <option value="">None (Root Level)</option>
                                     @foreach($parents as $parent)
                                         <option value="{{ $parent->id }}" {{ old('parent_id') == $parent->id ? 'selected' : '' }}>{{ $parent->name }}</option>
                                     @endforeach
@@ -49,7 +49,7 @@
                             </div>
                             
                             <div class="space-y-2">
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Execution Priority (Sort)</label>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Process Priority (Sort)</label>
                                 <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" placeholder="0" 
                                        class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all shadow-sm">
                             </div>
@@ -58,9 +58,9 @@
                 </div>
             </div>
 
-            <!-- Assets Column -->
+            <!-- Image Column -->
             <div class="space-y-8">
-                <!-- Visual Asset -->
+                <!-- Image -->
                 <div class="card-premium p-8">
                     <h3 class="text-[10px] font-black text-primary uppercase tracking-widest mb-8 text-center">Visual Asset</h3>
                     
@@ -92,7 +92,7 @@
                             </div>
                             <!-- Overlay -->
                             <div class="absolute inset-0 bg-primary/80 rounded-[2.5rem] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-[10px] font-black uppercase tracking-widest">
-                                Change Stream
+                                Payment Status
                             </div>
                         </div>
                         @error('image')
@@ -101,7 +101,7 @@
                     </div>
                 </div>
 
-                <!-- Protocol Switch -->
+                <!-- Toggle -->
                 <div class="card-premium p-8 flex items-center justify-between">
                     <div class="space-y-1">
                         <span class="text-[10px] font-black text-slate-800 dark:text-white uppercase tracking-widest">Live Status</span>
@@ -121,13 +121,13 @@
             </div>
         </div>
 
-        <!-- Terminal Actions -->
+        <!-- Actions -->
         <div class="flex items-center justify-center gap-6 pt-10">
             <a href="{{ route('admin.categories.index') }}" class="btn-matrix bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-800 dark:text-slate-500 dark:hover:text-white">
                 Abort Command
             </a>
             <button type="submit" class="btn-matrix btn-primary-matrix px-12">
-                Initialize Deployment
+                Initialize Setup
             </button>
         </div>
     </form>

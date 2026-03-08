@@ -1,15 +1,15 @@
 @extends('layouts.admin')
 
-@section('title', 'Banner Management - C-Market')
-@section('page-title', 'Promotional Infrastructure')
+@section('title', 'Banners - C-Market')
+@section('page-title', 'Create Coupon')
 
 @section('content')
 <div class="space-y-10 animate-fade-in">
-    <!-- Macro Summary & Action -->
+    <!-- Summary & Action -->
     <div class="card-premium flex flex-col lg:flex-row justify-between items-center gap-8 md:gap-10 relative overflow-hidden group">
         <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
             <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Banner Engine</h2>
-            <p class="text-slate-400 dark:text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] ml-1">Managing {{ $banners->total() }} promotional assets</p>
+            <p class="text-slate-400 dark:text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] ml-1">Managing {{ $banners->total() }} promotional items</p>
         </div>
         <div class="flex items-center gap-4 relative z-10 w-full lg:w-auto">
             <a href="{{ route('admin.banners.create') }}" class="btn-matrix btn-primary-matrix w-full lg:w-auto">
@@ -20,7 +20,7 @@
         <div class="absolute -right-10 -bottom-10 opacity-[0.03] text-[150px] md:text-[200px] leading-none select-none italic font-black group-hover:scale-110 transition-transform duration-1000 dark:text-white">PROMO</div>
     </div>
 
-    <!-- Data Infrastructure Table -->
+    <!-- Data Table -->
     <div class="card-premium !p-0 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[900px]">

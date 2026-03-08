@@ -65,32 +65,32 @@
             <!-- Sidebar Navigation -->
             <nav class="py-4 pb-24">
                 <div class="px-6 mb-4">
-                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Analytical</p>
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Overview</p>
                 </div>
                 <div class="space-y-0.5 mb-6">
                     <x-admin.sidebar-link route="admin.dashboard" icon="📊" label="Dashboard" />
                 </div>
 
                 <div class="px-6 mb-4 mt-6">
-                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Operations</p>
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Store</p>
                 </div>
                 <div class="space-y-0.5 mb-6">
                     <x-admin.sidebar-link route="admin.merchants.index" icon="🏢" label="Merchants" />
                     <x-admin.sidebar-link route="admin.pos.index" icon="🖥️" label="POS Terminal" />
                     <x-admin.sidebar-link route="admin.commissions.index" icon="🤝" label="Affiliates" />
-                    <x-admin.sidebar-link route="admin.products.index" icon="📁" label="Procurement" />
+                    <x-admin.sidebar-link route="admin.products.index" icon="📦" label="Products" />
                 </div>
 
                 <div class="px-6 mb-4 mt-6">
-                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Sales & Logs</p>
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Orders &amp; Finance</p>
                 </div>
                 <div class="space-y-0.5 mb-6">
-                    <x-admin.sidebar-dropdown icon="🛍️" label="Order Pipeline" :active="request()->is('admin/orders*')">
-                        <x-admin.sidebar-link route="admin.orders.index" label="Overview" />
+                    <x-admin.sidebar-dropdown icon="🛍️" label="Orders" :active="request()->is('admin/orders*')">
+                        <x-admin.sidebar-link route="admin.orders.index" label="All Orders" />
                         <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'pending']" label="Pending" />
                         <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'confirmed']" label="Confirmed" />
-                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'packaging']" label="Infrastructure" />
-                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'delivered']" label="Completed" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'packaging']" label="Packaging" />
+                        <x-admin.sidebar-link route="admin.orders.index" :params="['status' => 'delivered']" label="Delivered" />
                     </x-admin.sidebar-dropdown>
 
                     <x-admin.sidebar-dropdown icon="💸" label="Refunds" :active="request()->is('admin/refunds*')">
@@ -100,28 +100,28 @@
                 </div>
 
                 <div class="px-6 mb-4 mt-6">
-                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Asset Catalog</p>
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Catalog</p>
                 </div>
                 <div class="space-y-0.5 mb-6">
                     <x-admin.sidebar-dropdown icon="📦" label="Products" :active="request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.sub-categories.*', 'admin.sub-sub-categories.*', 'admin.brands.*', 'admin.attributes.*')">
-                        <x-admin.sidebar-link route="admin.categories.index" label="Hierarchy" />
+                        <x-admin.sidebar-link route="admin.categories.index" label="Categories" />
                         <x-admin.sidebar-link route="admin.sub-categories.index" label="Sub-Categories" />
-                        <x-admin.sidebar-link route="admin.brands.index" label="Brand Registry" />
-                        <x-admin.sidebar-link route="admin.attributes.index" label="Specifications" />
-                        <x-admin.sidebar-link route="admin.products.index" label="In-house Stocks" />
-                        <x-admin.sidebar-link route="admin.products.index" :params="['type' => 'merchant']" label="Merchant Assets" />
+                        <x-admin.sidebar-link route="admin.brands.index" label="Brands" />
+                        <x-admin.sidebar-link route="admin.attributes.index" label="Attributes" />
+                        <x-admin.sidebar-link route="admin.products.index" label="All Products" />
+                        <x-admin.sidebar-link route="admin.products.index" :params="['type' => 'merchant']" label="Merchant Products" />
                     </x-admin.sidebar-dropdown>
                 </div>
 
                 <div class="px-6 mb-4 mt-6">
-                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Ecosystem</p>
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">People</p>
                 </div>
                 <div class="space-y-0.5 mb-6">
-                    <x-admin.sidebar-dropdown icon="👥" label="Stakeholders" :active="request()->routeIs('admin.users.*', 'admin.merchants.*', 'admin.riders.*', 'admin.kyc.*')">
-                        <x-admin.sidebar-link route="admin.users.index" label="Consumer Base" />
-                        <x-admin.sidebar-link route="admin.merchants.index" label="Merchant Network" />
-                        <x-admin.sidebar-link route="admin.riders.index" label="Delivery Fleet" />
-                        <x-admin.sidebar-link route="admin.kyc.index" label="Verifications" />
+                    <x-admin.sidebar-dropdown icon="👥" label="Users" :active="request()->routeIs('admin.users.*', 'admin.merchants.*', 'admin.riders.*', 'admin.kyc.*')">
+                        <x-admin.sidebar-link route="admin.users.index" label="All Users" />
+                        <x-admin.sidebar-link route="admin.merchants.index" label="Merchants" />
+                        <x-admin.sidebar-link route="admin.riders.index" label="Delivery Riders" />
+                        <x-admin.sidebar-link route="admin.kyc.index" label="KYC Verifications" />
                     </x-admin.sidebar-dropdown>
 
                     <x-admin.sidebar-dropdown icon="⚡" label="Marketing" :active="request()->routeIs('admin.banners.*', 'admin.coupons.*', 'admin.flash-deals.*')">
@@ -135,8 +135,9 @@
                     <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500/80">Management</p>
                 </div>
                 <div class="space-y-0.5 mb-6">
-                    <x-admin.sidebar-link route="admin.settings.index" icon="⚙️" label="System Config" />
-                    <x-admin.sidebar-link route="admin.dashboard" icon="📈" label="Financial Audits" />
+                    <x-admin.sidebar-link route="admin.settings.index" icon="⚙️" label="Settings" />
+                    <x-admin.sidebar-link route="admin.wallets.index" icon="💰" label="Wallets" />
+                    <x-admin.sidebar-link route="admin.withdrawals.index" icon="📤" label="Withdrawals" />
                 </div>
             </nav>
         </aside>
@@ -153,7 +154,7 @@
                     <!-- Search Bar -->
                     <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-2xl px-4 py-2 w-[400px] border border-transparent focus-within:border-primary/20 focus-within:bg-white dark:focus-within:bg-[#1e293b] transition-all group">
                         <span class="text-slate-400 group-focus-within:text-primary transition-colors">🔍</span>
-                        <input type="text" placeholder="Global asset search..." class="bg-transparent border-none focus:ring-0 text-sm w-full ml-3 font-medium placeholder:text-slate-400 text-slate-600 dark:text-slate-200">
+                        <input type="text" placeholder="Search anything..." class="bg-transparent border-none focus:ring-0 text-sm w-full ml-3 font-medium placeholder:text-slate-400 text-slate-600 dark:text-slate-200">
                     </div>
                 </div>
 

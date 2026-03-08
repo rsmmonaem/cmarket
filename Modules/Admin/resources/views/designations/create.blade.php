@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title', 'Add Designation')
-@section('page-title', 'Add Designation Tier')
+@section('page-title', 'Add Designation')
 
 @section('content')
 <div class="max-w-2xl mx-auto">

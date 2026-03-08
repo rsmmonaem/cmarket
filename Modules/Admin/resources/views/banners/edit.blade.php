@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Reconfigure Asset - C-Market')
-@section('page-title', 'Protocol Reconfiguration')
+@section('title', 'Edit Product - C-Market')
+@section('page-title', 'Edit Banner')
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-12 animate-fade-in">
-    <!-- Header Node -->
+    <!-- Header -->
     <div class="card-premium bg-[#0f172a] p-10 md:p-14 text-white border-none shadow-2xl relative overflow-hidden group">
         <div class="relative z-10 lg:w-2/3">
             <h2 class="text-3xl md:text-4xl font-black mb-4 md:mb-6 tracking-tight">Reconfigure Promotional Asset</h2>
@@ -30,7 +30,7 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Position Protocol</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Display Position</label>
                         <select name="position" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl text-[11px] font-black text-slate-700 dark:text-white uppercase tracking-widest focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all shadow-sm">
                             <option value="main_banner" {{ $banner->position == 'main_banner' ? 'selected' : '' }}>Main Banner (Hero Slider)</option>
                             <option value="mid_banner" {{ $banner->position == 'mid_banner' ? 'selected' : '' }}>Mid Page Banner</option>
@@ -73,7 +73,7 @@
                                     <img :src="photoPreview" class="w-full h-full object-cover">
                                 </template>
                                 <div class="absolute inset-0 bg-primary/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-[10px] font-black uppercase tracking-widest">
-                                    Replace Asset
+                                    Replace Image
                                 </div>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                     Abort
                 </a>
                 <button type="submit" class="btn-matrix btn-primary-matrix px-12">
-                    Update Deployment
+                    Update Setup
                 </button>
             </div>
         </form>

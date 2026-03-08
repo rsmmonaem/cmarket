@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'System Variables - C-Market')
-@section('page-title', 'Core Protocol Configuration')
+@section('title', 'System Settings - C-Market')
+@section('page-title', 'System Settings')
 
 @section('content')
 <div class="space-y-10 animate-fade-in">
-    <!-- Macro Summary -->
+    <!-- Summary -->
     <div class="card-premium flex flex-col lg:flex-row justify-between items-center gap-8 relative overflow-hidden group">
         <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
-            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">System Core Hub</h2>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">System Settings</h2>
             <p class="text-slate-400 dark:text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] ml-1">Configuring global operational parameters</p>
         </div>
         <!-- Decor -->
@@ -21,7 +21,7 @@
             <!-- General Configuration -->
             <div class="card-premium space-y-8">
                 <h3 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-[0.3em] flex items-center gap-3">
-                    <span class="text-lg">⚙️</span> General Protocols
+                    <span class="text-lg">⚙️</span> General Settings
                 </h3>
                 
                 <div class="space-y-6">
@@ -43,7 +43,7 @@
             <!-- Intelligent Toggles -->
             <div class="card-premium space-y-8">
                 <h3 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-[0.3em] flex items-center gap-3">
-                    <span class="text-lg">⚡</span> Logic Switches
+                    <span class="text-lg">⚡</span> Feature Toggles
                 </h3>
 
                 <div class="space-y-4 divide-y divide-slate-50 dark:divide-slate-800">
@@ -52,7 +52,7 @@
                             <div class="flex items-center justify-between py-6 group" x-data="{ active: {{ $setting->value ? 'true' : 'false' }} }">
                                 <div class="space-y-1">
                                     <h4 class="text-sm font-black text-slate-800 dark:text-white uppercase group-hover:text-primary transition-colors">{{ str_replace('_', ' ', $setting->key) }}</h4>
-                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Toggle operational state for this protocol</p>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Enable or disable this feature</p>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" name="settings[{{ $setting->key }}]" class="sr-only peer" :checked="active" @change="active = !active">
@@ -65,9 +65,9 @@
 
                 <div class="pt-10">
                     <button type="submit" class="btn-matrix btn-primary-matrix w-full py-5 text-base">
-                        Synchronize Global Variables 💾
+                        Save Settings 💾
                     </button>
-                    <p class="text-center text-[9px] font-black text-slate-400 uppercase tracking-widest mt-6">Protocol synchronization requires administrative clearance</p>
+                    <p class="text-center text-[9px] font-black text-slate-400 uppercase tracking-widest mt-6">Only admins can update settings</p>
                 </div>
             </div>
         </div>

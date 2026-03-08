@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title', 'Commissions')
-@section('page-title', 'Commission Management')
+@section('page-title', 'Commissions')
 
 @section('content')
 <div class="space-y-6">

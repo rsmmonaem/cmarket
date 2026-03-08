@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title', 'Coupons')
-@section('page-title', 'Coupon Engine')
+@section('page-title', 'Coupons')
 
 @section('content')
 <div class="space-y-6">

@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'Participant Directory - CMarket')
-@section('page-title', 'Global Participant Management')
+@section('title', 'Users - CMarket')
+@section('page-title', 'Users')
 
 @section('content')
 <div class="space-y-10 animate-fade-in">
-    <!-- Macro Summary & Action -->
+    <!-- Summary & Action -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 lg:p-12 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col lg:flex-row justify-between items-center gap-8 md:gap-10 overflow-hidden relative group">
         <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
-            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Participant Inventory</h2>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Users</h2>
             <p class="text-slate-400 dark:text-slate-500 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em] ml-1">Managing {{ number_format($users->total()) }} platform nodes</p>
         </div>
         <div class="flex items-center gap-4 relative z-10 w-full lg:w-auto">
@@ -20,7 +20,7 @@
         <div class="absolute -right-10 -bottom-10 opacity-[0.03] text-[150px] md:text-[200px] leading-none select-none italic font-black group-hover:scale-110 transition-transform duration-1000 dark:text-white">INDEX</div>
     </div>
 
-    <!-- Intelligent Filtering Terminal -->
+    <!-- Filters -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 border border-slate-100 dark:border-slate-800 shadow-sm">
         <form method="GET" class="flex flex-col lg:flex-row gap-4 md:gap-6">
             <div class="flex-1 relative">
@@ -48,7 +48,7 @@
         </form>
     </div>
 
-    <!-- Data Infrastructure Table -->
+    <!-- Data Table -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[900px]">
@@ -56,7 +56,7 @@
                     <tr class="bg-slate-50/50 dark:bg-slate-800/50">
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Node Identity</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Communication</th>
-                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Role Matrix</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Role Overview</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Validation</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-right">Operations</th>
                     </tr>
@@ -111,7 +111,7 @@
                                     <a href="{{ route('admin.users.edit', $user) }}" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-lg hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all shadow-sm">
                                         ✏️
                                     </a>
-                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('Permanent node deletion confirmation?');">
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-lg hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all shadow-sm">
@@ -125,7 +125,7 @@
                         <tr>
                             <td colspan="5" class="px-10 py-32 text-center text-slate-300 flex flex-col items-center">
                                 <span class="text-8xl mb-6 opacity-10">🧊</span>
-                                <p class="text-lg font-black uppercase tracking-[0.2em]">Zero Participants Located</p>
+                                <p class="text-lg font-black uppercase tracking-[0.2em]">Zero Users Located</p>
                             </td>
                         </tr>
                     @endforelse

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Merchant Intelligence - ' . $merchant->business_name)
-@section('page-title', 'Entity Profile: ' . $merchant->business_name)
+@section('title', 'Merchant Profile - ' . $merchant->business_name)
+@section('page-title', 'Merchant Profile: ' . $merchant->business_name)
 
 @section('content')
 <div class="space-y-10 animate-fade-in">
@@ -11,7 +11,7 @@
             <div class="space-y-4">
                 <div class="flex items-center gap-3">
                     <span class="px-4 py-1.5 bg-primary/20 text-primary rounded-xl text-[10px] font-black uppercase tracking-[0.2em] border border-primary/30">
-                        Merchant Node #{{ $merchant->id }}
+                        Merchant #{{ $merchant->id }}
                     </span>
                     @if($merchant->status === 'approved')
                         <span class="px-4 py-1.5 bg-emerald-500/20 text-emerald-400 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] border border-emerald-500/30">
@@ -19,7 +19,7 @@
                         </span>
                     @elseif($merchant->status === 'pending')
                         <span class="px-4 py-1.5 bg-amber-500/20 text-amber-400 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] border border-amber-500/30">
-                            Protocol Awaiting Approval
+                            Pending Approval
                         </span>
                     @else
                         <span class="px-4 py-1.5 bg-rose-500/20 text-rose-400 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] border border-rose-500/30">
@@ -36,7 +36,7 @@
                     <form action="{{ route('admin.merchants.approve', $merchant) }}" method="POST">
                         @csrf
                         <button type="submit" class="px-8 py-4 bg-emerald-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-emerald-400 transition-all shadow-xl shadow-emerald-500/20">
-                            ✓ Authorize Entity
+                            ✓ Authorize Record
                         </button>
                     </form>
                     <form action="{{ route('admin.merchants.reject', $merchant) }}" method="POST">
@@ -59,7 +59,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <!-- Identity Node -->
+        <!-- Profile Info -->
         <div class="lg:col-span-2 space-y-10">
             <!-- Information Clusters -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -70,7 +70,7 @@
                     </h3>
                     <div class="space-y-6">
                         <div>
-                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Entity Name</p>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Record Name</p>
                             <p class="text-sm font-black text-slate-800 dark:text-white uppercase">{{ $merchant->business_name }}</p>
                         </div>
                         <div>
@@ -87,7 +87,7 @@
                 <!-- Account Cluster -->
                 <div class="card-premium p-8 md:p-10 bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 shadow-sm">
                     <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8 flex items-center gap-2">
-                        <span class="w-2 h-2 bg-accent rounded-full"></span> Auth Controller
+                        <span class="w-2 h-2 bg-accent rounded-full"></span> Approval
                     </h3>
                     <div class="space-y-6">
                         <div>
@@ -95,7 +95,7 @@
                             <p class="text-sm font-black text-slate-800 dark:text-white uppercase">{{ $merchant->user->name }}</p>
                         </div>
                         <div>
-                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Signal Protocol</p>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Contact</p>
                             <p class="text-sm font-black text-primary tracking-tight">{{ $merchant->phone }}</p>
                             <p class="text-[10px] font-bold text-slate-400 mt-1">{{ $merchant->email ?? $merchant->user->email }}</p>
                         </div>
@@ -109,10 +109,10 @@
                 </div>
             </div>
 
-            <!-- Operational Activity -->
+            <!-- Active Activity -->
             <div class="card-premium p-8 md:p-10 bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 shadow-sm">
                 <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8 flex items-center gap-2">
-                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span> Performance Matrix
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span> Performance Overview
                 </h3>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">

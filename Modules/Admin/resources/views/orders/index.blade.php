@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'Order Stream - CMarket')
-@section('page-title', 'Global Commerce Stream')
+@section('title', 'Orders - CMarket')
+@section('page-title', 'Orders')
 
 @section('content')
 <div class="space-y-10 animate-fade-in">
-    <!-- Macro Summary -->
+    <!-- Summary -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 lg:p-12 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col lg:flex-row justify-between items-center gap-8 md:gap-10 overflow-hidden relative group">
         <div class="relative z-10 w-full lg:w-auto">
-            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Territory Commerce</h2>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3 md:mb-4">Orders</h2>
             <p class="text-slate-400 dark:text-slate-500 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em] ml-1">Live Transaction Stream • {{ number_format($orders->total()) }} Logged Events</p>
         </div>
         <div class="grid grid-cols-2 lg:flex items-center gap-3 md:gap-4 relative z-10 w-full lg:w-auto">
@@ -24,7 +24,7 @@
         <div class="absolute -right-10 -bottom-10 opacity-[0.03] text-[150px] md:text-[200px] leading-none select-none italic font-black group-hover:scale-110 transition-transform duration-1000 dark:text-white">COMMERCE</div>
     </div>
 
-    <!-- Intelligent Filtering Terminal -->
+    <!-- Filters -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 border border-slate-100 dark:border-slate-800 shadow-sm">
         <form method="GET" class="flex flex-col lg:flex-row gap-4 md:gap-6">
             <div class="flex-1 relative">
@@ -36,7 +36,7 @@
             
             <div class="lg:w-64">
                 <select name="status" class="w-full h-14 md:h-16 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl px-6 text-xs font-black text-slate-800 dark:text-white focus:ring-2 focus:ring-sky-500/20 transition-all">
-                    <option value="">All Lifecycle Phases</option>
+                    <option value="">All Status Phases</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Paid</option>
                     <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Processing</option>
@@ -52,7 +52,7 @@
         </form>
     </div>
 
-    <!-- Data Infrastructure Table -->
+    <!-- Data Table -->
     <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[1000px]">
@@ -60,9 +60,9 @@
                     <tr class="bg-slate-50/50 dark:bg-slate-800/50">
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Order Token</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Target Node</th>
-                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Merchant Entity</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Merchant</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Transaction Value</th>
-                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Lifecycle</th>
+                        <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-center">Status</th>
                         <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 text-right">Operations</th>
                     </tr>
                 </thead>
