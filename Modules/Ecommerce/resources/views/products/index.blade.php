@@ -10,7 +10,7 @@
         <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm sticky top-32">
             <div class="flex items-center gap-3 mb-10 pl-1">
                 <span class="text-xl">🔍</span>
-                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Refine Catalog</h3>
+                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Filters</h3>
             </div>
             
             <form action="{{ route('products.index') }}" method="GET" class="space-y-8">
@@ -22,9 +22,9 @@
 
                 <!-- Category -->
                 <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Category Hub</label>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Category</label>
                     <select name="category" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all">
-                        <option value="">All Dynamic Categories</option>
+                        <option value="">All Categories</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
@@ -35,7 +35,7 @@
 
                 <!-- Price Range -->
                 <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Monetary Reach</label>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Price Range</label>
                     <div class="flex gap-4">
                         <input type="number" name="min_price" placeholder="Min" value="{{ request('min_price') }}" class="w-1/2 bg-slate-50 border-none rounded-2xl p-4 text-xs font-black text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">
                         <input type="number" name="max_price" placeholder="Max" value="{{ request('max_price') }}" class="w-1/2 bg-slate-50 border-none rounded-2xl p-4 text-xs font-black text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300">
@@ -44,19 +44,19 @@
 
                 <!-- Sorting -->
                 <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Sorting Priority</label>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Sort By</label>
                     <select name="sort" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all">
-                        <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest Acquisitions</option>
-                        <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Value: Ascending</option>
-                        <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Value: Descending</option>
-                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Nomenclature</option>
+                        <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Newest First</option>
+                        <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
+                        <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
+                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Name A–Z</option>
                     </select>
                 </div>
 
                 <button type="submit" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-slate-900/10 hover:bg-sky-600 hover:scale-[1.02] transition-all duration-300">
                     Update Results ✨
                 </button>
-                <a href="{{ route('products.index') }}" class="block text-center text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">Reset Global Filters</a>
+                <a href="{{ route('products.index') }}" class="block text-center text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">Clear Filters</a>
             </form>
         </div>
     </aside>
@@ -66,7 +66,7 @@
         <!-- Results Summary -->
         <div class="flex items-center justify-between px-4">
             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Identified <span class="text-slate-800">{{ $products->total() }}</span> Assets in Territory
+                Showing <span class="text-slate-800">{{ $products->total() }}</span> products
             </p>
         </div>
 
@@ -81,7 +81,7 @@
                         @else
                             <div class="w-full h-full flex flex-col items-center justify-center bg-slate-50 group-hover:bg-sky-50 transition-colors">
                                 <span class="text-5xl mb-2 opacity-20">📦</span>
-                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Visual Pending</span>
+                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">No Image</span>
                             </div>
                         @endif
                         
@@ -129,7 +129,7 @@
 
                             <!-- Engagement Module -->
                             <button onclick="addToCart({{ $product->id }})" class="w-full py-4 bg-slate-50 text-slate-900 rounded-2xl border-2 border-transparent font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:shadow-xl hover:shadow-slate-900/10 transition-all duration-300 flex items-center justify-center gap-3">
-                                <span>🛒</span> Add to Terminal
+                                <span>🛒</span> Add to Cart
                             </button>
                         </div>
                     </div>
@@ -137,8 +137,8 @@
             @empty
                 <div class="col-span-full py-32 flex flex-col items-center text-center">
                     <div class="text-8xl mb-8 opacity-10">🧊</div>
-                    <h3 class="text-2xl font-black text-slate-800 uppercase tracking-widest mb-2">Zero Assets Identified</h3>
-                    <p class="text-sm font-bold text-slate-400">Expansion of inventory is required to match your criteria.</p>
+                    <h3 class="text-2xl font-black text-slate-800 uppercase tracking-widest mb-2">No Products Found</h3>
+                    <p class="text-sm font-bold text-slate-400">Try adjusting your search or filters.</p>
                 </div>
             @endforelse
         </div>
@@ -184,10 +184,10 @@ function addToCart(productId) {
     .catch(error => {
         console.error('Error:', error);
         Toast.fire({
-            icon: 'error',
-            title: 'Protocol failure.'
+                icon: 'error',
+                title: 'Something went wrong. Please try again.'
+            });
         });
-    });
 }
 </script>
 @endsection

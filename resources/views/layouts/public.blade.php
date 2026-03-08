@@ -150,15 +150,61 @@
                         <span class="text-[9px] font-black uppercase tracking-tighter hidden sm:block text-slate-500">Wishlist</span>
                     </a>
 
-                    <a href="{{ route('cart.index') }}" class="flex flex-col items-center group hover:text-primary transition-standard relative">
-                        <span class="text-xl mb-0.5 group-hover:scale-110 transition-standard">🛒</span>
-                        <span class="text-[9px] font-black uppercase tracking-tighter hidden sm:block text-slate-500">Cart</span>
-                        @if(session('cart_count', 0) > 0)
-                            <span class="absolute -top-1 -right-1 bg-primary text-white text-[8px] font-black rounded-full w-4.5 h-4.5 flex items-center justify-center border-2 border-white shadow-lg shadow-primary/20">
-                                {{ session('cart_count', 0) }}
-                            </span>
-                        @endif
-                    </a>
+                    {{-- Cart Hover Dropdown --}}
+                    <div class="relative" x-data="miniCart()" @mouseenter="open=true" @mouseleave="open=false">
+                        <a href="{{ route('cart.index') }}" class="flex flex-col items-center group hover:text-primary transition-standard relative">
+                            <span class="text-xl mb-0.5 group-hover:scale-110 transition-standard">🛒</span>
+                            <span class="text-[9px] font-black uppercase tracking-tighter hidden sm:block text-slate-500">Cart</span>
+                            <span x-show="count > 0"
+                                  x-text="count"
+                                  class="absolute -top-1.5 -right-1.5 bg-primary text-white text-[8px] font-black rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 border-2 border-white shadow-md"
+                                  style="display:none;"></span>
+                        </a>
+
+                        {{-- Mini Cart Dropdown --}}
+                        <div x-show="open && items.length > 0"
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 translate-y-2"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             class="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-2xl shadow-slate-900/10 border border-slate-100 z-50 overflow-hidden"
+                             style="display:none;">
+                            <div class="px-4 py-3 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-700">Your Cart</span>
+                                <span class="text-xs text-slate-400 font-semibold" x-text="count + ' item' + (count !== 1 ? 's' : '')"></span>
+                            </div>
+
+                            <div class="max-h-72 overflow-y-auto divide-y divide-slate-50 p-2">
+                                <template x-for="item in items" :key="item.id">
+                                    <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 transition-colors">
+                                        <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0">
+                                            <img :src="item.image" class="w-full h-full object-cover" x-on:error="$el.src='https://placehold.co/48?text=?'">
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-xs font-bold text-slate-800 truncate" x-text="item.name"></p>
+                                            <p class="text-[10px] text-slate-400">
+                                                <span x-text="'× ' + item.quantity"></span> &middot;
+                                                <span class="text-primary font-semibold" x-text="'৳' + item.subtotal.toLocaleString()"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div class="px-4 py-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between">
+                                <div>
+                                    <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wide">Subtotal</p>
+                                    <p class="text-sm font-bold text-slate-900" x-text="'৳' + total.toLocaleString()"></p>
+                                </div>
+                                <a href="{{ route('cart.index') }}"
+                                   class="px-5 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-primary transition-colors">
+                                    View Cart →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -284,5 +330,76 @@
     </footer>
 
     @stack('scripts')
+
+<script>
+// ─── Global addToCart function ───────────────────────────────────────────────
+function addToCart(productId) {
+    @guest
+        window.location.href = '{{ route("login") }}';
+        return;
+    @endguest
+
+    fetch(`/cart/add/${productId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            // Update all miniCart instances on the page
+            window.dispatchEvent(new CustomEvent('cart-updated', { detail: data }));
+            if (typeof Toast !== 'undefined') {
+                Toast.fire({ icon: 'success', title: data.message || 'Added to cart! 🛍️' });
+            }
+        } else {
+            if (typeof Toast !== 'undefined') {
+                Toast.fire({ icon: 'error', title: data.message || 'Could not add to cart.' });
+            }
+        }
+    })
+    .catch(() => {
+        if (typeof Toast !== 'undefined') {
+            Toast.fire({ icon: 'error', title: 'Something went wrong. Please try again.' });
+        }
+    });
+}
+
+// ─── Alpine miniCart component ────────────────────────────────────────────────
+function miniCart() {
+    return {
+        open: false,
+        count: {{ session('cart_count', 0) }},
+        items: [],
+        total: 0,
+
+        init() {
+            this.fetchCart();
+            // Listen for add-to-cart events
+            window.addEventListener('cart-updated', (e) => {
+                this.count = e.detail.cart_count ?? this.count;
+                this.items = e.detail.cart_items ?? this.items;
+                this.total = e.detail.cart_total ?? this.total;
+            });
+        },
+
+        fetchCart() {
+            fetch('/cart/summary', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                this.count = data.count;
+                this.items = data.items;
+                this.total = data.total;
+            })
+            .catch(() => {});
+        }
+    }
+}
+</script>
 </body>
 </html>
+

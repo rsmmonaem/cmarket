@@ -85,14 +85,22 @@ class CheckoutController extends Controller
                 }
             }
 
+            $discount = session('coupon.discount', 0);
+            $totalAmount = max(0, $subtotal - $discount);
+
+            $firstProductId = array_key_first($cart);
+            $firstProduct = Product::findOrFail($firstProductId);
+
             // Create order
             $order = Order::create([
                 'user_id' => $user->id,
-                'total_amount' => $subtotal,
+                'merchant_id' => $firstProduct->merchant_id,
                 'subtotal' => $subtotal,
+                'discount' => $discount,
+                'total_amount' => $totalAmount,
                 'cashback_amount' => $cashbackTotal,
                 'payment_method' => $request->payment_method,
-                'payment_status' => $request->payment_method === 'wallet' ? 'paid' : 'pending', // Assume wallet is instant paid
+                'payment_status' => $request->payment_method === 'wallet' ? 'paid' : 'pending',
                 'status' => 'pending',
                 'shipping_address' => $request->shipping_address,
                 'shipping_phone'   => $request->phone,
@@ -123,14 +131,14 @@ class CheckoutController extends Controller
             if ($request->payment_method === 'wallet') {
                 $mainWallet = $user->getWallet('main');
 
-                if (!$mainWallet || $mainWallet->balance < $subtotal) {
+                if (!$mainWallet || $mainWallet->balance < $totalAmount) {
                     throw new \Exception('Insufficient wallet balance');
                 }
 
                 $reference = 'ORD-' . $order->order_number;
                 
                 // Deduct from main wallet
-                $mainWallet->debit($subtotal, $reference, 'order_payment', "Payment for Order #{$order->order_number}");
+                $mainWallet->debit($totalAmount, $reference, 'order_payment', "Payment for Order #{$order->order_number}");
 
                 // Add cashback to cashback wallet
                 if ($cashbackTotal > 0) {
@@ -143,9 +151,10 @@ class CheckoutController extends Controller
                 }
             }
 
-            // Clear cart
+            // Clear cart & session coupon
             session()->forget('cart');
             session()->forget('cart_count');
+            session()->forget('coupon');
 
             // Send order confirmation email (queued, silent failure)
             try {

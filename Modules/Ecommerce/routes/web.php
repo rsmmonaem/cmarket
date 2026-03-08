@@ -47,6 +47,9 @@ Route::get('/categories', function() {
     return view('categories.index', compact('categories'));
 })->name('categories.index');
 
+// Cart summary (public — used by mini-cart in header)
+Route::get('/cart/summary', [CartController::class, 'summary'])->name('cart.summary');
+
 // Auth Required Routes
 Route::middleware(['auth'])->group(function () {
     // Cart

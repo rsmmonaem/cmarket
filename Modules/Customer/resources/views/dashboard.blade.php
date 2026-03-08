@@ -75,7 +75,7 @@
 
             <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
                 <div class="flex items-center justify-between mb-8">
-                    <h3 class="text-sm font-black uppercase tracking-widest text-slate-500">Career Trajectory</h3>
+                    <h3 class="text-sm font-black uppercase tracking-widest text-slate-500">Account Level</h3>
                     <span class="px-4 py-1.5 rounded-full bg-sky-500 text-white text-[10px] font-black uppercase tracking-wider shadow-lg shadow-sky-500/20">
                         {{ $currentRank?->name ?? 'Free Customer' }}
                     </span>
@@ -100,7 +100,7 @@
                     <div class="mt-8 p-6 rounded-3xl bg-indigo-600 text-white relative overflow-hidden shadow-xl shadow-indigo-600/20 group">
                         <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
                             <div class="text-center sm:text-left">
-                                <h5 class="text-lg font-black leading-tight">Fast-Track Upgrade Available</h5>
+                                <h5 class="text-lg font-black leading-tight">Instant Upgrade Available</h5>
                                 <p class="text-xs font-bold opacity-80 mt-1">Upgrade using {{ number_format($nextRank->required_voucher_points) }} Voucher Points instantly.</p>
                             </div>
                             <form action="{{ route('customer.upgrade.voucher') }}" method="POST">
@@ -119,8 +119,8 @@
                 @else
                     <div class="flex flex-col items-center py-10 text-center">
                         <span class="text-6xl mb-4">👑</span>
-                        <h4 class="text-2xl font-black text-slate-800">Elite Level Reached</h4>
-                        <p class="text-sm text-slate-500 font-bold mt-2">You have reached the maximum career designation.</p>
+                        <h4 class="text-2xl font-black text-slate-800">Top Level Reached</h4>
+                        <p class="text-sm text-slate-500 font-bold mt-2">You have reached the highest account level.</p>
                     </div>
                 @endif
             </div>
@@ -160,7 +160,7 @@
             @if(!$user->kyc || $user->kyc->status !== 'approved')
             <div class="bg-amber-50 rounded-[2.5rem] p-8 border border-amber-100 relative overflow-hidden">
                 <h3 class="text-sm font-black text-amber-800 uppercase tracking-widest mb-4">Identity Unverified</h3>
-                <p class="text-xs font-bold text-amber-900/60 leading-relaxed mb-8">Complete your KYC verification to unlock full system features including withdrawals and hierarchy earnings.</p>
+                <p class="text-xs font-bold text-amber-900/60 leading-relaxed mb-8">Complete your verification to unlock full system features including withdrawals and team earnings.</p>
                 <a href="{{ route('kyc.index') }}" class="w-full py-4 rounded-2xl bg-amber-500 text-white font-black text-xs uppercase tracking-widest text-center block shadow-lg shadow-amber-500/20 hover:scale-[1.02] transition">Verify Now ⚡</a>
                 <div class="absolute -right-4 -bottom-4 text-8xl opacity-5 select-none font-black italic">!</div>
             </div>

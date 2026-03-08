@@ -89,7 +89,17 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('auth.login', ['role' => 'customer', 'postRoute' => route('login'), 'title' => 'Customer Login']);
+    }
+
+    public function showAdminLoginForm()
+    {
+        return view('auth.login', ['role' => 'admin', 'postRoute' => route('login.admin'), 'title' => 'Admin Security Portal']);
+    }
+
+    public function showMerchantLoginForm()
+    {
+        return view('auth.login', ['role' => 'merchant', 'postRoute' => route('login.merchant'), 'title' => 'Merchant Business Hub']);
     }
 
     public function login(Request $request)
@@ -99,6 +109,14 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
+        $path = $request->path();
+        $expectedRole = 'customer';
+        if (str_contains($path, 'login/admin')) {
+            $expectedRole = 'admin';
+        } elseif (str_contains($path, 'login/merchant')) {
+            $expectedRole = 'merchant';
+        }
+
         $user = User::where('phone', $request->login)
                     ->orWhere('email', $request->login)
                     ->first();
@@ -107,6 +125,22 @@ class AuthController extends Controller
             return back()->withErrors([
                 'login' => 'The provided credentials do not match our records.',
             ])->onlyInput('login');
+        }
+
+        // --- ROLE VALIDITY CHECK ---
+        if ($expectedRole === 'admin') {
+            if (!$user->hasRole(['super-admin', 'admin'])) {
+                return back()->withErrors(['login' => 'Unauthorized Access. You are not an admin.']);
+            }
+        } elseif ($expectedRole === 'merchant') {
+            if (!$user->hasRole('merchant')) {
+                return back()->withErrors(['login' => 'Unauthorized Access. You are not a registered merchant.']);
+            }
+        } else {
+            // Customer Login
+            if ($user->hasRole(['super-admin', 'admin', 'merchant'])) {
+                return back()->withErrors(['login' => 'Please use the appropriate designated portal (Admin/Merchant) to login.']);
+            }
         }
 
         // Check if account is locked

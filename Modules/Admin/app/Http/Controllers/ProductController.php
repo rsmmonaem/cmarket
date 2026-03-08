@@ -26,7 +26,7 @@ class ProductController extends Controller
 
     public function create()
     {
-        $categories = Category::active()->get();
+        $categories = Category::active()->whereNull('parent_id')->with('children.children')->get();
         $merchants = Merchant::where('status', 'approved')->get();
         return view('admin::products.create', compact('categories', 'merchants'));
     }
@@ -51,11 +51,18 @@ class ProductController extends Controller
             'is_flash_deal' => 'boolean',
             'flash_deal_start' => 'nullable|date',
             'flash_deal_end' => 'nullable|date|after:flash_deal_start',
-            'product_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'product_images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $data = $request->except('product_images');
+        $data = $request->except(['product_images', 'thumbnail', 'attributes', 'variations']);
         
+        // Single Thumbnail
+        if ($request->hasFile('thumbnail')) {
+            $data['thumbnail'] = $this->imageService->upload($request->file('thumbnail'), 'products');
+        }
+
+        // Multiple Gallery Images
         $images = [];
         if ($request->hasFile('product_images')) {
             foreach ($request->file('product_images') as $image) {
@@ -63,6 +70,22 @@ class ProductController extends Controller
             }
         }
         $data['images'] = $images;
+
+        // Attributes & Variations JSON Decoding
+        if ($request->filled('attributes')) {
+            $data['attributes'] = json_decode($request->attributes, true) ?: [];
+        }
+        
+        if ($request->filled('variations')) {
+            $variations = json_decode($request->variations, true) ?: [];
+            
+            // Clean up the variations data logic if needed, ensure types
+            foreach($variations as &$v) {
+                $v['price'] = floatval($v['price'] ?? 0);
+                $v['stock'] = intval($v['stock'] ?? 0);
+            }
+            $data['variations'] = $variations;
+        }
 
         Product::create($data);
 

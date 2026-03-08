@@ -64,7 +64,67 @@ class CartController extends Controller
         session()->put('cart', $cart);
         session()->put('cart_count', count($cart));
 
-        return response()->json(['success' => true, 'message' => 'Product added to cart']);
+        // Build response with cart data for mini-cart dropdown
+        $cartData = $this->buildCartData($cart);
+
+        return response()->json([
+            'success'    => true,
+            'message'    => 'Added to cart! 🛒',
+            'cart_count' => $cartData['count'],
+            'cart_total' => $cartData['total'],
+            'cart_items' => $cartData['items'],
+        ]);
+    }
+
+    /**
+     * Return compact cart summary for AJAX mini-cart dropdown.
+     */
+    public function summary()
+    {
+        $cart = session()->get('cart', []);
+        $data = $this->buildCartData($cart);
+        return response()->json($data);
+    }
+
+    /**
+     * Build normalised cart data array for JSON responses.
+     */
+    private function buildCartData(array $cart): array
+    {
+        $items = [];
+        $total = 0;
+
+        foreach ($cart as $id => $details) {
+            $product = Product::find($id);
+            if (!$product) continue;
+
+            $price    = $product->final_price ?? $product->price;
+            $subtotal = $price * $details['quantity'];
+            $total   += $subtotal;
+
+            // Resolve image URL
+            $images = is_array($product->images)
+                ? $product->images
+                : (json_decode($product->images, true) ?: []);
+            $imageUrl = !empty($images[0])
+                ? asset('storage/' . $images[0])
+                : asset('images/placeholder.png');
+
+            $items[] = [
+                'id'       => $product->id,
+                'name'     => $product->name,
+                'image'    => $imageUrl,
+                'quantity' => $details['quantity'],
+                'price'    => $price,
+                'subtotal' => $subtotal,
+            ];
+        }
+
+        return [
+            'count' => count($items),
+            'total' => $total,
+            'items' => $items,
+        ];
     }
 
     public function update(Request $request, $productId)

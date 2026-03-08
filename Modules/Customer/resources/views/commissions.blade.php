@@ -11,7 +11,7 @@
             <div class="text-center md:text-left">
                 <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-3">Withdrawable Balance</p>
                 <h2 class="text-5xl font-black tracking-tight">৳{{ number_format(auth()->user()->getWallet('commission')->balance ?? 0, 2) }}</h2>
-                <p class="text-emerald-100/50 text-xs font-bold mt-4">Total hierarchy earnings since joining.</p>
+                <p class="text-emerald-100/50 text-xs font-bold mt-4">Total team and referral earnings since joining.</p>
             </div>
             <div class="flex gap-4">
                 <button class="bg-white/10 hover:bg-white/20 backdrop-blur-xl px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">Withdraw Funds</button>
@@ -31,9 +31,9 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50/50">
-                        <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Source Context</th>
-                        <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Hierarchy Lvl</th>
-                        <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Disbursed Amount</th>
+                        <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Source</th>
+                        <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Level</th>
+                        <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Amount</th>
                         <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Status</th>
                         <th class="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Date</th>
                     </tr>
@@ -46,7 +46,7 @@
                                     <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-lg group-hover:shadow-lg transition-all">💸</div>
                                     <div>
                                         <p class="text-sm font-black text-slate-800 group-hover:text-emerald-600 transition-colors">Order #{{ $comm->order->order_number ?? 'N/A' }}</p>
-                                        <p class="text-[10px] font-bold text-slate-400">Hierarchy Referral Payout</p>
+                                        <p class="text-[10px] font-bold text-slate-400">Team Referral Payout</p>
                                     </div>
                                 </div>
                             </td>

@@ -12,7 +12,7 @@ class Product extends Model
 
     protected $fillable = [
         'merchant_id', 'category_id', 'type', 'name', 'slug', 'description',
-        'price', 'discount_price', 'stock', 'images', 'sku',
+        'price', 'discount_price', 'stock', 'images', 'thumbnail', 'attributes', 'variations', 'sku',
         'cashback_percentage', 'status',
         'meta_title', 'meta_description',
         'is_featured', 'is_flash_deal',
@@ -26,6 +26,8 @@ class Product extends Model
             'discount_price' => 'decimal:2',
             'cashback_percentage' => 'decimal:2',
             'images' => 'array',
+            'attributes' => 'array',
+            'variations' => 'array',
             'is_featured' => 'boolean',
             'is_flash_deal' => 'boolean',
             'flash_deal_start' => 'datetime',

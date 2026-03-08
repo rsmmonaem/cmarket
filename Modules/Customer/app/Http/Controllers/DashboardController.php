@@ -41,12 +41,12 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        return view('customer.dashboard', compact('user', 'wallets', 'stats', 'recent_orders', 'nextRank'));
+        return view('customer::dashboard', compact('user', 'wallets', 'stats', 'recent_orders', 'nextRank'));
     }
 
     public function profile()
     {
-        return view('customer.profile');
+        return view('customer::profile');
     }
 
     public function updateProfile(Request $request)
@@ -71,7 +71,7 @@ class DashboardController extends Controller
 
     public function settings()
     {
-        return view('customer.settings');
+        return view('customer::settings');
     }
 
     public function updateSettings(Request $request)
@@ -94,13 +94,13 @@ class DashboardController extends Controller
         $commissions = \App\Models\AffiliateCommission::where('user_id', auth()->id())
             ->latest()
             ->paginate(15);
-        return view('customer.commissions', compact('commissions'));
+        return view('customer::commissions', compact('commissions'));
     }
 
     public function designation()
     {
         $user = auth()->user();
         // Assuming user has a relationship with designations
-        return view('customer.designation', compact('user'));
+        return view('customer::designation', compact('user'));
     }
 }

@@ -119,14 +119,14 @@
     <div class="auth-container">
         <div class="logo">
             <h1>🚀 CMarket</h1>
-            <p>Welcome back!</p>
+            <p>{{ $title ?? 'Welcome Back!' }}</p>
         </div>
 
         @if(session('success'))
             <div class="success">{{ session('success') }}</div>
         @endif
 
-        <form action="{{ route('login') }}" method="POST">
+        <form action="{{ $postRoute ?? route('login') }}" method="POST">
             @csrf
 
             <div class="form-group">
@@ -154,15 +154,22 @@
         </form>
 
         <!-- Auto Login Section -->
-        <div style="margin-top: 25px; border-top: 1px solid #f0f0f0; pt: 20px; padding-top: 20px;">
+        <div style="margin-top: 25px; border-top: 1px solid #f0f0f0; padding-top: 20px;">
             <p style="text-align: center; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 15px;">Fast Track Access</p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button type="button" onclick="autoLogin('admin@cmarket.com', 'password')" style="padding: 10px; background: #0f172a; color: white; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1px solid transparent;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='#0f172a'">
-                    🛡️ Admin
+            <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                @if(isset($role) && $role === 'admin')
+                <button type="button" onclick="autoLogin('admin@cmarket.com', 'password')" style="padding: 10px; background: #0f172a; color: white; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='#0f172a'">
+                    🛡️ Login as Admin
                 </button>
+                @elseif(isset($role) && $role === 'merchant')
+                <button type="button" onclick="autoLogin('merchant@cmarket.com', 'password')" style="padding: 10px; background: #f8fafc; color: #1e293b; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">
+                    🏪 Login as Demo Merchant
+                </button>
+                @else
                 <button type="button" onclick="autoLogin('vrkm55@gmail.com', 'password')" style="padding: 10px; background: #f8fafc; color: #1e293b; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">
-                    👤 Customer
+                    👤 Login as Customer
                 </button>
+                @endif
             </div>
         </div>
 

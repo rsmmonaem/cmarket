@@ -6,13 +6,12 @@
     <title>@yield('title', 'Customer Dashboard') - CMarket</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/admin-custom.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --sidebar-w: 280px;
-            --primary-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            --active-gradient: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 100%);
+            --sidebar-w: 260px;
         }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
         
@@ -27,15 +26,6 @@
             .main-content { margin-left: 0 !important; }
         }
 
-        .sidebar-link {
-            transition: all 0.2s ease;
-        }
-        .sidebar-link.active {
-            background: var(--active-gradient);
-            color: #3b82f6;
-            border-left: 4px solid #3b82f6;
-        }
-        
         .glass-topbar {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
@@ -44,10 +34,10 @@
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
     </style>
 </head>
 <body class="text-slate-900 overflow-x-hidden">
@@ -55,71 +45,144 @@
     <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
     <div class="dashboard-container flex">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar sidebar-solid fixed left-0 top-0 bottom-0 z-50 overflow-y-auto bg-[#0f172a]">
+        <!-- Minimal Sidebar -->
+        <aside id="sidebar" class="sidebar fixed left-0 top-0 bottom-0 z-50 overflow-y-auto bg-slate-900 text-slate-300 border-r border-slate-800">
             <div class="p-6">
-                <div class="flex items-center justify-between mb-10">
-                    <a href="{{ route('home') }}" class="flex items-center gap-3 no-underline">
-                        <span class="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center text-xl shadow-lg shadow-sky-500/20">🛒</span>
-                        <span class="text-xl font-extrabold text-white tracking-tight">CMARKET</span>
-                    </a>
-                    <button class="lg:hidden text-white opacity-50 hover:opacity-100" onclick="toggleSidebar()">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </div>
+                <!-- Logo -->
+                <a href="{{ route('home') }}" class="flex items-center gap-3 mb-10 hover:opacity-80 transition-opacity">
+                    <span class="w-8 h-8 rounded-lg bg-sky-500 flex items-center justify-center text-sm shadow-lg shadow-sky-500/20 text-white">🛒</span>
+                    <span class="text-lg font-black text-white tracking-widest uppercase">CMarket</span>
+                </a>
                 
-                <div class="space-y-8">
-                    <div>
-                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Personal</div>
-                        <nav class="space-y-1">
-                            <x-customer.sidebar-link route="customer.dashboard" icon="📊" label="Dashboard" />
-                            <x-customer.sidebar-link route="wallet.index" icon="💰" label="Wallets" />
-                            <x-customer.sidebar-link route="withdrawals.index" icon="🏦" label="Withdrawals" />
-                            <x-customer.sidebar-link route="orders.index" icon="🛍️" label="Orders" />
-                            <x-customer.sidebar-link route="referrals.index" icon="🤝" label="Referrals" />
-                            <x-customer.sidebar-link route="customer.generations" icon="🌍" label="Generations" />
-                        </nav>
+                <!-- Nav -->
+                <nav class="space-y-1.5" x-data="{ activeMenu: '{{ request()->segment(2) ?? 'dashboard' }}' }">
+                    
+                    <!-- Single Link: Dashboard -->
+                    <a href="{{ route('customer.dashboard') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
+                              {{ request()->routeIs('customer.dashboard') ? 'bg-sky-500/10 text-sky-400' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <span class="text-base {{ request()->routeIs('customer.dashboard') ? 'text-sky-400' : 'text-slate-500' }}">📊</span>
+                        Dashboard
+                    </a>
+
+                    <!-- Accordion: Finance -->
+                    <div x-data="{ expanded: {{ request()->routeIs('wallet.*', 'customer.withdrawals.*', 'customer.commissions') ? 'true' : 'false' }} }">
+                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
+                            <div class="flex items-center gap-3">
+                                <span class="text-base text-slate-500" :class="expanded ? 'text-emerald-400' : ''">💰</span>
+                                Finance
+                            </div>
+                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-emerald-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div x-show="expanded" x-collapse>
+                            <div class="pt-1 pb-2 pl-11 space-y-1">
+                                <a href="{{ route('wallet.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('wallet.index') ? 'text-emerald-400' : 'text-slate-400' }}">My Wallets</a>
+                                <a href="{{ route('customer.withdrawals.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('customer.withdrawals.*') ? 'text-emerald-400' : 'text-slate-400' }}">Withdrawals</a>
+                                <a href="{{ route('customer.commissions') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('customer.commissions') ? 'text-emerald-400' : 'text-slate-400' }}">Commissions</a>
+                            </div>
+                        </div>
                     </div>
 
-                    <div>
-                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Earnings</div>
-                        <nav class="space-y-1">
-                            <x-customer.sidebar-link route="customer.commissions" icon="📈" label="Commissions" />
-                            <x-customer.sidebar-link route="customer.designation" icon="🏆" label="Designations" />
-                            <x-customer.sidebar-link route="kyc.index" icon="🆔" label="Verification" />
-                        </nav>
+                    <!-- Accordion: Orders & Shopping -->
+                    <div x-data="{ expanded: {{ request()->routeIs('orders.*', 'products.*') ? 'true' : 'false' }} }">
+                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
+                            <div class="flex items-center gap-3">
+                                <span class="text-base text-slate-500" :class="expanded ? 'text-purple-400' : ''">🛍️</span>
+                                Shopping
+                            </div>
+                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-purple-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div x-show="expanded" x-collapse>
+                            <div class="pt-1 pb-2 pl-11 space-y-1">
+                                <a href="{{ route('orders.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('orders.*') ? 'text-purple-400' : 'text-slate-400' }}">My Orders</a>
+                                <a href="{{ route('products.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('products.*') ? 'text-purple-400' : 'text-slate-400' }}">Browse Market</a>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Accordion: Network & Team -->
+                    <div x-data="{ expanded: {{ request()->routeIs('referrals.*', 'customer.generations') ? 'true' : 'false' }} }">
+                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
+                            <div class="flex items-center gap-3">
+                                <span class="text-base text-slate-500" :class="expanded ? 'text-amber-400' : ''">🤝</span>
+                                Network
+                            </div>
+                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-amber-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div x-show="expanded" x-collapse>
+                            <div class="pt-1 pb-2 pl-11 space-y-1">
+                                <a href="{{ route('referrals.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('referrals.*') ? 'text-amber-400' : 'text-slate-400' }}">My Referrals</a>
+                                <a href="{{ route('customer.generations') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('customer.generations') ? 'text-amber-400' : 'text-slate-400' }}">Team Levels</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Account & Identity -->
+                    <div x-data="{ expanded: {{ request()->routeIs('kyc.*', 'customer.designation') ? 'true' : 'false' }} }">
+                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
+                            <div class="flex items-center gap-3">
+                                <span class="text-base text-slate-500" :class="expanded ? 'text-sky-400' : ''">🆔</span>
+                                Verification
+                            </div>
+                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-sky-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div x-show="expanded" x-collapse>
+                            <div class="pt-1 pb-2 pl-11 space-y-1">
+                                <a href="{{ route('kyc.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('kyc.*') ? 'text-sky-400' : 'text-slate-400' }}">Identity (KYC)</a>
+                                <a href="{{ route('customer.designation') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('customer.designation') ? 'text-sky-400' : 'text-slate-400' }}">My Designations</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Investments -->
+                    <div x-data="{ expanded: {{ request()->routeIs('investments.*') ? 'true' : 'false' }} }">
+                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
+                            <div class="flex items-center gap-3">
+                                <span class="text-base text-slate-500" :class="expanded ? 'text-indigo-400' : ''">🏗️</span>
+                                Investments
+                            </div>
+                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-indigo-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div x-show="expanded" x-collapse>
+                            <div class="pt-1 pb-2 pl-11 space-y-1">
+                                <a href="{{ route('investments.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('investments.index') ? 'text-indigo-400' : 'text-slate-400' }}">Opportunities</a>
+                                <a href="{{ route('investments.my-shares') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('investments.my-shares') ? 'text-indigo-400' : 'text-slate-400' }}">My Portfolio</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="my-4 border-t border-slate-800 mx-4"></div>
 
                     @hasanyrole('upazila|district|division|director')
-                    <div>
-                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Regional</div>
-                        <nav class="space-y-1">
-                            <x-customer.sidebar-link route="regional.dashboard" icon="🌎" label="Management" />
-                        </nav>
-                    </div>
+                    <a href="{{ route('regional.dashboard') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white">
+                        <span class="text-base text-slate-500">🌎</span>
+                        Regional Admin
+                    </a>
                     @endhasanyrole
 
                     @role('merchant')
-                    <div>
-                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Business</div>
-                        <nav class="space-y-1">
-                            <x-customer.sidebar-link route="merchant.dashboard" icon="🏪" label="Shop Hub" />
-                            <x-customer.sidebar-link route="merchant.products.index" icon="📦" label="My Products" />
-                            <x-customer.sidebar-link route="merchant.orders.index" icon="🛍️" label="Customer Orders" />
-                            <x-customer.sidebar-link route="merchant.reports.sales" icon="📈" label="Sales Analytics" />
-                        </nav>
+                    <!-- Accordion: Merchant Tools -->
+                    <div x-data="{ expanded: {{ request()->routeIs('merchant.*') ? 'true' : 'false' }} }">
+                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
+                            <div class="flex items-center gap-3">
+                                <span class="text-base text-slate-500" :class="expanded ? 'text-rose-400' : ''">🏪</span>
+                                Business Hub
+                            </div>
+                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-rose-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div x-show="expanded" x-collapse>
+                            <div class="pt-1 pb-2 pl-11 space-y-1">
+                                <a href="{{ route('merchant.dashboard') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('merchant.dashboard') ? 'text-rose-400' : 'text-slate-400' }}">Shop Status</a>
+                                <a href="{{ route('merchant.products.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('merchant.products.*') ? 'text-rose-400' : 'text-slate-400' }}">My Products</a>
+                                <a href="{{ route('merchant.orders.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('merchant.orders.*') ? 'text-rose-400' : 'text-slate-400' }}">Customer Orders</a>
+                            </div>
+                        </div>
                     </div>
                     @endrole
 
-                    <div>
-                        <div class="px-4 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Market</div>
-                        <nav class="space-y-1">
-                            <x-customer.sidebar-link route="products.index" icon="📦" label="Shop Products" />
-                            <x-customer.sidebar-link route="investments.index" icon="🏗️" label="Investments" />
-                            <x-customer.sidebar-link route="investments.my-shares" icon="💎" label="My Portfolio" />
-                        </nav>
-                    </div>
-                </div>
+                </nav>
             </div>
         </aside>
 

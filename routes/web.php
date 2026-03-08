@@ -10,8 +10,18 @@ use App\Http\Controllers\Auth\AuthController;
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+    
+    // Customer Login
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+    
+    // Admin Login
+    Route::get('/login/admin', [AuthController::class, 'showAdminLoginForm'])->name('login.admin');
+    Route::post('/login/admin', [AuthController::class, 'login']);
+
+    // Merchant Login
+    Route::get('/login/merchant', [AuthController::class, 'showMerchantLoginForm'])->name('login.merchant');
+    Route::post('/login/merchant', [AuthController::class, 'login']);
     
     // Multi-layer Security OTP
     Route::get('/auth/otp-verify', [AuthController::class, 'showOtpVerifyForm'])->name('auth.otp.verify.form');
