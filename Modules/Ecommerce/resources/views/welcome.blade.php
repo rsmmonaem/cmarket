@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('content')
-<div class="space-y-20 pb-20">
+<div class="space-y-10 pb-10">
     <!-- Hero Section -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -20,7 +20,7 @@
 
             <!-- Hero Banner Slider -->
             <div class="lg:col-span-3">
-                <div class="relative rounded-2xl overflow-hidden aspect-[21/9] lg:aspect-auto lg:h-[500px] gradient-primary group shadow-2xl">
+                <div class="relative rounded-2xl overflow-hidden aspect-[21/9] lg:aspect-auto lg:h-[380px] gradient-primary group shadow-2xl">
                     @forelse($mainBanners as $banner)
                         <div class="absolute inset-0 transition-opacity duration-1000">
                             <img src="{{ asset('storage/' . $banner->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition-standard duration-[2s]">
@@ -54,8 +54,8 @@
     <!-- Flash Deals Section -->
     @if($flashDeals->count() > 0)
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-white rounded-[2rem] p-8 md:p-12 border border-slate-100 shadow-2xl relative overflow-hidden">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12 relative z-10">
+        <div class="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-2xl relative overflow-hidden">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-8 relative z-10">
                 <div class="flex items-center gap-6">
                     <div class="w-16 h-16 bg-primary text-white flex items-center justify-center text-3xl rounded-2xl shadow-xl shadow-primary/20 animate-pulse">
                         ⚡
@@ -135,7 +135,7 @@
 
     <!-- Popular Categories -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-12 flex justify-between items-end">
+        <div class="mb-8 flex justify-between items-end">
             <div>
                 <h2 class="text-3xl font-black text-dark tracking-tight">Browse Categories</h2>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2">Explore our collections</p>
@@ -145,9 +145,9 @@
             </a>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6">
             @foreach($popularCategories as $cat)
-                <a href="{{ route('categories.index') }}" class="group bg-white p-10 rounded-2xl border border-slate-100 card-shadow hover:shadow-2xl hover:-translate-y-2 transition-standard text-center flex flex-col items-center relative overflow-hidden">
+                <a href="{{ route('categories.index') }}" class="group bg-white p-6 rounded-2xl border border-slate-100 card-shadow hover:shadow-2xl hover:-translate-y-2 transition-standard text-center flex flex-col items-center relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 transition-standard group-hover:bg-primary/10"></div>
                     <div class="w-20 h-20 rounded-2xl bg-slate-50 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-standard overflow-hidden font-black relative z-10 shadow-sm group-hover:shadow-xl">
                         @if($cat->image)
@@ -184,7 +184,7 @@
 
     <!-- Featured Products Section -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-12 flex justify-between items-end">
+        <div class="mb-8 flex justify-between items-end">
             <div>
                 <h2 class="text-3xl font-black text-dark tracking-tight">Featured Products</h2>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2">Handpicked for you</p>
@@ -192,7 +192,7 @@
             <a href="{{ route('products.index') }}" class="text-[11px] font-black text-primary uppercase tracking-widest transition-standard hover:brightness-110">View Inventory ➔</a>
         </div>
         
-        <div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
             @foreach($featuredProducts as $product)
                 <div class="group bg-white rounded-2xl p-4 border border-slate-50 card-shadow hover:shadow-2xl transition-standard relative flex flex-col h-full overflow-hidden">
                     <div class="aspect-square rounded-xl bg-slate-50 overflow-hidden mb-6 flex items-center justify-center relative shadow-inner">
@@ -245,10 +245,10 @@
     </section>
 
     <!-- Top Merchants Section -->
-    <section class="bg-dark py-32 relative overflow-hidden">
+    <section class="bg-dark py-12 md:py-16 relative overflow-hidden">
         <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="mb-16 text-center lg:text-left flex flex-col lg:flex-row justify-between items-end gap-8">
+            <div class="mb-10 text-center lg:text-left flex flex-col lg:flex-row justify-between items-end gap-8">
                 <div>
                     <h2 class="text-3xl md:text-5xl font-black text-white tracking-tight">Verified Merchants</h2>
                     <p class="text-[11px] font-black text-primary uppercase tracking-[0.3em] mt-3">Shop from the most trusted stores</p>
@@ -256,7 +256,7 @@
                 <a href="{{ route('merchants.index') }}" class="text-white/60 hover:text-white text-[11px] font-black uppercase tracking-widest border-b border-white/20 pb-2 transition-standard">Discover All Stores</a>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($topMerchants as $merchant)
                     <div class="bg-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/10 group hover:bg-white/10 transition-standard hover:border-white/20">
                         <div class="flex justify-between items-start mb-6">
