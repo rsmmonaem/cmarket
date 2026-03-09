@@ -228,7 +228,7 @@
                                     <span class="text-[10px] font-bold text-slate-300 line-through">৳{{ number_format($product->price) }}</span>
                                 @endif
                             </div>
-                            <button onclick="addToCart({{ $product->id }})" class="w-10 h-10 bg-dark text-white rounded-lg flex items-center justify-center hover:bg-primary transition-standard shadow-lg shadow-dark/10 active:scale-90">
+                            <button onclick="addToCart({{ $product->id }})" class="w-10 h-10 text-white rounded-lg flex items-center justify-center hover:bg-primary transition-standard shadow-lg shadow-dark/10 active:scale-90">
                                 🛒
                             </button>
                         </div>

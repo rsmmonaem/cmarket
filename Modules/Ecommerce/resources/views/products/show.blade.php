@@ -14,16 +14,16 @@
         <span class="text-slate-900">{{ $product->name }}</span>
     </nav>
 
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden relative">
+    <div class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden mb-12">
         <div class="flex flex-col lg:flex-row">
             <!-- Product Images -->
-            <div class="lg:w-1/2 p-6 md:p-10 relative group border-r border-slate-100">
+            <div class="lg:w-1/2 p-4 md:p-8 border-r border-slate-50">
                 @php 
                     $images = is_array($product->images) ? $product->images : (json_decode($product->images, true) ?: []);
-                    $mainImage = $images[0] ?? null;
+                    $mainImage = $product->thumbnail ?: ($images[0] ?? null);
                 @endphp
                 
-                <div class="aspect-square rounded-xl overflow-hidden bg-white border border-slate-100 mb-6 group-hover:scale-[1.02] transition-transform duration-500">
+                <div class="aspect-square rounded-lg overflow-hidden bg-white border border-slate-50 mb-4">
                     @if($mainImage)
                         <img id="main-display-node" src="{{ asset('storage/' . $mainImage) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                     @else
@@ -33,9 +33,9 @@
 
                 <!-- Thumbnail Array -->
                 @if(count($images) > 1)
-                    <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+                    <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
                         @foreach($images as $img)
-                            <button onclick="syncDisplayNode('{{ asset('storage/' . $img) }}')" class="w-16 h-16 rounded-lg overflow-hidden border-2 border-transparent hover:border-primary transition-all flex-shrink-0 bg-white shadow-sm">
+                            <button onclick="syncDisplayNode('{{ asset('storage/' . $img) }}')" class="w-14 h-14 rounded-md overflow-hidden border border-slate-100 hover:border-primary transition-all flex-shrink-0">
                                 <img src="{{ asset('storage/' . $img) }}" class="w-full h-full object-cover">
                             </button>
                         @endforeach
@@ -44,83 +44,73 @@
             </div>
 
             <!-- Product Details -->
-            <div class="lg:w-1/2 p-6 md:p-10 flex flex-col">
-                <div class="flex flex-wrap gap-2 mb-6">
-                    <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-black uppercase tracking-widest">SKU: {{ $product->sku ?? 'N/A' }}</span>
+            <div class="lg:w-1/2 p-4 md:p-8 flex flex-col">
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="px-2 py-0.5 bg-slate-50 text-slate-500 rounded text-[9px] font-bold uppercase tracking-wider">SKU: {{ $product->sku ?? 'N/A' }}</span>
                     @if($product->is_featured)
-                        <span class="px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-lg text-[10px] font-black uppercase tracking-widest">Featured</span>
-                    @endif
-                    @if($product->is_flash_deal)
-                        <span class="px-3 py-1 bg-rose-100 text-rose-600 rounded-lg text-[10px] font-black uppercase tracking-widest animate-pulse">⚡ Flash Deal</span>
+                        <span class="px-2 py-0.5 bg-sky-50 text-sky-600 rounded text-[9px] font-bold uppercase tracking-wider">Featured</span>
                     @endif
                 </div>
 
-                <h1 class="text-2xl md:text-4xl font-black text-slate-900 mb-4 leading-tight tracking-tight">{{ $product->name }}</h1>
+                <h1 class="text-xl md:text-3xl font-bold text-slate-900 mb-2 leading-tight tracking-tight">{{ $product->name }}</h1>
                 
-                <div class="flex items-center gap-4 mb-10">
-                    <div class="flex text-amber-400 text-lg">★★★★☆</div>
-                    <span class="text-[10px] font-bold text-slate-500 border-l border-slate-200 pl-4 uppercase tracking-widest">{{ $product->reviews_count ?? 0 }} Reviews</span>
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="flex text-amber-400 text-sm">★★★★☆</div>
+                    <span class="text-[9px] font-bold text-slate-400 border-l border-slate-100 pl-3 uppercase tracking-widest">{{ $product->reviews_count ?? 0 }} Reviews</span>
                 </div>
 
-                <div class="flex items-baseline gap-8 mb-12">
-                    <span class="text-4xl font-black text-slate-900 tracking-tighter">৳{{ number_format($product->final_price) }}</span>
+                <div class="flex items-baseline gap-4 mb-8">
+                    <span class="text-3xl font-bold text-slate-900 tracking-tighter">৳{{ number_format($product->final_price) }}</span>
                     @if($product->discount_price)
-                        <div class="flex flex-col">
-                            <span class="text-xl font-bold text-slate-300 line-through">৳{{ number_format($product->price) }}</span>
-                            <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-1">Save {{ round($product->discount_percentage) }}%</span>
-                        </div>
+                        <span class="text-lg font-medium text-slate-300 line-through">৳{{ number_format($product->price) }}</span>
+                        <span class="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">Save {{ round($product->discount_percentage) }}%</span>
                     @endif
                 </div>
 
-                @if($product->cashback_percentage > 0)
-                    <div class="bg-primary/5 rounded-[2.5rem] p-8 border border-primary/10 mb-12 relative overflow-hidden group/cb">
-                        <div class="relative z-10 flex items-center justify-between">
-                            <div>
-                                <h4 class="text-lg font-black text-slate-800">৳{{ number_format($product->final_price * $product->cashback_percentage / 100, 2) }} Cashback</h4>
-                                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Earned upon successful delivery</p>
-                            </div>
-                            <div class="text-4xl">🎁</div>
-                        </div>
-                        <div class="absolute -right-4 -bottom-4 text-primary opacity-[0.03] scale-[3]">REWARD</div>
-                    </div>
-                @endif
-
-                <div class="space-y-12">
-                    <div class="grid grid-cols-2 gap-8">
+                <div class="space-y-8 pt-8 border-t border-slate-50">
+                    <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Availability</p>
-                            <p class="text-sm font-bold text-slate-800">{{ $product->stock > 0 ? $product->stock . ' In Stock' : 'Out of Stock' }}</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Availability</p>
+                            <p class="text-xs font-semibold text-slate-700">{{ $product->stock > 0 ? $product->stock . ' In Stock' : 'Out of Stock' }}</p>
                         </div>
                         <div>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Sold By</p>
-                            <a href="#" class="text-sm font-bold text-primary hover:underline transition-colors">{{ $product->merchant?->business_name ?? 'C-Market (In-House)' }}</a>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Sold By</p>
+                            <a href="#" class="text-xs font-semibold text-sky-600 hover:underline">{{ $product->merchant?->business_name ?? 'C-Market' }}</a>
                         </div>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex gap-3">
                         <button
                             onclick="addToCart({{ $product->id }})"
-                            class="flex-1 py-4 bg-slate-900 text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-slate-900/10 hover:bg-primary hover:-translate-y-0.5 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
+                            class="flex-1 py-3 bg-slate-900 text-white rounded-lg font-bold text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all flex items-center justify-center gap-2">
                             Add to Cart 🛒
                         </button>
-                        <button class="w-14 h-14 bg-white border border-slate-200 rounded-xl shadow-sm flex items-center justify-center text-xl hover:text-rose-500 hover:border-rose-200 transition-colors">🤍</button>
+                        <button class="w-12 h-12 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-lg hover:text-rose-500 transition-colors">🤍</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Product Description -->
-    <div class="mt-12">
-        <div class="flex border-b border-slate-100 mb-8 pb-1 gap-8 text-xs font-bold uppercase tracking-widest text-slate-400">
-            <button class="border-b-2 border-primary pb-3 text-slate-900">Description</button>
-            <button class="hover:text-primary transition-colors pb-3">Reviews ({{ $product->reviews_count ?? 0 }})</button>
+    <!-- Details Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-xl p-6 md:p-8 border border-slate-100">
+                <h3 class="text-lg font-bold mb-6 text-slate-900">Product Details</h3>
+                <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed text-sm">
+                    {!! nl2br(e($product->description)) !!}
+                </div>
+            </div>
         </div>
         
-        <div class="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm">
-            <h3 class="text-xl font-black mb-6 text-slate-900">Product Details</h3>
-            <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed text-sm">
-                {!! nl2br(e($product->description)) !!}
+        <div class="space-y-6">
+            <div class="bg-slate-50 rounded-xl p-6 border border-slate-100">
+                <h4 class="text-[10px] font-black text-slate-800 uppercase tracking-widest mb-4">Delivery Info</h4>
+                <ul class="space-y-3 text-[11px] text-slate-500 font-medium">
+                    <li class="flex items-start gap-2"><span>🚚</span> Fast Delivery: 2-3 Business Days</li>
+                    <li class="flex items-start gap-2"><span>🔄</span> 7-Day Asset Rollback Policy</li>
+                    <li class="flex items-start gap-2"><span>🛡️</span> 100% Genuine Guaranteed</li>
+                </ul>
             </div>
         </div>
     </div>
