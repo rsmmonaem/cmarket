@@ -119,7 +119,7 @@
                                     <div class="w-1.5 h-1.5 rounded-full {{ $product->stock > 10 ? 'bg-emerald-500' : 'bg-rose-500' }}"></div>
                                     <span class="text-[9px] font-black text-slate-400 capitalize">{{ $product->stock > 0 ? 'In Stock' : 'Out of stock' }}</span>
                                 </div>
-                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">{{ $product->merchant->business_name }}</span>
+                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">{{ $product->merchant?->business_name ?? 'C-Market' }}</span>
                             </div>
 
                             <button onclick="addToCart({{ $product->id }})" class="w-full py-3 bg-slate-50 text-slate-900 rounded-xl border-2 border-transparent font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2">

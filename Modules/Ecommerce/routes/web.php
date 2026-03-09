@@ -41,10 +41,12 @@ Route::get('/categories', function() {
     $categories = \App\Models\Category::where('is_active', true)
         ->whereNull('parent_id')
         ->withCount('products')
-        ->with('children')
+        ->with(['children' => function($q) {
+            $q->withCount('products')->with('children');
+        }])
         ->orderBy('sort_order')
         ->get();
-    return view('categories.index', compact('categories'));
+    return view('ecommerce::categories.index', compact('categories'));
 })->name('categories.index');
 
 // Cart summary (public — used by mini-cart in header)

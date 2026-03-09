@@ -33,7 +33,10 @@
             <div class="grid grid-cols-2 lg:flex gap-4">
                 <select name="status" class="w-full lg:w-48 h-14 md:h-16 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl px-6 text-xs font-black text-slate-800 dark:text-white focus:ring-2 focus:ring-sky-500/20 transition-all">
                     <option value="">Status</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>New Requests</option>
+                    <option value="update_pending" {{ request('status') == 'update_pending' ? 'selected' : '' }}>Update Requests</option>
                     <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="denied" {{ request('status') == 'denied' ? 'selected' : '' }}>Denied</option>
                     <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                     <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                 </select>
@@ -108,6 +111,18 @@
                                 @if($product->status === 'active')
                                     <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-emerald-50 text-emerald-600 border border-emerald-100 mb-1">
                                         LIVE
+                                    </span>
+                                @elseif($product->status === 'pending')
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-sky-50 text-sky-600 border border-sky-100 mb-1">
+                                        NEW REQ
+                                    </span>
+                                @elseif($product->status === 'update_pending')
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-indigo-50 text-indigo-600 border border-indigo-100 mb-1">
+                                        UPDATED
+                                    </span>
+                                @elseif($product->status === 'denied')
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-rose-50 text-rose-600 border border-rose-100 mb-1">
+                                        DENIED
                                     </span>
                                 @elseif($product->status === 'draft')
                                     <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-[8px] font-black bg-amber-50 text-amber-600 border border-amber-100 mb-1">

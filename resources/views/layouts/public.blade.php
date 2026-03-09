@@ -11,7 +11,12 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -98,7 +103,7 @@
                     <div class="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center text-white text-xl shadow-lg shadow-primary/20 group-hover:rotate-12 transition-standard">
                         🧩
                     </div>
-                    <span class="text-2xl font-black tracking-tighter text-dark">Ecom<span class="text-primary">Matrix</span></span>
+                    <span class="text-2xl font-black tracking-tighter text-dark">C-Market</span>
                 </a>
 
                 <!-- Centered Search Bar -->
@@ -157,8 +162,9 @@
                             <span class="text-[9px] font-black uppercase tracking-tighter hidden sm:block text-slate-500">Cart</span>
                             <span x-show="count > 0"
                                   x-text="count"
+                                  data-cart-count
                                   class="absolute -top-1.5 -right-1.5 bg-primary text-white text-[8px] font-black rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 border-2 border-white shadow-md"
-                                  style="display:none;"></span>
+                                  style="{{ session('cart_count', 0) > 0 ? 'display:flex;' : 'display:none;' }}">{{ session('cart_count', 0) ?: '' }}</span>
                         </a>
 
                         {{-- Mini Cart Dropdown --}}
@@ -329,77 +335,124 @@
         </div>
     </footer>
 
-    @stack('scripts')
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-// ─── Global addToCart function ───────────────────────────────────────────────
-function addToCart(productId) {
-    @guest
-        window.location.href = '{{ route("login") }}';
-        return;
-    @endguest
-
-    fetch(`/cart/add/${productId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        }
-    })
-    .then(r => r.json())
-    .then(data => {
-        if (data.success) {
-            // Update all miniCart instances on the page
-            window.dispatchEvent(new CustomEvent('cart-updated', { detail: data }));
-            if (typeof Toast !== 'undefined') {
-                Toast.fire({ icon: 'success', title: data.message || 'Added to cart! 🛍️' });
-            }
-        } else {
-            if (typeof Toast !== 'undefined') {
-                Toast.fire({ icon: 'error', title: data.message || 'Could not add to cart.' });
-            }
-        }
-    })
-    .catch(() => {
-        if (typeof Toast !== 'undefined') {
-            Toast.fire({ icon: 'error', title: 'Something went wrong. Please try again.' });
+    <script>
+    // ─── Global Toast ─────────────────────────────────────────────────────────────
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
         }
     });
-}
 
-// ─── Alpine miniCart component ────────────────────────────────────────────────
-function miniCart() {
-    return {
-        open: false,
-        count: {{ session('cart_count', 0) }},
-        items: [],
-        total: 0,
-
-        init() {
-            this.fetchCart();
-            // Listen for add-to-cart events
-            window.addEventListener('cart-updated', (e) => {
-                this.count = e.detail.cart_count ?? this.count;
-                this.items = e.detail.cart_items ?? this.items;
-                this.total = e.detail.cart_total ?? this.total;
+    // ─── Global addToCart function ────────────────────────────────────────────────
+    function addToCart(productId) {
+        @guest
+            Swal.fire({
+                title: 'Login Required',
+                text: 'Please login to add items to your cart.',
+                icon: 'info',
+                confirmButtonText: 'Login',
+                confirmButtonColor: '#FF6B2C',
+                showCancelButton: true,
+            }).then(result => {
+                if (result.isConfirmed) window.location.href = '{{ route("login") }}';
             });
-        },
+            return;
+        @endguest
 
-        fetchCart() {
-            fetch('/cart/summary', {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(r => r.json())
-            .then(data => {
-                this.count = data.count;
-                this.items = data.items;
-                this.total = data.total;
-            })
-            .catch(() => {});
+        // Animate button feedback
+        const btn = event?.currentTarget;
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Adding...';
+        }
+
+        fetch(`/cart/add/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '🛒 Add to Cart';
+            }
+
+            if (data.success) {
+                // ✅ SweetAlert toast — different icon for duplicate vs new
+                Toast.fire({
+                    icon: data.is_duplicate ? 'info' : 'success',
+                    title: data.message
+                });
+
+                // ✅ Update cart counter badge immediately
+                const badges = document.querySelectorAll('[data-cart-count]');
+                badges.forEach(el => {
+                    el.textContent = data.cart_count;
+                    el.style.display = data.cart_count > 0 ? 'flex' : 'none';
+                });
+
+                // ✅ Dispatch event for Alpine miniCart
+                window.dispatchEvent(new CustomEvent('cart-updated', { detail: data }));
+
+            } else {
+                Toast.fire({ icon: 'error', title: data.message || 'Could not add to cart.' });
+                if (btn) btn.innerHTML = '🛒 Add to Cart';
+            }
+        })
+        .catch(() => {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '🛒 Add to Cart';
+            }
+            Toast.fire({ icon: 'error', title: 'Something went wrong. Please try again.' });
+        });
+    }
+
+    // ─── Alpine miniCart component ─────────────────────────────────────────────
+    function miniCart() {
+        return {
+            open: false,
+            count: {{ session('cart_count', 0) }},
+            items: [],
+            total: 0,
+
+            init() {
+                this.fetchCart();
+                window.addEventListener('cart-updated', (e) => {
+                    this.count = e.detail.cart_count ?? this.count;
+                    this.items = e.detail.cart_items ?? this.items;
+                    this.total = e.detail.cart_total ?? this.total;
+                });
+            },
+
+            fetchCart() {
+                fetch('/cart/summary', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    this.count = data.count;
+                    this.items = data.items;
+                    this.total = data.total;
+                })
+                .catch(() => {});
+            }
         }
     }
-}
-</script>
+    </script>
 </body>
 </html>
 

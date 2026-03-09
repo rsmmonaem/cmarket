@@ -29,7 +29,7 @@ class WalletController extends Controller
             }])
             ->get();
 
-        return view('wallet.index', compact('wallets', 'user'));
+        return view('ecommerce::wallet.index', compact('wallets', 'user'));
     }
 
     /**

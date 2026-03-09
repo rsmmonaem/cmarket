@@ -10,13 +10,16 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $merchant = auth()->user()->merchant;
-        $products = Product::where('merchant_id', $merchant->id)
-            ->with('category')
-            ->latest()
-            ->paginate(15);
+        $query = Product::where('merchant_id', $merchant->id)->with('category');
+
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $products = $query->latest()->paginate(15);
 
         return view('merchant.products.index', compact('products'));
     }
@@ -45,7 +48,7 @@ class ProductController extends Controller
 
         $data = $request->except('image');
         $data['merchant_id'] = $merchant->id;
-        $data['status'] = 'active';
+        $data['status'] = 'pending';
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('products', 'public');
@@ -98,10 +101,15 @@ class ProductController extends Controller
             $data['image'] = $request->file('image')->store('products', 'public');
         }
 
+        // If product was active/denied, and it's updated, set to update_pending
+        if (in_array($product->status, ['active', 'denied'])) {
+            $data['status'] = 'update_pending';
+        }
+
         $product->update($data);
 
-        return redirect()->route('merchant.products.index')
-            ->with('success', 'Product updated successfully!');
+        return redirect()->route('merchant.products.index', ['status' => $product->status])
+            ->with('success', 'Product updated and submitted for review!');
     }
 
     public function destroy(Product $product)

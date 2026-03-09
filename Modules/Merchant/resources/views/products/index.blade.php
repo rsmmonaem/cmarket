@@ -78,6 +78,23 @@
                                     <span class="inline-flex items-center gap-2 py-2 px-4 rounded-xl text-[9px] font-black bg-emerald-50 text-emerald-600 border border-emerald-100">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> LIVE
                                     </span>
+                                @elseif($product->status === 'pending')
+                                    <span class="inline-flex items-center gap-2 py-2 px-4 rounded-xl text-[9px] font-black bg-sky-50 text-sky-600 border border-sky-100">
+                                        🕒 PENDING
+                                    </span>
+                                @elseif($product->status === 'update_pending')
+                                    <span class="inline-flex items-center gap-2 py-2 px-4 rounded-xl text-[9px] font-black bg-indigo-50 text-indigo-600 border border-indigo-100">
+                                        🔄 UPDATING
+                                    </span>
+                                @elseif($product->status === 'denied')
+                                    <div class="flex flex-col items-center gap-1">
+                                        <span class="inline-flex items-center gap-2 py-2 px-4 rounded-xl text-[9px] font-black bg-rose-50 text-rose-600 border border-rose-100">
+                                            ❌ DENIED
+                                        </span>
+                                        @if($product->admin_feedback)
+                                            <p class="text-[8px] font-bold text-rose-400 max-w-[150px] leading-tight">{{ $product->admin_feedback }}</p>
+                                        @endif
+                                    </div>
                                 @else
                                     <span class="inline-flex items-center gap-2 py-2 px-4 rounded-xl text-[9px] font-black bg-slate-50 text-slate-400 border border-slate-100">
                                         OFFLINE

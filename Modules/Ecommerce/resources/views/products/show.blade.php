@@ -93,17 +93,16 @@
                         </div>
                         <div>
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Sold By</p>
-                            <a href="#" class="text-sm font-bold text-primary hover:underline transition-colors">{{ $product->merchant->business_name }}</a>
+                            <a href="#" class="text-sm font-bold text-primary hover:underline transition-colors">{{ $product->merchant?->business_name ?? 'C-Market (In-House)' }}</a>
                         </div>
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <form action="{{ route('cart.add', $product) }}" method="POST" class="flex-1">
-                            @csrf
-                            <button type="submit" class="w-full py-4 bg-slate-900 text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-slate-900/10 hover:bg-primary hover:-translate-y-0.5 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
-                                Add to Cart 🛒
-                            </button>
-                        </form>
+                        <button
+                            onclick="addToCart({{ $product->id }})"
+                            class="flex-1 py-4 bg-slate-900 text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-slate-900/10 hover:bg-primary hover:-translate-y-0.5 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
+                            Add to Cart 🛒
+                        </button>
                         <button class="w-14 h-14 bg-white border border-slate-200 rounded-xl shadow-sm flex items-center justify-center text-xl hover:text-rose-500 hover:border-rose-200 transition-colors">🤍</button>
                     </div>
                 </div>

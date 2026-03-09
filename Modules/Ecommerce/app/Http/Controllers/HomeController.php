@@ -59,7 +59,7 @@ class HomeController extends Controller
             ->take(6)
             ->get();
 
-        return view('welcome', compact(
+        return view('ecommerce::welcome', compact(
             'mainBanners', 'midBanners', 'popupBanner', 
             'flashDeals', 'featuredProducts', 'newArrivals',
             'popularCategories', 'topMerchants'
@@ -76,17 +76,17 @@ class HomeController extends Controller
             ->withCount('products')
             ->get();
 
-        return view('categories.index', compact('categories'));
+        return view('ecommerce::categories.index', compact('categories'));
     }
 
     public function about()
     {
-        return view('pages.about');
+        return view('ecommerce::pages.about');
     }
 
     public function contact()
     {
-        return view('pages.contact');
+        return view('ecommerce::pages.contact');
     }
 
     public function merchants()
@@ -96,6 +96,6 @@ class HomeController extends Controller
             ->orderBy('products_count', 'desc')
             ->get();
 
-        return view('merchants.index', compact('merchants'));
+        return view('ecommerce::merchants.index', compact('merchants'));
     }
 }

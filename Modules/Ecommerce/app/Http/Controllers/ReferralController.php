@@ -48,7 +48,7 @@ class ReferralController extends Controller
             ->where('status', 'pending')
             ->sum('amount');
 
-        return view('referral.index', compact('directReferrals', 'allReferrals', 'totalCommissions', 'pendingCommissions'));
+        return view('ecommerce::referral.index', compact('directReferrals', 'allReferrals', 'totalCommissions', 'pendingCommissions'));
     }
 
     private function getAllReferrals($userId, $level = 1, $maxLevel = 5)

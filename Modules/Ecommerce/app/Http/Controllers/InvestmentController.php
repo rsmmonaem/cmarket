@@ -18,7 +18,7 @@ class InvestmentController extends Controller
     public function index()
     {
         $shops = ChainShop::active()->get();
-        return view('investments.index', compact('shops'));
+        return view('ecommerce::investments.index', compact('shops'));
     }
 
     /**
@@ -26,7 +26,7 @@ class InvestmentController extends Controller
      */
     public function show(ChainShop $shop)
     {
-        return view('investments.show', compact('shop'));
+        return view('ecommerce::investments.show', compact('shop'));
     }
 
     /**
@@ -86,6 +86,6 @@ class InvestmentController extends Controller
             ->latest()
             ->get();
             
-        return view('investments.my-shares', compact('purchases'));
+        return view('ecommerce::investments.my-shares', compact('purchases'));
     }
 }

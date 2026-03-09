@@ -61,7 +61,7 @@ class ProductController extends Controller
         $products = $query->paginate(12);
         $categories = Category::where('is_active', true)->get();
 
-        return view('products.index', compact('products', 'categories'));
+        return view('ecommerce::products.index', compact('products', 'categories'));
     }
 
     public function show(Product $product)
@@ -73,7 +73,7 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
-        return view('products.show', compact('product', 'relatedProducts'));
+        return view('ecommerce::products.show', compact('product', 'relatedProducts'));
     }
 
     public function search(Request $request)
@@ -87,6 +87,6 @@ class ProductController extends Controller
             ->with(['category', 'merchant'])
             ->paginate(12);
 
-        return view('products.search', compact('products', 'query'));
+        return view('ecommerce::products.search', compact('products', 'query'));
     }
 }

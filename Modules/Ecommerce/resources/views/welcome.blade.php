@@ -119,12 +119,9 @@
 
                         <!-- Quick Actions -->
                         <div class="mt-8 flex gap-3 opacity-0 group-hover:opacity-100 transition-standard translate-y-4 group-hover:translate-y-0">
-                            <form action="{{ route('cart.add', $product) }}" method="POST" class="flex-1">
-                                @csrf
-                                <button type="submit" class="w-full bg-dark text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-standard active:scale-95 shadow-lg">
-                                    Add to Cart
-                                </button>
-                            </form>
+                            <button onclick="addToCart({{ $product->id }})" class="flex-1 bg-dark text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-standard active:scale-95 shadow-lg">
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
                 @endforeach
@@ -231,12 +228,9 @@
                                     <span class="text-[10px] font-bold text-slate-300 line-through">৳{{ number_format($product->price) }}</span>
                                 @endif
                             </div>
-                            <form action="{{ route('cart.add', $product) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="w-10 h-10 bg-dark text-white rounded-lg flex items-center justify-center hover:bg-primary transition-standard shadow-lg shadow-dark/10 active:scale-90">
-                                    🛒
-                                </button>
-                            </form>
+                            <button onclick="addToCart({{ $product->id }})" class="w-10 h-10 bg-dark text-white rounded-lg flex items-center justify-center hover:bg-primary transition-standard shadow-lg shadow-dark/10 active:scale-90">
+                                🛒
+                            </button>
                         </div>
                     </div>
                 </div>

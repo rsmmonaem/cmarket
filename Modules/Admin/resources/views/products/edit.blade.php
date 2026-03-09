@@ -45,6 +45,18 @@
                     :options="$categories->pluck('name', 'id')->toArray()"
                 />
 
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Merchant (Select In-house for system product)
+                    </label>
+                    <select name="merchant_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">In-house (System Product)</option>
+                        @foreach($merchants as $merchant)
+                            <option value="{{ $merchant->id }}" {{ $product->merchant_id == $merchant->id ? 'selected' : '' }}>{{ $merchant->business_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
                     <x-input 
                         label="Price" 
@@ -165,11 +177,21 @@
                     :required="true"
                     :selected="$product->status"
                     :options="[
-                        'active' => 'Active',
+                        'active' => 'Active / Approve',
+                        'pending' => 'Pending Review',
+                        'update_pending' => 'Update Pending',
+                        'denied' => 'Denied',
                         'inactive' => 'Inactive',
                         'draft' => 'Draft',
                     ]"
                 />
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Admin Feedback (Visible to merchant if denied)
+                    </label>
+                    <textarea name="admin_feedback" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Reason for denial or suggestions...">{{ old('admin_feedback', $product->admin_feedback) }}</textarea>
+                </div>
 
                 <div class="flex justify-end gap-3 mt-6">
                     <a href="{{ route('admin.products.index') }}">

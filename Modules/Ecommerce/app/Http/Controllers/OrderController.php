@@ -16,7 +16,7 @@ class OrderController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('orders.index', compact('orders'));
+        return view('ecommerce::orders.index', compact('orders'));
     }
 
     public function show(Order $order)
@@ -28,6 +28,6 @@ class OrderController extends Controller
 
         $order->load(['items.product', 'items.merchant']);
 
-        return view('orders.show', compact('order'));
+        return view('ecommerce::orders.show', compact('order'));
     }
 }

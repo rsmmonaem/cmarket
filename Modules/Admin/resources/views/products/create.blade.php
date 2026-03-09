@@ -37,9 +37,9 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Merchant <span class="text-rose-500">*</span></label>
-                    <select name="merchant_id" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
-                        <option value="">Select a Merchant</option>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Merchant</label>
+                    <select name="merchant_id" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                        <option value="">In-house (System Product)</option>
                         @foreach($merchants as $merchant)
                             <option value="{{ $merchant->id }}" {{ old('merchant_id') == $merchant->id ? 'selected' : '' }}>{{ $merchant->business_name }}</option>
                         @endforeach

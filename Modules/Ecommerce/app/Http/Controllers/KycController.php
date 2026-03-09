@@ -24,7 +24,7 @@ class KycController extends Controller
     {
         $user = auth()->user();
         $kyc = $user->kyc;
-        return view('kyc.index', compact('kyc'));
+        return view('ecommerce::kyc.index', compact('kyc'));
     }
 
     public function store(Request $request)

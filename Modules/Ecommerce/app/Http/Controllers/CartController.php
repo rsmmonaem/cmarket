@@ -49,30 +49,32 @@ class CartController extends Controller
             }
         }
 
-        if (isset($cart[$productId])) {
+        $isDuplicate = isset($cart[$productId]);
+
+        if ($isDuplicate) {
             $cart[$productId]['quantity']++;
         } else {
             $cart[$productId] = [
-                'name' => $product->name,
+                'name'     => $product->name,
                 'quantity' => 1,
-                'price' => $product->discount_price ?? $product->price,
-                'image' => ($product->images[0] ?? null),
-                'type' => $product->type,
+                'price'    => $product->discount_price ?? $product->price,
+                'image'    => ($product->images[0] ?? null),
+                'type'     => $product->type,
             ];
         }
 
         session()->put('cart', $cart);
         session()->put('cart_count', count($cart));
 
-        // Build response with cart data for mini-cart dropdown
         $cartData = $this->buildCartData($cart);
 
         return response()->json([
-            'success'    => true,
-            'message'    => 'Added to cart! 🛒',
-            'cart_count' => $cartData['count'],
-            'cart_total' => $cartData['total'],
-            'cart_items' => $cartData['items'],
+            'success'      => true,
+            'is_duplicate' => $isDuplicate,
+            'message'      => $isDuplicate ? '🔄 Quantity updated in cart!' : '🛒 Added to cart successfully!',
+            'cart_count'   => $cartData['count'],
+            'cart_total'   => $cartData['total'],
+            'cart_items'   => $cartData['items'],
         ]);
     }
 

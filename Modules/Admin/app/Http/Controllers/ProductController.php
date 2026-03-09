@@ -34,7 +34,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'merchant_id' => 'required|exists:merchants,id',
+            'merchant_id' => 'nullable|exists:merchants,id',
             'category_id' => 'required|exists:categories,id',
             'type' => 'required|in:product,package',
             'name' => 'required|string|max:255',
@@ -72,14 +72,15 @@ class ProductController extends Controller
         $data['images'] = $images;
 
         // Attributes & Variations JSON Decoding
+        // NOTE: $request->attributes is a reserved Symfony ParameterBag — must use input()
         if ($request->filled('attributes')) {
-            $data['attributes'] = json_decode($request->attributes, true) ?: [];
+            $data['attributes'] = json_decode($request->input('attributes'), true) ?: [];
         }
         
         if ($request->filled('variations')) {
-            $variations = json_decode($request->variations, true) ?: [];
+            $variations = json_decode($request->input('variations'), true) ?: [];
             
-            // Clean up the variations data logic if needed, ensure types
+            // Clean up the variations data — ensure correct types
             foreach($variations as &$v) {
                 $v['price'] = floatval($v['price'] ?? 0);
                 $v['stock'] = intval($v['stock'] ?? 0);
@@ -109,7 +110,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'merchant_id' => 'required|exists:merchants,id',
+            'merchant_id' => 'nullable|exists:merchants,id',
             'category_id' => 'required|exists:categories,id',
             'type' => 'required|in:product,package',
             'name' => 'required|string|max:255',
@@ -119,14 +120,15 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
             'sku' => 'nullable|string|unique:products,sku,' . $product->id,
             'cashback_percentage' => 'nullable|numeric|min:0|max:100',
-            'status' => 'required|in:active,inactive,draft',
+            'status' => 'required|in:active,inactive,draft,pending,denied,update_pending',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:1000',
             'is_featured' => 'boolean',
             'is_flash_deal' => 'boolean',
             'flash_deal_start' => 'nullable|date',
             'flash_deal_end' => 'nullable|date|after:flash_deal_start',
-            'product_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'admin_feedback' => 'nullable|string|max:1000',
+            'product_images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $data = $request->except('product_images');

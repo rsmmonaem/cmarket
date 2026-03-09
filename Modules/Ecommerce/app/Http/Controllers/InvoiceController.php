@@ -33,6 +33,6 @@ class InvoiceController extends Controller
 
         $order->load(['items.product', 'items.merchant', 'user']);
 
-        return view('invoices.order', compact('order'));
+        return view('ecommerce::invoices.order', compact('order'));
     }
 }

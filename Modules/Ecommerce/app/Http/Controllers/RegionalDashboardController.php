@@ -42,7 +42,7 @@ class RegionalDashboardController extends Controller
             'recent_orders' => $orderQuery->latest()->with('user')->take(5)->get(),
         ];
 
-        return view('regional.dashboard', compact('stats', 'role'));
+        return view('ecommerce::regional.dashboard', compact('stats', 'role'));
     }
 
     /**
@@ -59,7 +59,7 @@ class RegionalDashboardController extends Controller
         elseif ($role === 'division') $query->where('division', $user->division);
 
         $users = $query->latest()->paginate(20);
-        return view('regional.users', compact('users', 'role'));
+        return view('ecommerce::regional.users', compact('users', 'role'));
     }
 
     /**
@@ -80,6 +80,6 @@ class RegionalDashboardController extends Controller
         }
 
         $orders = $query->latest()->with('user')->paginate(20);
-        return view('regional.orders', compact('orders', 'role'));
+        return view('ecommerce::regional.orders', compact('orders', 'role'));
     }
 }

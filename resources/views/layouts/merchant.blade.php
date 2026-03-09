@@ -101,11 +101,12 @@
                         <x-admin.sidebar-link route="merchant.orders.index" :params="['status' => 'delivered']" label="Deployment Complete" />
                     </x-admin.sidebar-dropdown>
 
-                    <x-admin.sidebar-dropdown icon="📦" label="Products">
-                        <x-admin.sidebar-link route="merchant.products.index" label="Inventory List" />
-                        <x-admin.sidebar-link route="merchant.products.create" label="Deploy New Unit" />
-                        <x-admin.sidebar-link route="merchant.products.index" label="Bulk Ingestion" />
-                        <x-admin.sidebar-link route="merchant.products.index" label="Asset Reviews" />
+                    <x-admin.sidebar-dropdown icon="📦" label="Merchant Products">
+                        <x-admin.sidebar-link route="merchant.products.index" :params="['status' => 'pending']" label="New Products Requests" />
+                        <x-admin.sidebar-link route="merchant.products.index" :params="['status' => 'update_pending']" label="Product Updated Requests" />
+                        <x-admin.sidebar-link route="merchant.products.index" :params="['status' => 'active']" label="Approved Products" />
+                        <x-admin.sidebar-link route="merchant.products.index" :params="['status' => 'denied']" label="Denied Products" />
+                        <x-admin.sidebar-link route="merchant.products.create" label="Register New Product" />
                     </x-admin.sidebar-dropdown>
                 </div>
 
