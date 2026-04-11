@@ -34,7 +34,7 @@
                     New Request <span class="bg-emerald-100 text-emerald-600 text-[10px] p-1.5 rounded-lg">📤</span>
                 </h3>
 
-                <form action="{{ route('withdrawals.request') }}" method="POST" class="space-y-6" id="withdrawalForm">
+                <form action="{{ route('customer.withdrawals.request') }}" method="POST" class="space-y-6" id="withdrawalForm">
                     @csrf
                     <div>
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Source Wallet</label>

@@ -10,7 +10,7 @@ class MerchantRegistrationController extends Controller
 {
     public function showRegistrationForm()
     {
-        return view('merchant.register');
+        return view('merchant::register');
     }
 
     public function register(Request $request)

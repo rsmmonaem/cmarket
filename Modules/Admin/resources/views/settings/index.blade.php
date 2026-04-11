@@ -24,18 +24,29 @@
                     <span class="text-lg">⚙️</span> General Settings
                 </h3>
                 
-                <div class="space-y-6">
-                    @foreach($settings->flatten() as $setting)
-                        @if($setting->type !== 'boolean')
-                            <div class="space-y-2">
-                                <label for="setting_{{ $setting->id }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">{{ str_replace('_', ' ', $setting->key) }}</label>
-                                <input type="{{ $setting->type === 'number' ? 'number' : 'text' }}" 
-                                       name="settings[{{ $setting->key }}]" 
-                                       id="setting_{{ $setting->id }}"
-                                       value="{{ $setting->value }}"
-                                       class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all shadow-sm">
+                <div class="space-y-8">
+                    @foreach($settings as $group => $items)
+                        <div class="pt-4 first:pt-0">
+                            <h4 class="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-4 pb-2 border-b border-slate-50 dark:border-slate-800">{{ $group }} settings</h4>
+                            <div class="space-y-6">
+                                @foreach($items as $setting)
+                                    @if($setting->type !== 'boolean')
+                                        <div class="space-y-2">
+                                            <label for="setting_{{ $setting->id }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">{{ str_replace('_', ' ', $setting->key) }}</label>
+                                            <input type="{{ $setting->type === 'number' || $setting->type === 'decimal' ? 'number' : 'text' }}" 
+                                                   name="settings[{{ $setting->key }}]" 
+                                                   id="setting_{{ $setting->id }}"
+                                                   value="{{ $setting->value }}"
+                                                   step="{{ $setting->type === 'decimal' ? '0.01' : '1' }}"
+                                                   class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all shadow-sm">
+                                            @if($setting->description)
+                                                <p class="text-[9px] font-bold text-slate-400 pl-1">{{ $setting->description }}</p>
+                                            @endif
+                                        </div>
+                                    @endif
+                                @endforeach
                             </div>
-                        @endif
+                        </div>
                     @endforeach
                 </div>
             </div>

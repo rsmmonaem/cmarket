@@ -54,7 +54,8 @@ class WalletController extends Controller
     public function transfer(Request $request)
     {
         $request->validate([
-            'phone' => 'required|string',
+            'phone' => 'nullable|string',
+            'recipient_id' => 'required_without:phone|exists:users,id',
             'amount' => 'required|numeric|min:1',
             'wallet_type' => 'required|in:main,cashback,commission,shop,share',
             'description' => 'nullable|string|max:255',
@@ -66,7 +67,8 @@ class WalletController extends Controller
                 $request->phone,
                 $request->amount,
                 $request->wallet_type,
-                $request->description
+                $request->description,
+                $request->recipient_id
             );
 
             return back()->with('success', "Transfer successful! Reference: {$reference}");

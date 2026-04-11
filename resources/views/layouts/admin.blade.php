@@ -136,8 +136,11 @@
                 </div>
                 <div class="space-y-0.5 mb-6">
                     <x-admin.sidebar-link route="admin.settings.index" icon="⚙️" label="Settings" />
-                    <x-admin.sidebar-link route="admin.wallets.index" icon="💰" label="Wallets" />
+                    <x-admin.sidebar-link route="admin.designations.index" icon="🏆" label="Designations" />
                     <x-admin.sidebar-link route="admin.withdrawals.index" icon="📤" label="Withdrawals" />
+                    <x-admin.sidebar-link route="admin.wallets.ledgers" icon="⚖️" label="Financial Audit" />
+                    <x-admin.sidebar-link route="admin.kyc.index" icon="🆔" label="KYC Verifications" />
+                    <x-admin.sidebar-link route="admin.topups.index" icon="📥" label="Top-up Requests" />
                 </div>
             </nav>
         </aside>

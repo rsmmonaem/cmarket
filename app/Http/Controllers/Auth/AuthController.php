@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserDevice;
 use App\Models\Wallet;
+use App\Models\Designation;
+use App\Models\UserDesignation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -44,6 +46,7 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
                 'status' => 'free',
                 'referred_by' => $referrer ? $referrer->id : null,
+                'referral_by' => $referrer ? ($referrer->referral_code ?? $referrer->name) : $request->ref,
             ]);
 
             // Assign customer role
@@ -68,6 +71,23 @@ class AuthController extends Controller
 
                 // Bonus: You might want to track all parents in the referral table up to N levels
                 // But for now, the 'referred_by' column on users table handles the direct parent.
+            }
+
+            // AUTO-ASSIGN DESIGNATION (Priority 1 = Top)
+            $initialDesignation = Designation::active()->orderBy('sort_order', 'asc')->first();
+            if ($initialDesignation) {
+                $user->update([
+                    'designation_id' => $initialDesignation->id,
+                    'designation_achieved_at' => now(),
+                ]);
+
+                UserDesignation::create([
+                    'user_id' => $user->id,
+                    'designation_id' => $initialDesignation->id,
+                    'achieved_at' => now(),
+                    'is_current' => true,
+                    'achievement_data' => ['context' => 'Initial signup assignment']
+                ]);
             }
 
             \Illuminate\Support\Facades\DB::commit();

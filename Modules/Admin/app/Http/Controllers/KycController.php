@@ -30,8 +30,12 @@ class KycController extends Controller
         // Update user status
         $user->update(['status' => 'wallet_verified']);
 
-        // Update role to 'wallet_verified'
-        $user->syncRoles(['wallet_verified']);
+        // Update role - protect admin roles
+        if (!$user->hasAnyRole(['admin', 'super-admin'])) {
+            $user->syncRoles(['wallet_verified']);
+        } else {
+            $user->assignRole('wallet_verified');
+        }
 
         // Create additional wallets
         $walletTypes = ['cashback', 'commission', 'shop', 'share'];

@@ -20,5 +20,18 @@ Route::middleware(['auth'])->prefix('customer')->name('customer.')->group(functi
         // Withdrawal system
         Route::get('/withdrawals', [\Modules\Customer\Http\Controllers\WithdrawalController::class, 'index'])->name('withdrawals.index');
         Route::post('/withdrawals/request', [\Modules\Customer\Http\Controllers\WithdrawalController::class, 'request'])->name('withdrawals.request');
+
+        // Top-up system
+        Route::get('/topup', [\Modules\Customer\Http\Controllers\TopupController::class, 'index'])->name('topup.index');
+        Route::get('/topup/create', [\Modules\Customer\Http\Controllers\TopupController::class, 'create'])->name('topup.create');
+        Route::post('/topup/store', [\Modules\Customer\Http\Controllers\TopupController::class, 'store'])->name('topup.store');
+
+        // Fund Transfer
+        Route::get('/transfer', [\Modules\Customer\Http\Controllers\TransferController::class, 'index'])->name('transfer.index');
+        Route::post('/transfer', [\Modules\Customer\Http\Controllers\TransferController::class, 'transfer'])->name('transfer.submit');
+
+        // Membership Card
+        Route::get('/membership', [\Modules\Customer\Http\Controllers\MembershipController::class, 'index'])->name('membership.index');
+        Route::post('/membership/purchase', [\Modules\Customer\Http\Controllers\MembershipController::class, 'purchase'])->name('membership.purchase');
     });
 });

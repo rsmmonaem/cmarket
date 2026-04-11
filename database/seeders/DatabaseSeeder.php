@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\Designation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,8 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
         // 1. Role & Permission Infrastructure
         $this->call(RolePermissionSeeder::class);
+
+        // 2. MLM Test Chain
+        $this->call(MLMTestSeeder::class);
 
         // 2. Global System Configuration
         $this->call(SystemSettingsSeeder::class);
@@ -29,7 +34,7 @@ class DatabaseSeeder extends Seeder
         // 5. Ecommerce Demo Data (Products, Categories, Banners)
         $this->call(EcommerceDemoSeeder::class);
 
-        // 6. Super Admin Initialization (Safe Deployment)
+        // 6. Super Admin Initialization
         $superAdmin = User::updateOrCreate(
             ['email' => 'admin@cmarket.com'],
             [
@@ -44,15 +49,42 @@ class DatabaseSeeder extends Seeder
             $superAdmin->assignRole('super-admin');
         }
 
-        // 7. Mandatory Wallet Infrastructure for Admin
+        // 7. Test Customer Initialization
+        $customer = User::updateOrCreate(
+            ['email' => 'user@gmail.com'],
+            [
+                'name' => '2nd user',
+                'phone' => '01968402925',
+                'password' => Hash::make('12345678'),
+                'status' => 'active',
+            ]
+        );
+
+        // Auto-assign top priority designation (Priority 1)
+        // Note: Using sort_order as it represents priority in our system (1 = Top)
+        $designation = Designation::where('sort_order', 1)->first();
+        if ($designation) {
+            $customer->update(['designation_id' => $designation->id]);
+        }
+
+        if ($customer->wasRecentlyCreated || !$customer->hasRole('customer')) {
+            $customer->assignRole('customer');
+        }
+
+        // 8. Mandatory Wallet Infrastructure
         $walletTypes = ['main', 'cashback', 'commission', 'shop', 'share'];
-        foreach ($walletTypes as $type) {
-            Wallet::firstOrCreate([
-                'user_id' => $superAdmin->id,
-                'wallet_type' => $type
-            ], [
-                'is_locked' => false,
-            ]);
+        
+        $usersToSetup = [$superAdmin, $customer];
+
+        foreach ($usersToSetup as $user) {
+            foreach ($walletTypes as $type) {
+                Wallet::firstOrCreate([
+                    'user_id' => $user->id,
+                    'wallet_type' => $type
+                ], [
+                    'is_locked' => false,
+                ]);
+            }
         }
 
         $this->command->info('Ecosystem Protocol Deployment Successful!');

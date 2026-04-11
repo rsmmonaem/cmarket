@@ -38,10 +38,14 @@
                             <div class="flex -space-x-4 overflow-hidden">
                                 @foreach($order->items->take(4) as $item)
                                     <div class="inline-block h-12 w-12 rounded-xl ring-4 ring-white bg-slate-100 overflow-hidden border border-slate-200">
-                                        @if($item->product->image)
-                                            <img src="{{ asset('storage/' . $item->product->image) }}" alt="" class="h-full w-full object-cover">
+                                        @php
+                                            $product = $item->product;
+                                            $image = $product->thumbnail ?? (is_array($product->images) ? ($product->images[0] ?? null) : (json_decode($product->images, true)[0] ?? null));
+                                        @endphp
+                                        @if($image)
+                                            <img src="{{ asset('storage/' . $image) }}" alt="" class="h-full w-full object-cover">
                                         @else
-                                            <div class="h-full w-full flex items-center justify-center text-xs">📦</div>
+                                            <div class="h-full w-full flex items-center justify-center text-xs opacity-30 text-slate-400">📦</div>
                                         @endif
                                     </div>
                                 @endforeach

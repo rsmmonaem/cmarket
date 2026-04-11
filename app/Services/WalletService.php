@@ -12,10 +12,14 @@ class WalletService
     /**
      * Transfer funds between users
      */
-    public function transfer(User $fromUser, string $toPhone, float $amount, string $walletType = 'main', string $description = null)
+    public function transfer(User $fromUser, string $toPhone = null, float $amount, string $walletType = 'main', string $description = null, int $toUserId = null)
     {
-        return DB::transaction(function () use ($fromUser, $toPhone, $amount, $walletType, $description) {
-            $toUser = User::where('phone', $toPhone)->first();
+        return DB::transaction(function () use ($fromUser, $toPhone, $amount, $walletType, $description, $toUserId) {
+            if ($toUserId) {
+                $toUser = User::find($toUserId);
+            } else {
+                $toUser = User::where('phone', $toPhone)->first();
+            }
             
             if (!$toUser) {
                 throw new \Exception("Recipient user not found.");

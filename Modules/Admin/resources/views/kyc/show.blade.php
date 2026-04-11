@@ -39,12 +39,12 @@
             <h2 class="text-lg font-semibold text-gray-800 mb-4">KYC Details</h2>
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
-                    <p class="text-sm text-gray-500">ID Type</p>
-                    <p class="text-gray-900 font-medium">{{ ucfirst($kyc->id_type) }}</p>
+                    <label class="text-sm font-bold text-slate-400 uppercase tracking-widest block mb-1">ID Type</label>
+                    <p class="text-slate-800 dark:text-white font-black uppercase text-sm">{{ $kyc->document_type }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500">ID Number</p>
-                    <p class="text-gray-900 font-medium">{{ $kyc->id_number }}</p>
+                    <label class="text-sm font-bold text-slate-400 uppercase tracking-widest block mb-1">ID Number</label>
+                    <p class="text-slate-800 dark:text-white font-black text-sm">{{ $kyc->document_number }}</p>
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Date of Birth</p>
@@ -58,18 +58,22 @@
 
             <!-- Documents -->
             <div>
-                <p class="text-sm text-gray-500 mb-2">Uploaded Documents</p>
-                <div class="grid grid-cols-2 gap-4">
-                    @if($kyc->front_image)
-                        <div class="border border-gray-200 rounded-lg p-2">
-                            <p class="text-xs text-gray-500 mb-2">Front Image</p>
-                            <img src="{{ asset('storage/' . $kyc->front_image) }}" alt="Front" class="w-full rounded">
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 pb-2 border-b border-slate-50 dark:border-slate-800">Verification Documents</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    @if($kyc->document_front)
+                        <div class="bg-slate-50 dark:bg-slate-800 rounded-3xl p-4 border border-slate-100 dark:border-slate-700">
+                            <p class="text-[10px] font-black uppercase tracking-widest text-primary mb-3 text-center">ID FRONT PART</p>
+                            <a href="{{ asset('storage/' . $kyc->document_front) }}" target="_blank" class="block group cursor-zoom-in">
+                                <img src="{{ asset('storage/' . $kyc->document_front) }}" alt="Front" class="w-full h-64 object-cover rounded-2xl shadow-sm group-hover:opacity-90 transition-all border border-slate-200 dark:border-slate-600">
+                            </a>
                         </div>
                     @endif
-                    @if($kyc->back_image)
-                        <div class="border border-gray-200 rounded-lg p-2">
-                            <p class="text-xs text-gray-500 mb-2">Back Image</p>
-                            <img src="{{ asset('storage/' . $kyc->back_image) }}" alt="Back" class="w-full rounded">
+                    @if($kyc->document_back)
+                        <div class="bg-slate-50 dark:bg-slate-800 rounded-3xl p-4 border border-slate-100 dark:border-slate-700">
+                            <p class="text-[10px] font-black uppercase tracking-widest text-primary mb-3 text-center">ID BACK PART</p>
+                            <a href="{{ asset('storage/' . $kyc->document_back) }}" target="_blank" class="block group cursor-zoom-in">
+                                <img src="{{ asset('storage/' . $kyc->document_back) }}" alt="Back" class="w-full h-64 object-cover rounded-2xl shadow-sm group-hover:opacity-90 transition-all border border-slate-200 dark:border-slate-600">
+                            </a>
                         </div>
                     @endif
                 </div>

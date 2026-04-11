@@ -22,7 +22,7 @@ class GenerationController extends Controller
         $user = auth()->user();
         $generations = $this->rankService->getGenerations($user);
         
-        return view('customer.generations.index', compact('generations'));
+        return view('customer::generations.index', compact('generations'));
     }
 
     public function upgradeWithVoucher(Request $request)

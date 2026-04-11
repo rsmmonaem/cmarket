@@ -60,6 +60,41 @@
         </div>
     </div>
 
+    <!-- Referral Link Hub -->
+    <div class="bg-indigo-900 rounded-[2.5rem] p-8 text-white shadow-xl shadow-indigo-900/20 relative overflow-hidden group">
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="space-y-2 text-center md:text-left">
+                <h3 class="text-2xl font-black italic tracking-tight">Expand Your Network 🚀</h3>
+                <p class="text-indigo-200 text-sm font-bold">Invite friends and earn points for every join!</p>
+            </div>
+            <div class="flex items-center gap-3 bg-white/10 p-2 pl-6 rounded-2xl backdrop-blur-md border border-white/20 w-full md:w-auto">
+                <span class="text-xs font-black uppercase tracking-widest text-indigo-200 truncate max-w-[200px]" id="referral_link_text">
+                    {{ route('register', ['ref' => $user->referral_code]) }}
+                </span>
+                <button onclick="copyToClipboard()" class="px-6 py-3 rounded-xl bg-white text-indigo-900 text-[10px] font-black uppercase tracking-widest hover:bg-sky-400 hover:text-white transition-all shadow-lg active:scale-95">
+                    Copy Link
+                </button>
+            </div>
+        </div>
+        <div class="absolute -left-10 -bottom-10 opacity-10 text-[12rem] group-hover:scale-110 transition-transform duration-700 pointer-events-none">🔗</div>
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const copyText = "{{ route('register', ['ref' => $user->referral_code]) }}";
+            navigator.clipboard.writeText(copyText).then(() => {
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = 'Copied! ✅';
+                btn.classList.add('bg-emerald-500', 'text-white');
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-emerald-500', 'text-white');
+                }, 2000);
+            });
+        }
+    </script>
+
     <!-- Main Dashboard Body -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-8">
@@ -77,7 +112,7 @@
                 <div class="flex items-center justify-between mb-8">
                     <h3 class="text-sm font-black uppercase tracking-widest text-slate-500">Account Level</h3>
                     <span class="px-4 py-1.5 rounded-full bg-sky-500 text-white text-[10px] font-black uppercase tracking-wider shadow-lg shadow-sky-500/20">
-                        {{ $currentRank?->name ?? 'Free Customer' }}
+                        {{ $currentRank?->name ?? 'Customer' }}
                     </span>
                 </div>
 
@@ -157,7 +192,7 @@
 
         <aside class="space-y-8">
             <!-- KYC Card -->
-            @if(!$user->kyc || $user->kyc->status !== 'approved')
+            @if(!$user->is_wallet_verified)
             <div class="bg-amber-50 rounded-[2.5rem] p-8 border border-amber-100 relative overflow-hidden">
                 <h3 class="text-sm font-black text-amber-800 uppercase tracking-widest mb-4">Identity Unverified</h3>
                 <p class="text-xs font-bold text-amber-900/60 leading-relaxed mb-8">Complete your verification to unlock full system features including withdrawals and team earnings.</p>
@@ -178,6 +213,10 @@
                         <span class="text-2xl block mb-2 group-hover:scale-110 transition-transform">💳</span>
                         <span class="text-[10px] font-black uppercase tracking-tight text-slate-700">Wallet</span>
                     </a>
+                    <a href="{{ route('customer.topup.create') }}" class="p-4 rounded-3xl bg-slate-100 text-center hover:bg-sky-50 transition group border-2 border-dashed border-sky-200">
+                        <span class="text-2xl block mb-2 group-hover:scale-110 transition-transform">📥</span>
+                        <span class="text-[10px] font-black uppercase tracking-tight text-sky-600">Top-up</span>
+                    </a>
                     <a href="{{ route('referrals.index') }}" class="p-4 rounded-3xl bg-slate-50 text-center hover:bg-slate-100 transition group">
                         <span class="text-2xl block mb-2 group-hover:scale-110 transition-transform">🤝</span>
                         <span class="text-[10px] font-black uppercase tracking-tight text-slate-700">Network</span>
@@ -187,6 +226,48 @@
                         <span class="text-[10px] font-black uppercase tracking-tight text-slate-700">Invest</span>
                     </a>
                 </div>
+            </div>
+
+            <!-- Recent Transactions Sidebar -->
+            <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-sm font-black text-slate-500 uppercase tracking-widest">Recent Activity</h3>
+                    <span class="text-xl">📜</span>
+                </div>
+                
+                <div class="space-y-4">
+                    @php
+                        $userWallets = $user->wallets;
+                        $sidebarTxs = collect();
+                        foreach($userWallets as $w) { $sidebarTxs = $sidebarTxs->merge($w->ledgers); }
+                        $sidebarTxs = $sidebarTxs->sortByDesc('created_at')->take(5);
+                    @endphp
+
+                    @forelse($sidebarTxs as $tx)
+                        <div class="p-4 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-all group">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm">{{ $tx->credit > 0 ? '📥' : '📤' }}</span>
+                                    <span class="text-[10px] font-extra-bold uppercase tracking-tighter text-slate-400">{{ $tx->wallet->wallet_type }}</span>
+                                </div>
+                                <p class="text-xs font-black {{ $tx->credit > 0 ? 'text-emerald-600' : 'text-slate-800' }}">
+                                    {{ $tx->credit > 0 ? '+' : '-' }}৳{{ number_format($tx->credit > 0 ? $tx->credit : $tx->debit, 2) }}
+                                </p>
+                            </div>
+                            <p class="text-[11px] font-bold text-slate-700 leading-tight mb-1">{{ $tx->description }}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[9px] font-bold text-slate-400 uppercase">{{ $tx->created_at->diffForHumans() }}</span>
+                                <span class="text-[8px] font-black text-slate-300 uppercase tracking-widest">Bal: ৳{{ number_format($tx->balance_after, 2) }}</span>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center py-6 opacity-30">
+                            <p class="text-xs font-black uppercase tracking-widest italic">No Ledger Data</p>
+                        </div>
+                    @endforelse
+                </div>
+
+                <a href="{{ route('wallet.index') }}" class="w-full mt-6 py-4 rounded-2xl bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest text-center block hover:bg-slate-900 hover:text-white transition-all">View Full Ledger</a>
             </div>
         </aside>
     </div>

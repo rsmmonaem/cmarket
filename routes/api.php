@@ -11,7 +11,5 @@ Route::post('/login/verify', [ApiAuthController::class, 'verifyOtp']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [ApiAuthController::class, 'logout']);
     
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::get('/users/search', [\App\Http\Controllers\Api\UserController::class, 'search'])->middleware('web', 'auth');
 });

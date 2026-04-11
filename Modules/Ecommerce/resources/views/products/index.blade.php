@@ -3,14 +3,33 @@
 @section('title', 'All Products - C-Market')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-    <div class="flex flex-col lg:flex-row gap-8 animate-fade-in">
+<div x-data="{ mobileFiltersOpen: false }" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
+    <!-- Mobile Filter Trigger -->
+    <div class="lg:hidden mb-6">
+        <button @click="mobileFiltersOpen = true" class="w-full flex items-center justify-center gap-3 py-4 bg-white rounded-2xl border border-slate-100 shadow-sm text-sm font-black text-slate-800 uppercase tracking-widest active:scale-95 transition-all">
+            <span>⚡</span>
+            Quick Filters
+            <span class="ml-auto mr-4 text-slate-300">➔</span>
+        </button>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8 animate-fade-in relative">
+    
     <!-- Filters Sidebar -->
-    <aside class="w-full lg:w-72 flex-shrink-0 space-y-6">
-        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm sticky top-32">
-            <div class="flex items-center gap-3 mb-6 pl-1">
-                <span class="text-xl">🔍</span>
-                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Filters</h3>
+    <aside 
+        :class="mobileFiltersOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 lg:translate-x-0 lg:opacity-100'"
+        class="fixed inset-0 z-[100] lg:relative lg:inset-auto lg:z-auto w-full md:w-80 lg:w-72 flex-shrink-0 transition-all duration-500 lg:transition-none"
+    >
+        <!-- Mobile Overlay -->
+        <div @click="mobileFiltersOpen = false" class="lg:hidden absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+
+        <div class="relative bg-white h-full lg:h-auto w-[85%] md:w-80 lg:w-full p-8 lg:p-6 border-r border-slate-100 lg:border-none lg:rounded-2xl lg:shadow-sm sticky top-0 lg:top-32 overflow-y-auto lg:overflow-visible">
+            <div class="flex items-center justify-between mb-8 pl-1">
+                <div class="flex items-center gap-3">
+                    <span class="text-xl">🔍</span>
+                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Filters</h3>
+                </div>
+                <button @click="mobileFiltersOpen = false" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400">✕</button>
             </div>
             
             <form action="{{ route('products.index') }}" method="GET" class="space-y-8">
@@ -26,7 +45,7 @@
                     <select name="category" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all">
                         <option value="">All Categories</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                            <option value="{{ $category->slug }}" {{ (request('category') == $category->id || request('category') == $category->slug) ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
                         @endforeach
@@ -72,7 +91,7 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             @forelse($products as $product)
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col">
+                <div onclick="window.location.href='{{ route('products.show', $product) }}'" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer">
                     <div class="aspect-square relative overflow-hidden bg-slate-50">
                         @if($product->thumbnail)
                             <img src="{{ asset('storage/' . $product->thumbnail) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
@@ -101,9 +120,9 @@
                     </div>
                     
                     <div class="p-4 md:p-6 flex-1 flex flex-col">
-                        <p class="text-[9px] font-black text-sky-500 uppercase tracking-widest mb-2">{{ $product->category->name }}</p>
+                        <a href="{{ route('products.index', ['category' => $product->category->slug]) }}" onclick="event.stopPropagation();" class="text-[9px] font-black text-sky-500 uppercase tracking-widest mb-2 hover:underline">{{ $product->category->name }}</a>
                         <h3 class="text-sm font-bold text-slate-800 mb-4 leading-tight group-hover:text-primary transition-colors line-clamp-2 h-10">
-                            <a href="{{ route('products.show', $product) }}">{{ $product->name }}</a>
+                            {{ $product->name }}
                         </h3>
                         
                         <div class="mt-auto space-y-4">
@@ -117,14 +136,14 @@
                             </div>
                             
                             <div class="flex items-center justify-between border-t border-slate-50 pt-4">
-                                <div class="flex items-center gap-1.5">
+                                <div class="flex items-center gap-1.5" onclick="event.stopPropagation();">
                                     <div class="w-1.5 h-1.5 rounded-full {{ $product->stock > 10 ? 'bg-emerald-500' : 'bg-rose-500' }}"></div>
                                     <span class="text-[9px] font-black text-slate-400 capitalize">{{ $product->stock > 0 ? 'In Stock' : 'Out of stock' }}</span>
                                 </div>
                                 <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">{{ $product->merchant?->business_name ?? 'C-Market' }}</span>
                             </div>
 
-                            <button onclick="addToCart({{ $product->id }})" class="w-full py-3 bg-slate-50 text-slate-900 rounded-xl border-2 border-transparent font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2">
+                            <button onclick="event.stopPropagation(); addToCart({{ $product->id }})" class="w-full py-3 bg-slate-50 text-slate-900 rounded-xl border-2 border-transparent font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2">
                                 🛒 Add to Cart
                             </button>
                         </div>
@@ -145,6 +164,7 @@
             </div>
         @endif
     </div>
+</div>
 </div>
 
 <script>

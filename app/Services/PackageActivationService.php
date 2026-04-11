@@ -39,31 +39,50 @@ class PackageActivationService
     {
         Log::info("Processing package activation for User ID: {$user->id}, Package: {$product->name}");
 
-        // Example "Self-Logic": Upgrade user status based on package name or price
-        // This is where specific MLM logic or feature unlocks happen.
-        
         $oldStatus = $user->status;
         $newStatus = $user->status;
+        $updateData = [];
 
-        // Simple mapping for demonstration - can be expanded
+        // 1. Determine Status Upgrade
         if (str_contains(strtolower($product->name), 'bp')) {
             $newStatus = 'bp';
         } elseif (str_contains(strtolower($product->name), 'merchant')) {
             $newStatus = 'merchant';
         } elseif (str_contains(strtolower($product->name), 'rider')) {
             $newStatus = 'rider';
+        } elseif (str_contains(strtolower($product->name), 'membership')) {
+            // Membership Card Specific Logic
+            $newStatus = 'verified';
+            $updateData['has_membership_card'] = true;
+            $updateData['membership_purchased_at'] = now();
+
+            // Generate Unique Member ID if not exists
+            if (!$user->member_id) {
+                $lastUser = User::whereNotNull('member_id')->orderBy('member_id', 'desc')->first();
+                $lastIdNumber = 10000;
+
+                if ($lastUser && preg_match('/CAB(\d+)/', $lastUser->member_id, $matches)) {
+                    $lastIdNumber = (int)$matches[1];
+                }
+
+                $updateData['member_id'] = 'CAB' . ($lastIdNumber + 1);
+            }
         }
 
-        if ($newStatus !== $oldStatus) {
-            $user->update(['status' => $newStatus]);
-            $user->syncRoles([$newStatus]);
+        // 2. Apply Updates
+        if ($newStatus !== $oldStatus || !empty($updateData)) {
+            $updateData['status'] = $newStatus;
+            $user->update($updateData);
+            
+            // Sync roles if status changed
+            if ($newStatus !== $oldStatus) {
+                $user->syncRoles([$newStatus]);
+            }
             
             $this->auditService->log('package_activated', $user, 
                 ['status' => $oldStatus], 
-                ['status' => $newStatus, 'package_id' => $product->id, 'order_id' => $order->id]
+                array_merge($updateData, ['package_id' => $product->id, 'order_id' => $order->id])
             );
         }
-
-        // Additional Logic: Maybe generate referral links, etc.
     }
 }

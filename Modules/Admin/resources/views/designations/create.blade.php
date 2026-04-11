@@ -32,8 +32,8 @@
                     <input type="number" name="criteria[referral_count]" value="{{ old('criteria.referral_count') }}" min="0" class="w-full px-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-transparent text-sm font-bold transition-all" placeholder="0">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Sort Order</label>
-                    <input type="number" name="sort_order" value="{{ old('sort_order') }}" min="0" class="w-full px-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-transparent text-sm font-bold transition-all" placeholder="1">
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Priority (1 = Top)</label>
+                    <input type="number" name="sort_order" value="{{ old('sort_order', 1) }}" min="1" class="w-full px-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-transparent text-sm font-bold transition-all" placeholder="1">
                 </div>
             </div>
             <div class="flex items-center gap-3">

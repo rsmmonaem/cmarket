@@ -14,17 +14,19 @@ use Illuminate\Support\Facades\Log;
 
 class CommissionService
 {
+    protected $walletService;
     protected $pointService;
     protected $rankService;
 
-    public function __construct(PointService $pointService, RankService $rankService)
+    public function __construct(PointService $pointService, RankService $rankService, WalletService $walletService)
     {
         $this->pointService = $pointService;
         $this->rankService = $rankService;
+        $this->walletService = $walletService;
     }
 
     /**
-     * Distribute profit based on the 9-generation hierarchy
+     * Distribute profit based on the order type (Membership vs Product)
      */
     public function distribute(Order $order)
     {
@@ -32,52 +34,196 @@ class CommissionService
             $buyer = $order->user;
             if (!$buyer) return;
 
-            // Total % of profit to be distributed (Dynamic from DB)
-            $profitMargin = \App\Models\SystemSetting::get('distributable_profit_percentage', 10.00);
-            $totalProfit = ($order->total_amount * $profitMargin) / 100;
-
-            // Get all designations ordered by sort_order
-            $designations = Designation::orderBy('sort_order', 'asc')->get();
-
-            $currentReferrer = $this->getParent($buyer->id);
-            $level = 1;
-
-            while ($currentReferrer && $level <= 9) {
-                // Get the percentage for this level (mapped to rank order)
-                $rankInfo = $designations->where('sort_order', $level)->first();
-                
-                if ($rankInfo && $rankInfo->percentage > 0) {
-                    $commissionAmount = ($totalProfit * $rankInfo->percentage) / 100;
-
-                    if ($commissionAmount > 0) {
-                        $this->applyCommission($currentReferrer, $buyer, $order, $commissionAmount, $rankInfo->percentage, $level);
-                    }
-                }
-
-                $currentReferrer = $this->getParent($currentReferrer->id);
-                $level++;
+            // Prevent double distribution
+            if ($order->commissions()->exists()) {
+                return;
             }
 
-            // Also add points to the buyer
-            $orderPoints = 0;
+            // 1. Detect if this is a Membership Purchase Order
+            $isMembershipOrder = false;
             foreach ($order->items as $item) {
-                // Calculate points from product if not already snapshot-ed
-                $points = $item->points ?: ($item->product->points ?? 0);
-                $orderPoints += ($points * $item->quantity);
+                if ($item && $item->product && $item->product->type === 'package') {
+                    $isMembershipOrder = true;
+                    break;
+                }
             }
 
-            if ($orderPoints > 0) {
-                $this->pointService->addPoints($buyer, $orderPoints, "Order #{$order->order_number}");
+            if ($isMembershipOrder) {
+                return $this->distributeMembershipCommission($order);
             }
 
-            // Pay the Merchant
-            $this->processMerchantPayout($order);
+            // 2. Regular Product Commission Distribution
+            $this->distributeProductProfit($order);
 
-            // Check for potential target-based promotions for the whole hierarchy
-            $this->checkHierarchyPromotions($buyer);
+            // 3. Grant Buyer Cashback (if not already received)
+            if ($order->cashback_amount > 0) {
+                $this->grantBuyerCashback($order);
+            }
 
             return true;
         });
+    }
+
+    /**
+     * Distribute commission for Membership Card purchase (12 Levels)
+     */
+    protected function distributeMembershipCommission(Order $order)
+    {
+        $subscriber = $order->user;
+        $price = $order->total_amount;
+        $reference = 'MEMB-ORD-' . $order->order_number;
+
+        // A. Admin Distribution (10%)
+        $adminPercentage = \App\Models\SystemSetting::get('membership_admin_percentage', 10.00);
+        $adminAmount = ($price * $adminPercentage) / 100;
+        
+        $adminUser = User::role('admin')->first();
+        if ($adminUser) {
+            $adminWallet = $adminUser->getWallet('main');
+            if ($adminWallet) {
+                $adminWallet->credit($adminAmount, $reference, 'commission', "Admin Profit from Membership: {$subscriber->name}");
+            }
+        }
+
+        // B. Direct Referrer Distribution (20%)
+        $directReferrer = $this->getParent($subscriber->id);
+        $directPercentage = \App\Models\SystemSetting::get('membership_direct_percentage', 20.00);
+        $directAmount = ($price * $directPercentage) / 100;
+
+        if ($directReferrer) {
+            $refWallet = $directReferrer->getWallet('commission') ?: 
+                         $directReferrer->wallets()->firstOrCreate(['wallet_type' => 'commission'], ['user_id' => $directReferrer->id]);
+            
+            $refWallet->credit($directAmount, $reference, 'commission', "Direct Referral Commission from: {$subscriber->name}");
+            
+            $this->createCommissionRecord($directReferrer, $subscriber, $order, $directAmount, $directPercentage, 1);
+        }
+
+        // C. Multi-Level Distribution (Remaining amount across 12 Levels)
+        $remainingAmount = $price - ($adminAmount + $directAmount);
+        
+
+        $mlmDistribution = [
+            1  => 0.37037,
+            2  => 0.12346,
+            3  => 0.06173,
+            4  => 0.06173,
+            5  => 0.06173,
+            6  => 0.06173,
+            7  => 0.06173,
+            8  => 0.04938,
+            9  => 0.03704,
+            10 => 0.03704,
+            11 => 0.03704,
+            12 => 0.03704
+        ];
+
+
+        // Start from Subscriber's Grandparent
+        $currentUpline = $directReferrer ? $this->getParent($directReferrer->id) : null;
+        
+        for ($level = 1; $level <= 12; $level++) {
+            if (!isset($mlmDistribution[$level])) break;
+            
+            $percentage = $mlmDistribution[$level];
+            $amount = $remainingAmount * $percentage;
+
+            if ($currentUpline) {
+                $uplineWallet = $currentUpline->getWallet('commission') ?: 
+                               $currentUpline->wallets()->firstOrCreate(['wallet_type' => 'commission'], ['user_id' => $currentUpline->id]);
+                
+                $uplineWallet->credit($amount, $reference, 'commission', "Level {$level} MLM Commission from: {$subscriber->name}");
+
+                $this->createCommissionRecord($currentUpline, $subscriber, $order, $amount, ($percentage * 100), $level + 1);
+
+                $currentUpline = $this->getParent($currentUpline->id);
+            } else {
+                // If no upline, send unclaimed portion to Admin
+                if ($adminUser && isset($adminWallet)) {
+                    $adminWallet->credit($amount, $reference, 'unclaimed_commission', "Unclaimed MLM Level {$level} commission from: {$subscriber->name}");
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Original product distribution logic refactored
+     */
+    protected function distributeProductProfit(Order $order)
+    {
+        $buyer = $order->user;
+        
+        // Total % of profit to be distributed (Dynamic from DB)
+        $profitMargin = \App\Models\SystemSetting::get('distributable_profit_percentage', 10.00);
+        $totalProfit = ($order->total_amount * $profitMargin) / 100;
+
+        // Get all designations ordered by sort_order
+        $designations = Designation::orderBy('sort_order', 'asc')->get();
+
+        $currentReferrer = $this->getParent($buyer->id);
+        $level = 1;
+
+        while ($currentReferrer && $level <= 12) {
+            $rankInfo = $designations->where('sort_order', $level)->first();
+            
+            if ($rankInfo && $rankInfo->percentage > 0) {
+                $commissionAmount = ($totalProfit * $rankInfo->percentage) / 100;
+
+                if ($commissionAmount > 0) {
+                    $this->applyCommission($currentReferrer, $buyer, $order, $commissionAmount, $rankInfo->percentage, $level);
+                }
+            }
+
+            $currentReferrer = $this->getParent($currentReferrer->id);
+            $level++;
+        }
+
+        // Add points to buyer
+        $this->processOrderPoints($order, $buyer);
+
+        // Pay the Merchant
+        $this->processMerchantPayout($order);
+
+        // Check for promotions
+        $this->checkHierarchyPromotions($buyer);
+
+        return true;
+    }
+
+    /**
+     * Helper to create commission record
+     */
+    protected function createCommissionRecord($user, $sourceUser, $order, $amount, $percentage, $level)
+    {
+        return Commission::create([
+            'user_id' => $user->id,
+            'source_user' => $sourceUser->id,
+            'order_id' => $order->id,
+            'order_amount' => $order->total_amount,
+            'commission_amount' => $amount,
+            'commission_percentage' => $percentage,
+            'level' => $level,
+            'status' => 'approved',
+            'approved_at' => now(),
+        ]);
+    }
+
+    /**
+     * Process points for an order
+     */
+    protected function processOrderPoints(Order $order, $buyer)
+    {
+        $orderPoints = 0;
+        foreach ($order->items as $item) {
+            $points = $item->points ?: ($item->product->points ?? 0);
+            $orderPoints += ($points * $item->quantity);
+        }
+
+        if ($orderPoints > 0) {
+            $this->pointService->addPoints($buyer, $orderPoints, "Order #{$order->order_number}");
+        }
     }
 
     /**
@@ -207,6 +353,31 @@ class CommissionService
 
             return true;
         });
+    }
+
+    /**
+     * Grant cashback to the buyer for an order
+     */
+    protected function grantBuyerCashback(Order $order)
+    {
+        $buyer = $order->user;
+        if (!$buyer) return;
+
+        $reference = $order->order_number;
+        
+        // Check if cashback already granted for this order
+        $alreadyGranted = \App\Models\WalletLedger::where('reference', $reference)
+            ->where('type', 'cashback')
+            ->exists();
+
+        if (!$alreadyGranted) {
+            $this->walletService->creditCashback(
+                $buyer, 
+                $order->cashback_amount, 
+                $reference, 
+                "Cashback for Order #{$order->order_number}"
+            );
+        }
     }
 
     /**

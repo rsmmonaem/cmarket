@@ -94,7 +94,7 @@ class CheckoutController extends Controller
             // Create order
             $order = Order::create([
                 'user_id' => $user->id,
-                'merchant_id' => $firstProduct->merchant_id,
+                'merchant_id' => $firstProduct->merchant_id ?? 1,
                 'subtotal' => $subtotal,
                 'discount' => $discount,
                 'total_amount' => $totalAmount,
@@ -135,7 +135,7 @@ class CheckoutController extends Controller
                     throw new \Exception('Insufficient wallet balance');
                 }
 
-                $reference = 'ORD-' . $order->order_number;
+                $reference = $order->order_number;
                 
                 // Deduct from main wallet
                 $mainWallet->debit($totalAmount, $reference, 'order_payment', "Payment for Order #{$order->order_number}");
@@ -145,9 +145,14 @@ class CheckoutController extends Controller
                     $this->walletService->creditCashback($user, $cashbackTotal, $reference, "Cashback for Order #{$order->order_number}");
                 }
 
-                // If it's a package order and paid, trigger activation
+                // If it's a package order and paid, trigger activation and distribution immediately
                 if ($isPackageOrder) {
+                    $order->update([
+                        'status' => 'delivered',
+                        'delivered_at' => now()
+                    ]);
                     $this->packageService->activate($order);
+                    $this->commissionService->distribute($order);
                 }
             }
 

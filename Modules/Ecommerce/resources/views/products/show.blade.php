@@ -9,7 +9,7 @@
     <nav class="flex mb-12 text-[10px] font-black uppercase tracking-widest text-slate-400 gap-4">
         <a href="{{ route('home') }}" class="hover:text-primary transition-colors">Matrix Home</a>
         <span>/</span>
-        <a href="{{ route('categories.index') }}" class="hover:text-primary transition-colors">{{ $product->category->name }}</a>
+        <a href="{{ route('products.index', ['category' => $product->category->slug]) }}" class="hover:text-primary transition-colors">{{ $product->category->name }}</a>
         <span>/</span>
         <span class="text-slate-900">{{ $product->name }}</span>
     </nav>

@@ -26,8 +26,32 @@ class OrderController extends Controller
             abort(403);
         }
 
-        $order->load(['items.product', 'items.merchant']);
+        $order->load(['items.product.merchant']);
 
         return view('ecommerce::orders.show', compact('order'));
+    }
+
+    public function trackForm()
+    {
+        return view('ecommerce::orders.track');
+    }
+
+    public function track(Request $request)
+    {
+        $request->validate([
+            'order_number' => 'required|string',
+            'phone' => 'required|string'
+        ]);
+
+        $order = Order::where('order_number', $request->order_number)
+            ->where('shipping_phone', $request->phone)
+            ->with(['items.product.merchant'])
+            ->first();
+
+        if (!$order) {
+            return back()->with('error', 'No order found with these details.')->withInput();
+        }
+
+        return view('ecommerce::orders.show', compact('order'))->with('is_tracking', true);
     }
 }

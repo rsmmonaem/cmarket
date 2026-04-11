@@ -65,91 +65,69 @@
                         Dashboard
                     </a>
 
-                    <!-- Accordion: Finance -->
-                    <div x-data="{ expanded: {{ request()->routeIs('wallet.*', 'customer.withdrawals.*', 'customer.commissions') ? 'true' : 'false' }} }">
-                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
-                            <div class="flex items-center gap-3">
-                                <span class="text-base text-slate-500" :class="expanded ? 'text-emerald-400' : ''">💰</span>
-                                Finance
-                            </div>
-                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-emerald-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div x-show="expanded" x-collapse>
-                            <div class="pt-1 pb-2 pl-11 space-y-1">
-                                <a href="{{ route('wallet.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('wallet.index') ? 'text-emerald-400' : 'text-slate-400' }}">My Wallets</a>
-                                <a href="{{ route('customer.withdrawals.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('customer.withdrawals.*') ? 'text-emerald-400' : 'text-slate-400' }}">Withdrawals</a>
-                                <a href="{{ route('customer.commissions') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('customer.commissions') ? 'text-emerald-400' : 'text-slate-400' }}">Commissions</a>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Shop Section -->
+                    <a href="{{ route('products.index') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
+                              {{ request()->routeIs('products.*') ? 'bg-sky-500/10 text-sky-400' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <span class="text-base {{ request()->routeIs('products.*') ? 'text-sky-400' : 'text-slate-500' }}">📦</span>
+                        Shop
+                    </a>
 
-                    <!-- Accordion: Orders & Shopping -->
-                    <div x-data="{ expanded: {{ request()->routeIs('orders.*', 'products.*') ? 'true' : 'false' }} }">
-                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
-                            <div class="flex items-center gap-3">
-                                <span class="text-base text-slate-500" :class="expanded ? 'text-purple-400' : ''">🛍️</span>
-                                Shopping
-                            </div>
-                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-purple-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div x-show="expanded" x-collapse>
-                            <div class="pt-1 pb-2 pl-11 space-y-1">
-                                <a href="{{ route('orders.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('orders.*') ? 'text-purple-400' : 'text-slate-400' }}">My Orders</a>
-                                <a href="{{ route('products.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('products.*') ? 'text-purple-400' : 'text-slate-400' }}">Browse Market</a>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Wallet Section -->
+                    <a href="{{ route('wallet.index') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
+                              {{ request()->routeIs('wallet.*') ? 'bg-sky-500/10 text-sky-400' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <span class="text-base {{ request()->routeIs('wallet.*') ? 'text-sky-400' : 'text-slate-500' }}">💳</span>
+                        Wallet
+                    </a>
 
-                    <!-- Accordion: Network & Team -->
-                    <div x-data="{ expanded: {{ request()->routeIs('referrals.*', 'customer.generations') ? 'true' : 'false' }} }">
-                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
-                            <div class="flex items-center gap-3">
-                                <span class="text-base text-slate-500" :class="expanded ? 'text-amber-400' : ''">🤝</span>
-                                Network
-                            </div>
-                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-amber-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div x-show="expanded" x-collapse>
-                            <div class="pt-1 pb-2 pl-11 space-y-1">
-                                <a href="{{ route('referrals.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('referrals.*') ? 'text-amber-400' : 'text-slate-400' }}">My Referrals</a>
-                                <a href="{{ route('customer.generations') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('customer.generations') ? 'text-amber-400' : 'text-slate-400' }}">Team Levels</a>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Top-up Section -->
+                    <a href="{{ route('customer.topup.index') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
+                              {{ request()->routeIs('customer.topup.*') ? 'bg-sky-500/10 text-sky-400' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <span class="text-base {{ request()->routeIs('customer.topup.*') ? 'text-sky-400' : 'text-slate-500' }}">📥</span>
+                        Top-up
+                    </a>
 
-                    <!-- Accordion: Account & Identity -->
-                    <div x-data="{ expanded: {{ request()->routeIs('kyc.*', 'customer.designation') ? 'true' : 'false' }} }">
-                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
-                            <div class="flex items-center gap-3">
-                                <span class="text-base text-slate-500" :class="expanded ? 'text-sky-400' : ''">🆔</span>
-                                Verification
-                            </div>
-                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-sky-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div x-show="expanded" x-collapse>
-                            <div class="pt-1 pb-2 pl-11 space-y-1">
-                                <a href="{{ route('kyc.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('kyc.*') ? 'text-sky-400' : 'text-slate-400' }}">Identity (KYC)</a>
-                                <a href="{{ route('customer.designation') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('customer.designation') ? 'text-sky-400' : 'text-slate-400' }}">My Designations</a>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Network Section -->
+                    <a href="{{ route('referrals.index') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
+                              {{ request()->routeIs('referrals.*') ? 'bg-sky-500/10 text-sky-400' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <span class="text-base {{ request()->routeIs('referrals.*') ? 'text-sky-400' : 'text-slate-500' }}">🤝</span>
+                        Network
+                    </a>
 
-                    <!-- Accordion: Investments -->
-                    <div x-data="{ expanded: {{ request()->routeIs('investments.*') ? 'true' : 'false' }} }">
-                        <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide hover:bg-slate-800 hover:text-white" :class="expanded ? 'text-white' : ''">
-                            <div class="flex items-center gap-3">
-                                <span class="text-base text-slate-500" :class="expanded ? 'text-indigo-400' : ''">🏗️</span>
-                                Investments
-                            </div>
-                            <svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-180 text-indigo-400' : 'text-slate-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div x-show="expanded" x-collapse>
-                            <div class="pt-1 pb-2 pl-11 space-y-1">
-                                <a href="{{ route('investments.index') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('investments.index') ? 'text-indigo-400' : 'text-slate-400' }}">Opportunities</a>
-                                <a href="{{ route('investments.my-shares') }}" class="block py-2 text-xs font-semibold hover:text-white transition-colors {{ request()->routeIs('investments.my-shares') ? 'text-indigo-400' : 'text-slate-400' }}">My Portfolio</a>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Invest Section -->
+                    <a href="{{ route('investments.index') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
+                              {{ request()->routeIs('investments.*') ? 'bg-sky-500/10 text-sky-400' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <span class="text-base {{ request()->routeIs('investments.*') ? 'text-sky-400' : 'text-slate-500' }}">🏗️</span>
+                        Invest
+                    </a>
+
+                    <!-- Fast Transfer Section -->
+                    <a href="{{ route('customer.transfer.index') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
+                              {{ request()->routeIs('customer.transfer.*') ? 'bg-sky-500/10 text-sky-400' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <span class="text-base {{ request()->routeIs('customer.transfer.*') ? 'text-sky-400' : 'text-slate-500' }}">💸</span>
+                        Send Funds
+                    </a>
+
+                    <!-- Verification (Keeping for KYC accessibility) -->
+                    <a href="{{ route('kyc.index') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
+                              {{ request()->routeIs('kyc.*') ? 'bg-sky-500/10 text-sky-400' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <span class="text-base {{ request()->routeIs('kyc.*') ? 'text-sky-400' : 'text-slate-500' }}">🆔</span>
+                        Verify Identity
+                    </a>
+
+                    <!-- Membership Section -->
+                    <a href="{{ route('customer.membership.index') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
+                              {{ request()->routeIs('customer.membership.*') ? 'bg-sky-500/10 text-sky-400' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <span class="text-base {{ request()->routeIs('customer.membership.*') ? 'text-sky-400' : 'text-slate-500' }}">🪪</span>
+                        Membership Card
+                    </a>
 
                     <!-- Divider -->
                     <div class="my-4 border-t border-slate-800 mx-4"></div>
@@ -204,8 +182,12 @@
                     </div>
                     
                     <div class="relative group">
-                        <button class="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-lg hover:border-sky-500 hover:shadow-lg hover:shadow-sky-500/10 transition-all duration-300">
-                            👤
+                        <button class="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-lg hover:border-sky-500 hover:shadow-lg hover:shadow-sky-500/10 transition-all duration-300 overflow-hidden">
+                            @if(Auth::user()->avatar)
+                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover">
+                            @else
+                                👤
+                            @endif
                         </button>
                         <!-- Dropdown with transparent bridge to maintain hover -->
                         <div class="absolute right-0 top-full pt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">

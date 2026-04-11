@@ -1,7 +1,7 @@
 @extends('layouts.customer')
 
 @section('title', 'Referral Network - CMarket')
-@section('page-title', 'My Affiliates')
+@section('page-title', 'My Referrals')
 
 @section('content')
 <div class="space-y-8 animate-fade-in">

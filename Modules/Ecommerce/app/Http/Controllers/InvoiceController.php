@@ -17,9 +17,9 @@ class InvoiceController extends Controller
             abort(403);
         }
 
-        $order->load(['items.product', 'items.merchant', 'user']);
+        $order->load(['items.product.merchant', 'user']);
 
-        $pdf = Pdf::loadView('invoices.order', compact('order'));
+        $pdf = Pdf::loadView('ecommerce::invoices.order', compact('order'));
         
         return $pdf->download('invoice-' . $order->order_number . '.pdf');
     }
@@ -31,7 +31,7 @@ class InvoiceController extends Controller
             abort(403);
         }
 
-        $order->load(['items.product', 'items.merchant', 'user']);
+        $order->load(['items.product.merchant', 'user']);
 
         return view('ecommerce::invoices.order', compact('order'));
     }

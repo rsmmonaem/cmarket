@@ -27,7 +27,7 @@ class WithdrawalController extends Controller
 
         $wallets = $user->wallets()->whereIn('wallet_type', ['main', 'commission'])->get();
 
-        return view('customer.withdrawals.index', compact('withdrawals', 'wallets'));
+        return view('customer::withdrawals.index', compact('withdrawals', 'wallets'));
     }
 
     public function request(Request $request)

@@ -14,7 +14,7 @@
                 <p class="text-emerald-100/50 text-xs font-bold mt-4">Total team and referral earnings since joining.</p>
             </div>
             <div class="flex gap-4">
-                <button class="bg-white/10 hover:bg-white/20 backdrop-blur-xl px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">Withdraw Funds</button>
+                <a href="{{ route('customer.withdrawals.index') }}" class="bg-white/10 hover:bg-white/20 backdrop-blur-xl px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">Withdraw Funds</a>
             </div>
         </div>
         <div class="absolute -right-10 -bottom-10 opacity-10 text-[250px] leading-none select-none italic font-black group-hover:scale-110 transition-transform duration-700">💰</div>
@@ -54,7 +54,7 @@
                                 <span class="px-2.5 py-1 rounded-lg bg-slate-900 text-white text-[9px] font-black">Level {{ $comm->level ?? '1' }}</span>
                             </td>
                             <td class="p-6">
-                                <p class="text-lg font-black text-slate-800">৳{{ number_format($comm->amount, 2) }}</p>
+                                <p class="text-lg font-black text-slate-800">৳{{ number_format($comm->commission_amount, 2) }}</p>
                             </td>
                             <td class="p-6">
                                 <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-600 text-[9px] font-black uppercase tracking-wider">Approved</span>

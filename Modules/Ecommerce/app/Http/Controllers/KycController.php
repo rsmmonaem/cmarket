@@ -38,17 +38,20 @@ class KycController extends Controller
         $request->validate([
             'document_type' => 'required|in:nid,passport,driving_license',
             'document_number' => 'required|string|max:50',
-            'document_file' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'document_front' => 'required',
+            'document_back' => 'required',
         ]);
 
-        $filePath = $this->imageService->upload($request->file('document_file'), 'kyc');
+        $frontPath = $this->imageService->upload($request->file('document_front'), 'kyc/front');
+        $backPath = $this->imageService->upload($request->file('document_back'), 'kyc/back');
 
         $kyc = Kyc::updateOrCreate(
             ['user_id' => $user->id],
             [
                 'document_type' => $request->document_type,
                 'document_number' => $request->document_number,
-                'document_file' => $filePath,
+                'document_front' => $frontPath,
+                'document_back' => $backPath,
                 'status' => 'pending',
                 'rejection_reason' => null,
             ]

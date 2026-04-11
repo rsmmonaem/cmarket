@@ -30,10 +30,27 @@ class User extends Authenticatable
         'district',
         'division',
         'referred_by',
+        'referral_by',
         'referral_code',
         'designation_id',
         'designation_achieved_at',
+        'member_id',
+        'has_membership_card',
+        'membership_purchased_at',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($user) {
+            if (!$user->referral_code) {
+                $user->referral_code = 'CM' . strtoupper(substr(uniqid(), -6));
+                while (static::where('referral_code', $user->referral_code)->exists()) {
+                    $user->referral_code = 'CM' . strtoupper(substr(uniqid(), -6));
+                }
+            }
+        });
+    }
 
     protected $hidden = [
         'password',
@@ -47,6 +64,8 @@ class User extends Authenticatable
             'password' => 'hashed',
             'otp_expires_at' => 'datetime',
             'locked_until' => 'datetime',
+            'has_membership_card' => 'boolean',
+            'membership_purchased_at' => 'datetime',
         ];
     }
 
@@ -84,6 +103,11 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(User::class, 'referred_by');
     }
 
     public function referrals()
@@ -134,7 +158,7 @@ class User extends Authenticatable
 
     public function scopeVerified($query)
     {
-        return $query->where('status', 'wallet_verified');
+        return $query->whereIn('status', ['verified', 'wallet_verified']);
     }
 
     public function scopeMerchants($query)
@@ -150,7 +174,7 @@ class User extends Authenticatable
     // Accessors
     public function getIsWalletVerifiedAttribute()
     {
-        return in_array($this->status, ['wallet_verified', 'merchant', 'rider']);
+        return in_array($this->status, ['verified', 'wallet_verified', 'merchant', 'rider', 'admin', 'super-admin']);
     }
 
     public function getIsMerchantAttribute()

@@ -14,6 +14,8 @@ class Kyc extends Model
         'document_type',
         'document_number',
         'document_file',
+        'document_front',
+        'document_back',
         'status',
         'rejection_reason',
         'approved_at',

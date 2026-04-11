@@ -4,6 +4,7 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Wallet;
+use App\Models\WalletLedger;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,30 @@ class WalletController extends Controller
     {
         $wallets = Wallet::with('user')->latest()->paginate(20);
         return view('admin::wallets.index', compact('wallets'));
+    }
+
+    public function ledgers(Request $request)
+    {
+        $query = WalletLedger::with(['wallet.user']);
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('reference', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhereHas('wallet.user', function($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $ledgers = $query->latest()->paginate(50)->withQueryString();
+        return view('admin::wallets.ledgers', compact('ledgers'));
     }
 
     public function show(Wallet $wallet)

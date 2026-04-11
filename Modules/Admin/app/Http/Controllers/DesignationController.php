@@ -21,20 +21,19 @@ class DesignationController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|unique:designations,slug',
             'description' => 'nullable|string',
             'criteria' => 'required|array',
-            'criteria.sales_count' => 'nullable|integer|min:0',
-            'criteria.referral_count' => 'nullable|integer|min:0',
-            'criteria.team_levels' => 'nullable|integer|min:0',
             'commission_rate' => 'required|numeric|min:0|max:100',
-            'sort_order' => 'nullable|integer',
-            'is_active' => 'boolean',
+            'sort_order' => 'required|integer|min:1',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        Designation::create($request->all());
+        $validated['is_active'] = $request->has('is_active');
+
+        Designation::create($validated);
 
         return redirect()->route('admin.designations.index')
             ->with('success', 'Designation created successfully.');
@@ -47,20 +46,19 @@ class DesignationController extends Controller
 
     public function update(Request $request, Designation $designation)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|unique:designations,slug,' . $designation->id,
             'description' => 'nullable|string',
             'criteria' => 'required|array',
-            'criteria.sales_count' => 'nullable|integer|min:0',
-            'criteria.referral_count' => 'nullable|integer|min:0',
-            'criteria.team_levels' => 'nullable|integer|min:0',
             'commission_rate' => 'required|numeric|min:0|max:100',
-            'sort_order' => 'nullable|integer',
-            'is_active' => 'boolean',
+            'sort_order' => 'required|integer|min:1',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        $designation->update($request->all());
+        $validated['is_active'] = $request->has('is_active');
+
+        $designation->update($validated);
 
         return redirect()->route('admin.designations.index')
             ->with('success', 'Designation updated successfully.');

@@ -57,14 +57,22 @@ class DashboardController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             'phone' => 'required|string|unique:users,phone,' . $user->id,
             'address' => 'nullable|string|max:500',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $user->update([
+        $data = [
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
-        ]);
+        ];
+
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $data['avatar'] = $path;
+        }
+
+        $user->update($data);
 
         return redirect()->back()->with('success', 'Profile updated successfully! ✨');
     }
@@ -85,13 +93,13 @@ class DashboardController extends Controller
             $user->update(['password' => bcrypt($request->password)]);
         }
 
-        // Add other settings logic here (e.g., notifications)
-
+        return redirect()->back()->with('success', 'Settings updated successfully!');
     }
 
     public function commissions()
     {
-        $commissions = \App\Models\AffiliateCommission::where('user_id', auth()->id())
+        $commissions = \App\Models\Commission::where('user_id', auth()->id())
+            ->with(['sourceUser', 'order'])
             ->latest()
             ->paginate(15);
         return view('customer::commissions', compact('commissions'));

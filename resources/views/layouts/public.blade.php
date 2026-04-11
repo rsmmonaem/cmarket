@@ -84,7 +84,7 @@
 
             <div class="flex items-center gap-6">
                 <a href="{{ route('merchant.register') }}" class="hover:text-primary transition-colors">Seller Zone</a>
-                <a href="#" class="hover:text-primary transition-colors">Order Tracker</a>
+                <a href="{{ route('orders.track-form') }}" class="hover:text-primary transition-colors">Order Tracker</a>
             </div>
         </div>
     </div>
@@ -93,13 +93,8 @@
     <header class="bg-white/95 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-slate-100 h-[80px] flex items-center">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div class="flex items-center justify-between gap-8">
-                <!-- Mobile Menu Button -->
-                <button class="lg:hidden text-dark hover:text-primary transition-standard text-2xl h-11 w-11 flex items-center justify-center rounded-xl bg-slate-50">
-                    ☰
-                </button>
-
-                <!-- Logo -->
-                <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center gap-2 group">
+                <!-- Logo (Left aligned on mobile now menu is gone) -->
+                <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center gap-2 group mr-auto lg:mr-0">
                     <div class="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center text-white text-xl shadow-lg shadow-primary/20 group-hover:rotate-12 transition-standard">
                         🧩
                     </div>
@@ -122,7 +117,13 @@
                     @auth
                         <div class="relative group/user">
                             <a href="{{ route('customer.dashboard') }}" class="flex flex-col items-center group hover:text-primary transition-standard">
-                                <span class="text-xl mb-0.5 group-hover:scale-110 transition-standard">👤</span>
+                                @if(auth()->user()->avatar)
+                                    <div class="w-7 h-7 rounded-lg overflow-hidden border border-slate-200 mb-0.5 group-hover:scale-110 transition-standard">
+                                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="w-full h-full object-cover">
+                                    </div>
+                                @else
+                                    <span class="text-xl mb-0.5 group-hover:scale-110 transition-standard">👤</span>
+                                @endif
                                 <span class="text-[9px] font-black uppercase tracking-tighter hidden sm:block">Profile</span>
                             </a>
                             <div class="absolute right-0 top-full pt-4 opacity-0 invisible group-hover/user:opacity-100 group-hover/user:visible transition-standard">
@@ -221,9 +222,9 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                 <div class="flex items-center gap-8 h-12">
                     <div class="relative group/cat h-full">
-                        <button class="flex items-center gap-3 bg-primary text-white px-8 h-full font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-orange-500/10 active:scale-95 transition-transform">
+                        <a href="{{ route('categories.index') }}" class="flex items-center gap-3 bg-primary text-white px-8 h-full font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-orange-500/10 active:scale-95 transition-transform">
                             <span>☰</span> Browse Categories
-                        </button>
+                        </a>
                     </div>
                     
                     <div class="flex items-center gap-8 h-full">
@@ -263,7 +264,7 @@
     <!-- Global Footer Matrix -->
     <footer class="bg-dark text-white mt-32 relative overflow-hidden border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-12 sm:gap-16">
                 <!-- Brand Info -->
                 <div class="space-y-8">
                     <a href="{{ route('home') }}" class="flex items-center gap-3">
@@ -452,7 +453,121 @@
             }
         }
     }
+
+    // ─── Quick View functions ──────────────────────────────────────────────────
+    function openQuickView(productId) {
+        fetch(`/products/${productId}/quick-view`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('qv-image').src = data.main_image;
+                document.getElementById('qv-category').innerText = data.category_name;
+                document.getElementById('qv-name').innerText = data.product.name;
+                document.getElementById('qv-price').innerText = '৳' + data.final_price;
+                document.getElementById('qv-original-price').innerText = data.product.discount_price ? '৳' + data.original_price : '';
+                document.getElementById('qv-description').innerText = data.product.description;
+                document.getElementById('qv-view-details').href = data.show_url;
+                document.getElementById('qv-add-to-cart').setAttribute('onclick', `addToCart(${data.product.id})`);
+                
+                const modal = document.getElementById('quick-view-modal');
+                modal.classList.remove('opacity-0', 'invisible');
+                modal.querySelector('.modal-content').classList.remove('scale-90');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function closeQuickView() {
+        const modal = document.getElementById('quick-view-modal');
+        modal.classList.add('opacity-0', 'invisible');
+        modal.querySelector('.modal-content').classList.add('scale-90');
+    }
     </script>
+
+    <!-- Quick View Modal Matrix -->
+    <div id="quick-view-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/80 backdrop-blur-md opacity-0 invisible transition-all duration-500">
+        <div class="bg-white rounded-3xl overflow-hidden max-w-4xl w-full relative shadow-3xl scale-90 transition-standard duration-500 modal-content">
+            <button onclick="closeQuickView()" class="absolute top-6 right-6 w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center text-xl font-bold transition-standard text-slate-500 z-20">✕</button>
+            
+            <div class="flex flex-col lg:flex-row">
+                <!-- Product Image -->
+                <div class="lg:w-1/2 p-8 bg-slate-50 flex items-center justify-center">
+                    <img id="qv-image" src="" class="max-w-full h-auto rounded-2xl shadow-2xl">
+                </div>
+                
+                <!-- Product Info -->
+                <div class="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
+                    <p id="qv-category" class="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-4"></p>
+                    <h2 id="qv-name" class="text-3xl font-black text-dark mb-6 tracking-tight leading-tight"></h2>
+                    
+                    <div class="flex items-center gap-4 mb-8">
+                        <span id="qv-price" class="text-3xl font-black text-dark"></span>
+                        <span id="qv-original-price" class="text-lg font-bold text-slate-300 line-through"></span>
+                    </div>
+                    
+                    <p id="qv-description" class="text-slate-500 text-sm font-medium leading-relaxed line-clamp-4 mb-10"></p>
+                    
+                    <div class="flex flex-wrap gap-4 mt-auto">
+                        <button id="qv-add-to-cart" class="flex-1 bg-dark text-white px-10 py-5 rounded-xl font-black text-[11px] uppercase tracking-widest hover:bg-primary transition-standard shadow-xl shadow-dark/10 active:scale-95">
+                            Add to Cart 🛒
+                        </button>
+                        <a id="qv-view-details" href="" class="flex-1 border-2 border-slate-100 text-dark px-10 py-5 rounded-xl font-black text-[11px] uppercase tracking-widest hover:bg-slate-50 transition-standard text-center">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="lg:hidden fixed bottom-6 left-6 right-6 z-[60]">
+        <nav class="bg-slate-900/95 backdrop-blur-xl rounded-[2.5rem] p-3 flex items-center justify-around shadow-2xl border border-white/10 relative transition-all duration-300">
+            <!-- Glare effect -->
+            <div class="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent pointer-events-none"></div>
+
+            <a href="{{ route('home') }}" class="flex flex-col items-center gap-1 group relative z-10 p-2 active:scale-125 transition-transform duration-200">
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center {{ request()->routeIs('home') ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-110' : 'text-slate-400 hover:text-white transition' }}">
+                    <span class="text-xl">🏠</span>
+                </div>
+            </a>
+
+            <a href="{{ route('products.index') }}" class="flex flex-col items-center gap-1 group relative z-10 p-2 active:scale-125 transition-transform duration-200">
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center {{ request()->routeIs('products.*') ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-110' : 'text-slate-400 hover:text-white transition' }}">
+                    <span class="text-xl">🛍️</span>
+                </div>
+            </a>
+
+            <a href="{{ route('cart.index') }}" class="flex flex-col items-center gap-1 group relative z-10 p-1 active:scale-90 transition-all duration-200">
+                <div class="w-16 h-16 -mt-10 rounded-full bg-slate-900 border-4 border-white flex items-center justify-center text-white shadow-2xl hover:scale-110 active:rotate-12 transition group-hover:shadow-slate-900/40">
+                    <span class="text-2xl animate-pulse">🛒</span>
+                    <span x-data="{ count: {{ session('cart_count', 0) }} }" 
+                          x-show="count > 0" 
+                          x-text="count" 
+                          data-cart-count
+                          class="absolute top-0 right-0 bg-primary text-white text-[9px] font-black rounded-full min-w-[20px] h-[20px] flex items-center justify-center border-2 border-slate-900 shadow-sm translate-x-1 -translate-y-1">
+                    </span>
+                </div>
+            </a>
+
+            <a href="{{ route('wallet.index') }}" class="flex flex-col items-center gap-1 group relative z-10 p-2 active:scale-125 transition-transform duration-200">
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center {{ request()->routeIs('wallet.*') ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-110' : 'text-slate-400 hover:text-white transition' }}">
+                    <span class="text-xl">💳</span>
+                </div>
+            </a>
+
+            <a href="{{ auth()->check() ? route('customer.dashboard') : route('login') }}" class="flex flex-col items-center gap-1 group relative z-10 p-2 active:scale-125 transition-transform duration-200">
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center {{ (request()->routeIs('customer.*') || request()->routeIs('login')) ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-110' : 'text-slate-400 hover:text-white transition' }}">
+                    <span class="text-xl">👤</span>
+                </div>
+            </a>
+        </nav>
+    </div>
+
+    @stack('scripts')
 </body>
 </html>
 

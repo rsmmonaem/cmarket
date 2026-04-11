@@ -35,6 +35,11 @@ Route::get('/merchants', [HomeController::class, 'merchants'])->name('merchants.
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/products/{product}/quick-view', [ProductController::class, 'quickView'])->name('products.quick-view');
+
+// Public Order Tracking
+Route::get('/track-order', [OrderController::class, 'trackForm'])->name('orders.track-form');
+Route::get('/tracking', [OrderController::class, 'track'])->name('orders.track');
 
 // Categories
 Route::get('/categories', function() {

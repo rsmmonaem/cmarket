@@ -17,6 +17,7 @@ Route::middleware(['auth', 'role:super-admin|admin'])->prefix('admin')->name('ad
     Route::post('kyc/{kyc}/reject', [\Modules\Admin\Http\Controllers\KycController::class, 'reject'])->name('kyc.reject');
     
     // Wallet management
+    Route::get('wallets/ledgers', [\Modules\Admin\Http\Controllers\WalletController::class, 'ledgers'])->name('wallets.ledgers');
     Route::get('wallets', [\Modules\Admin\Http\Controllers\WalletController::class, 'index'])->name('wallets.index');
     Route::get('wallets/{wallet}', [\Modules\Admin\Http\Controllers\WalletController::class, 'show'])->name('wallets.show');
     Route::post('wallets/{wallet}/credit', [\Modules\Admin\Http\Controllers\WalletController::class, 'credit'])->name('wallets.credit');
@@ -29,6 +30,13 @@ Route::middleware(['auth', 'role:super-admin|admin'])->prefix('admin')->name('ad
     Route::get('withdrawals/{withdrawal}', [\Modules\Admin\Http\Controllers\WithdrawalController::class, 'show'])->name('withdrawals.show');
     Route::post('withdrawals/{withdrawal}/approve', [\Modules\Admin\Http\Controllers\WithdrawalController::class, 'approve'])->name('withdrawals.approve');
     Route::post('withdrawals/{withdrawal}/reject', [\Modules\Admin\Http\Controllers\WithdrawalController::class, 'reject'])->name('withdrawals.reject');
+    
+    // Top-up management
+    Route::get('topups', [\Modules\Admin\Http\Controllers\TopupController::class, 'index'])->name('topups.index');
+    Route::get('topups/create', [\Modules\Admin\Http\Controllers\TopupController::class, 'create'])->name('topups.create');
+    Route::post('topups/direct-store', [\Modules\Admin\Http\Controllers\TopupController::class, 'directStore'])->name('topups.direct-store');
+    Route::post('topups/{topup}/approve', [\Modules\Admin\Http\Controllers\TopupController::class, 'approve'])->name('topups.approve');
+    Route::post('topups/{topup}/reject', [\Modules\Admin\Http\Controllers\TopupController::class, 'reject'])->name('topups.reject');
     
     // Banner management
     Route::patch('banners/{banner}/toggle-status', [\Modules\Admin\Http\Controllers\BannerController::class, 'toggleStatus'])->name('banners.toggle-status');

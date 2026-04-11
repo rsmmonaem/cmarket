@@ -75,10 +75,10 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="text-lg font-black {{ $tx->type == 'credit' ? 'text-emerald-600' : 'text-slate-800' }}">
-                                    {{ $tx->type == 'credit' ? '+' : '-' }}৳{{ number_format($tx->amount, 2) }}
+                                <p class="text-lg font-black {{ $tx->credit > 0 ? 'text-emerald-600' : 'text-slate-800' }}">
+                                    {{ $tx->credit > 0 ? '+' : '-' }}৳{{ number_format($tx->credit > 0 ? $tx->credit : $tx->debit, 2) }}
                                 </p>
-                                <p class="text-[9px] font-black text-slate-300 uppercase">Balance: ৳{{ number_format($tx->running_balance, 2) }}</p>
+                                <p class="text-[9px] font-black text-slate-300 uppercase">Balance: ৳{{ number_format($tx->balance_after, 2) }}</p>
                             </div>
                         </div>
                     @empty
@@ -93,39 +93,6 @@
 
         <!-- Right Side: Transfer & Promo -->
         <div class="space-y-8">
-            <!-- Transfer Card -->
-            <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl overflow-hidden relative group">
-                <h3 class="text-lg font-black text-slate-800 mb-8 flex items-center gap-3">
-                    Fast Transfer <span class="bg-sky-100 text-sky-600 text-[10px] p-1.5 rounded-lg">⚡</span>
-                </h3>
-
-                <form action="{{ route('wallet.transfer') }}" method="POST" class="space-y-6">
-                    @csrf
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Recipient ID / Phone</label>
-                        <input type="text" name="phone" placeholder="01XXXXXXXXX" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300" required>
-                    </div>
-
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Source Wallet</label>
-                        <select name="wallet_type" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all" required>
-                            @foreach($wallets as $wallet)
-                                <option value="{{ $wallet->wallet_type }}">{{ ucfirst($wallet->wallet_type) }} Balance (৳{{ number_format($wallet->balance, 2) }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Transfer Amount (৳)</label>
-                        <input type="number" name="amount" min="1" step="0.01" placeholder="0.00" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-black text-slate-800 focus:ring-2 focus:ring-sky-500/20 transition-all placeholder:text-slate-300" required>
-                    </div>
-
-                    <button type="submit" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-slate-900/10 hover:bg-sky-600 hover:scale-[1.02] transition-all duration-300">
-                        Confirm Transaction 🤝
-                    </button>
-                </form>
-            </div>
-
             <!-- Promotion Card -->
             <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2.5rem] p-8 text-white relative overflow-hidden group shadow-2xl shadow-indigo-500/20">
                 <div class="relative z-10">

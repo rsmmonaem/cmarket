@@ -18,7 +18,12 @@ class ProductController extends Controller
 
         // Filter by category
         if ($request->has('category')) {
-            $query->where('category_id', $request->category);
+            $category = Category::where('id', $request->category)
+                ->orWhere('slug', $request->category)
+                ->first();
+            if ($category) {
+                $query->where('category_id', $category->id);
+            }
         }
 
         // Filter by merchant
@@ -27,10 +32,10 @@ class ProductController extends Controller
         }
 
         // Filter by price range
-        if ($request->has('min_price')) {
+        if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
-        if ($request->has('max_price')) {
+        if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
 
@@ -74,6 +79,23 @@ class ProductController extends Controller
             ->get();
 
         return view('ecommerce::products.show', compact('product', 'relatedProducts'));
+    }
+
+    public function quickView(Product $product)
+    {
+        $product->load(['category', 'merchant']);
+        $images = is_array($product->images) ? $product->images : (json_decode($product->images, true) ?: []);
+        $mainImage = $product->thumbnail ? asset('storage/' . $product->thumbnail) : ($images[0] ? asset('storage/' . $images[0]) : null);
+        
+        return response()->json([
+            'success' => true,
+            'product' => $product,
+            'main_image' => $mainImage,
+            'final_price' => number_format($product->final_price),
+            'original_price' => number_format($product->price),
+            'show_url' => route('products.show', $product),
+            'category_name' => $product->category->name ?? 'Product'
+        ]);
     }
 
     public function search(Request $request)

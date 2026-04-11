@@ -119,7 +119,14 @@
 
         <form action="{{ route('register') }}" method="POST">
             @csrf
-            <input type="hidden" name="ref" value="{{ request()->get('ref') }}">
+
+            <div class="form-group">
+                <label for="ref">Referral ID / Code</label>
+                <input type="text" id="ref" name="ref" value="{{ request()->get('ref') ?? old('ref') }}" placeholder="CMXXXXXX (Optional)">
+                @error('ref')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
 
             <div class="form-group">
                 <label for="name">Full Name</label>

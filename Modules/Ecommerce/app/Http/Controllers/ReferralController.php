@@ -42,11 +42,11 @@ class ReferralController extends Controller
         // Get commission earnings
         $totalCommissions = Commission::where('user_id', $user->id)
             ->where('status', 'approved')
-            ->sum('amount');
+            ->sum('commission_amount');
         
         $pendingCommissions = Commission::where('user_id', $user->id)
             ->where('status', 'pending')
-            ->sum('amount');
+            ->sum('commission_amount');
 
         return view('ecommerce::referral.index', compact('directReferrals', 'allReferrals', 'totalCommissions', 'pendingCommissions'));
     }

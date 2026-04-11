@@ -13,7 +13,7 @@
             <thead><tr class="bg-slate-50 dark:bg-slate-800/50">
                 <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Name</th>
                 <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Commission Rate</th>
-                <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Sort Order</th>
+                <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Priority (Sort)</th>
                 <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
                 <th class="px-8 py-5 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Actions</th>
             </tr></thead>

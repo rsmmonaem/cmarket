@@ -52,18 +52,35 @@
                 <input type="text" name="document_number" placeholder="Enter ID number" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-light); background: var(--bg-light);" required>
             </div>
 
-            <div style="margin-bottom: 2rem;">
-                <label style="display: block; font-size: 0.875rem; font-weight: 700; color: var(--text-light); margin-bottom: 0.5rem;">Upload Document Image</label>
-                <div style="padding: 2rem; border: 2px dashed var(--border-light); border-radius: 1rem; text-align: center; background: var(--bg-light); cursor: pointer;" onclick="document.getElementById('doc_file').click()">
-                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">📸</div>
-                    <p style="font-size: 0.875rem; color: var(--text-muted-light);">Click to select or drag and drop your image file here</p>
-                    <p style="font-size: 0.75rem; color: var(--text-muted-light); margin-top: 0.5rem;">JPG, PNG or PDF (Max 2MB)</p>
-                    <input type="file" id="doc_file" name="document_file" style="display: none;" required onchange="updateFileName(this)">
-                    <div id="file_name" style="margin-top: 1rem; font-weight: 700; color: var(--primary);"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 700; color: var(--text-light); margin-bottom: 0.5rem;">Document Front View</label>
+                    <div style="padding: 1.5rem; border: 2px dashed var(--border-light); border-radius: 1rem; text-align: center; background: var(--bg-light); cursor: pointer; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; position: relative;" onclick="document.getElementById('doc_front').click()">
+                        <div id="preview_front_wrap" style="display: flex; flex-direction: column; align-items: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🖼️</div>
+                            <p style="font-size: 0.75rem; color: var(--text-muted-light);">Front Part (JPG/PNG)</p>
+                        </div>
+                        <img id="preview_front" style="display: none; position: absolute; inset: 0; width: 100%; h-full; object-fit: cover;">
+                        <input type="file" id="doc_front" name="document_front" style="display: none;" required onchange="handlePreview(this, 'preview_front', 'preview_front_wrap')">
+                    </div>
+                    @error('document_front')<p style="color: var(--danger); font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 700; color: var(--text-light); margin-bottom: 0.5rem;">Document Back View</label>
+                    <div style="padding: 1.5rem; border: 2px dashed var(--border-light); border-radius: 1rem; text-align: center; background: var(--bg-light); cursor: pointer; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; position: relative;" onclick="document.getElementById('doc_back').click()">
+                        <div id="preview_back_wrap" style="display: flex; flex-direction: column; align-items: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🖼️</div>
+                            <p style="font-size: 0.75rem; color: var(--text-muted-light);">Back Part (JPG/PNG)</p>
+                        </div>
+                        <img id="preview_back" style="display: none; position: absolute; inset: 0; width: 100%; h-full; object-fit: cover;">
+                        <input type="file" id="doc_back" name="document_back" style="display: none;" required onchange="handlePreview(this, 'preview_back', 'preview_back_wrap')">
+                    </div>
+                    @error('document_back')<p style="color: var(--danger); font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</p>@enderror
                 </div>
             </div>
 
-            <button type="submit" class="btn-solid btn-primary-solid" style="width: 100%; justify-content: center; padding: 1rem;">
+            <button type="submit" class="btn-solid" style="width: 100%; justify-content: center; padding: 1rem; border-radius: 1rem; font-weight: 800; font-size: 1rem; transition: transform 0.2s; background: var(--primary); color: #fff; border: none; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                 Submit for Verification 🚀
             </button>
         </form>
@@ -71,9 +88,20 @@
 </div>
 
 <script>
-function updateFileName(input) {
-    const fileName = input.files[0] ? input.files[0].name : '';
-    document.getElementById('file_name').textContent = fileName ? 'Selected: ' + fileName : '';
+function handlePreview(input, previewId, wrapId) {
+    const file = input.files[0];
+    const preview = document.getElementById(previewId);
+    const wrap = document.getElementById(wrapId);
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            wrap.style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+    }
 }
 </script>
 @endsection

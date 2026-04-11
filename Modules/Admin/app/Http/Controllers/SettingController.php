@@ -22,16 +22,13 @@ class SettingController extends Controller
      */
     public function update(Request $request)
     {
-        $settings = $request->except('_token');
+        $settingsData = $request->input('settings', []);
 
-        foreach ($settings as $key => $value) {
+        foreach ($settingsData as $key => $value) {
             $setting = SystemSetting::where('key', $key)->first();
             if ($setting) {
-                // Validate if it's float/decimal type
-                if (in_array($setting->type, ['float', 'decimal'])) {
-                    $value = filter_var($value, FILTER_VALIDATE_FLOAT);
-                }
-                
+                // If checkbox (boolean) is not present in request, it's false
+                // But since we are looping over input, checkboxes handle themselves if checked
                 $setting->update(['value' => $value]);
             }
         }
