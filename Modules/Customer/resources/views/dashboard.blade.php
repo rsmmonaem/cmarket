@@ -225,6 +225,10 @@
                         <span class="text-2xl block mb-2 group-hover:scale-110 transition-transform">🏗️</span>
                         <span class="text-[10px] font-black uppercase tracking-tight text-slate-700">Invest</span>
                     </a>
+                    <a href="{{ route('customer.withdrawals.index') }}" class="p-4 rounded-3xl bg-slate-50 text-center hover:bg-slate-100 transition group">
+                        <span class="text-2xl block mb-2 group-hover:scale-110 transition-transform">🏧</span>
+                        <span class="text-[10px] font-black uppercase tracking-tight text-slate-700">Withdraw</span>
+                    </a>
                 </div>
             </div>
 

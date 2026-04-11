@@ -19,7 +19,8 @@ class WithdrawalController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $withdrawals = Withdrawal::whereHas('wallet', function($q) use ($user) {
+        $withdrawals = Withdrawal::with('wallet')
+            ->whereHas('wallet', function($q) use ($user) {
                 $q->where('user_id', $user->id);
             })
             ->latest()

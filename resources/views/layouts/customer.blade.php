@@ -89,6 +89,14 @@
                         Top-up
                     </a>
 
+                    <!-- Withdrawal Section -->
+                    <a href="{{ route('customer.withdrawals.index') }}" 
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
+                              {{ request()->routeIs('customer.withdrawals.*') ? 'bg-sky-500/10 text-sky-400' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <span class="text-base {{ request()->routeIs('customer.withdrawals.*') ? 'text-sky-400' : 'text-slate-500' }}">🏧</span>
+                        Withdrawals
+                    </a>
+
                     <!-- Network Section -->
                     <a href="{{ route('referrals.index') }}" 
                        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs tracking-wide
